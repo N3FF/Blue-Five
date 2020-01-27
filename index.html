@@ -14,8 +14,14 @@ Run this instead of main
     <script type="text/javascript" src="./gameengine.js"></script>
     <script type="text/javascript" src="./assetmanager.js"></script>
     <script type="text/javascript" src="./main.js"></script>
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            var ctx = document.getElementById("gameWorld");
+            ctx.focus();
+        });
+    </script>
 </head>
 <body>
-    <canvas id="gameWorld" tabindex="1" width="1000" height="750" style="border: 1px solid rgb(0, 0, 0); background: rgb(0, 128, 192)"></canvas>
+    <canvas id="gameWorld" tabindex="1" width="1000" height="750" style="border: 1px solid rgb(0, 0, 0); background: rgb(0, 128, 192); margin: 0 auto"></canvas>
 </body>
 </html> 
