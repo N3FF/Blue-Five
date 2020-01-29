@@ -4,14 +4,15 @@
 // Requests an animation frame
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        function (/* function */ callback, /* DOMElement */ element) {
-            window.setTimeout(callback, 1000 / 60);
-        };
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            window.msRequestAnimationFrame ||
+            function (/* function */ callback, /* DOMElement */ element) {
+                window.setTimeout(callback, 1000 / 60);
+            };
 })();
+
 
 // A timer for the game
 function Timer() {
@@ -25,7 +26,6 @@ Timer.prototype.tick = function () {
     var wallCurrent = Date.now();
     var wallDelta = (wallCurrent - this.wallLastTimestamp) / 1000;
     this.wallLastTimestamp = wallCurrent;
-
     var gameDelta = Math.min(wallDelta, this.maxStep);
     this.gameTime += gameDelta;
     return gameDelta;
@@ -41,7 +41,6 @@ function GameEngine() {
     this.wheel = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
-    this.keysActive = new Array(255).fill(false); // Keeps track of active keys on canvas
 }
 
 // The initialized function
@@ -69,39 +68,57 @@ GameEngine.prototype.startInput = function () {
     console.log('Starting input');
     var that = this;
 
-    // When a key is pressed
+    // The keydown event
     this.ctx.canvas.addEventListener("keydown", function (e) {
+    	 e = e || window.event;
+    	e.preventDefault(); // Prevents the down scrolling
+    		
+    	if (String.fromCharCode(e.which) === 'D' || e.keyCode == '39') {
+        	that.right = true;
+        }  else if (String.fromCharCode(e.which) === ' ') {
+          	that.space = true;
+          } else if (String.fromCharCode(e.which) === 'A' || e.keyCode == '37') {
+        	that.left = true;
+        } 
 
-        // Array of all of the keys on the keyboard
-        if (!that.keysActive[e.which]) {
-            // Set key that is pressed to true
-            that.keysActive[e.which] = true;
-        }
-
+        
     }, false);
-
-    // When a key is released
-    this.ctx.canvas.addEventListener("keyup", function (e) {
-
-        if (that.keysActive[e.which]) {
-            that.keysActive[e.which] = false;
-        }
-
-    }, false);
-
-    /*
-    Set all keys to false when the canvas loses focus so that you character doesn't 
-    keep moving without the key pressed
-    */
-    this.ctx.canvas.addEventListener("focusout", function (e) {
-        that.keysActive.fill(false);
-    });
-
-    // Right click event
-    this.ctx.canvas.addEventListener("contextmenu", (e)=>{ 
-        // Action
-    });
     
+ this.ctx.canvas.addEventListener("onkeydown", function (e) {
+    	
+    	e.preventDefault(); // Prevents the down scrolling
+    		
+    	if (String.fromCharCode(e.which) === 'D') {
+        	that.right = true;
+        }  else if (String.fromCharCode(e.which) === 'A') {
+        	that.left = true;
+        } 
+
+        
+    }, false);
+    
+this.ctx.canvas.addEventListener("keyup", function (e) {
+    	
+    	
+    	if (String.fromCharCode(e.which) === 'D') {
+        	that.right = false;
+        }  else if (String.fromCharCode(e.which) === 'A') {
+        	that.left = false;
+        } 
+
+        
+    }, false);
+    
+    
+//    this.ctx.canvas.addEventListener("keydown", function (e) {
+//        if (String.fromCharCode(e.which) === ' ') that.space = true;
+////        console.log(e);
+//        e.preventDefault();
+//    },
+    
+     
+        
+
     console.log('Input started');
 }
 
