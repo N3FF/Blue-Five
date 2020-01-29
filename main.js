@@ -37,11 +37,11 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     var locY = y;
     var offset = vindex === 0 ? this.startX : 0;
     ctx.drawImage(this.spriteSheet,
-        index * this.frameWidth + offset, vindex * this.frameHeight + this.startY,  // source from sheet
-        this.frameWidth, this.frameHeight,
-        locX, locY,
-        this.frameWidth * scaleBy,
-        this.frameHeight * scaleBy);
+                  index * this.frameWidth + offset, vindex * this.frameHeight + this.startY,  // source from sheet
+                  this.frameWidth, this.frameHeight,
+                  locX, locY,
+                  this.frameWidth * scaleBy,
+                  this.frameHeight * scaleBy);
 }
 
 Animation.prototype.currentFrame = function () {
@@ -52,7 +52,13 @@ Animation.prototype.isDone = function () {
     return (this.elapsedTime >= this.totalTime);
 }
 
-function Background(game) {
+function Background(game) 
+{
+	//this.img = document.getElementById("Background");
+	this.back1 = new Animation(ASSET_MANAGER.getAsset("./img/Background.png"), 0, 0, 1680, 1050, 1, 1, true, true);
+	//this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tile.png"), 0, 0, 52, 52, 1, 1, true, true);
+	this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tilea.png"), 0, 0, 52, 52, 1, 1, true, true);
+	this.hud = new Animation(ASSET_MANAGER.getAsset("./img/HudPrototype1.png"), 0, 0, 250, 360, 1, 1, true, true);
     Entity.call(this, game, 0, 400);
     this.radius = 200;
 }
@@ -64,72 +70,158 @@ Background.prototype.update = function () {
 }
 
 Background.prototype.draw = function (ctx) {
-    ctx.fillStyle = "#9999CC";
-    ctx.fillRect(0, 500, 1000, 300);
+    ctx.fillStyle = "#808080";
+    //ctx.drawImage(this.idlrL, 10, 10);
+    //ctx.fillRect(0,500,1000,300);  
+	this.back1.drawFrame(this.game.clockTick, ctx, 0, 0, 1);
+	//ctx.fillRect(0,500,1000,300);
+	
+	var tileSize = 52;
+	for(i = 0; i < 20; i++) {
+		for(j = 0; j < 3; j++) {
+			this.tile1.drawFrame(this.game.clockTick, ctx, i * tileSize, (600 + j * tileSize), 1);
+		}
+		
+	}
+	
+	this.hud.drawFrame(this.game.clockTick, ctx, 875, 0, 1/2);
     Entity.prototype.draw.call(this);
 }
 
-function Unicorn(game) {
-    this.animation = new Animation(ASSET_MANAGER.getAsset("./img/RobotUnicorn.png"), 0, 0, 206, 110, 0.02, 30, true, true);
-    this.jumpAnimation = new Animation(ASSET_MANAGER.getAsset("./img/RobotUnicorn.png"), 618, 334, 174, 138, 0.02, 40, false, true);
+
+function Hero(game) {
+    this.idleR = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 0, 0, 55, 60, .20, 1, true, true);
+    this.idleL = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 220, 60, 55, 60, .20, 1, true, true);
+    this.RunningR = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 55, 0, 55, 60, .20, 4, true, false);
+    this.RunningL = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 0, 60, 55, 60, .20, 4, true, false);
+    this.jumpAnimation = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 0, 0, 55, 60, .20, 5, true, false);
+    this.jumpAnimationL = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 0, 60, 55, 60, .20, 5, true, false);
     this.jumping = false;
     this.moveR = false;
     this.moveL = false;
-    this.radius = 100;
-    this.ground = 400;
-    Entity.call(this, game, 0, 400);
+    this.radius = 50;
+    this.ground = 500;
+    this.accel = 0;
+    this.yAccel = 0;
+    this.direction = true;
+    this.gravity = 1;
+    this.canJump = true;
+    Entity.call(this, game, 0, 500);
 }
 
-Unicorn.prototype = new Entity();
-Unicorn.prototype.constructor = Unicorn;
+Hero.prototype = new Entity();
+Hero.prototype.constructor = Hero;
 
 // Having the unicorn jump here
-Unicorn.prototype.update = function () {
-
-    // Keys Active gameengine->startinput
-
-    // If the character is already jumping wait until it is done before 
-    // you can start jumping again.
-    if(!this.jumping && this.game.keysActive[' '.charCodeAt(0)])
-        this.jumping = true;
-    this.moveR = this.game.keysActive['D'.charCodeAt(0)];
-    this.moveL = this.game.keysActive['A'.charCodeAt(0)];
-
+Hero.prototype.update = function () {
+	
+	if (this.y > this.ground) {
+		this.jumping = false;
+		this.y = this.ground;
+	    this.canJump = true;
+	    this.yAccel = 0;
+	}
+	
+	
+	if (this.jumping === false) {
+		if (this.accel < -1) {
+			this.accel += .2;
+		} else if (this.accel > 1) {
+			this.accel -= .2;
+		} else {
+			this.accel = 0;
+		}
+	}
+	
+	
+	this.x = this.x + this.accel;
+	this.y = this.y + this.yAccel;
+	
+	
+    if (this.game.space) {
+    	this.jumping = true;
+    }
+    
+    if (this.game.right) {
+    	this.moveR = true;
+    } else {
+    	this.moveR = false;
+    }
+    
+    if (this.game.left) {
+    	this.moveL = true;
+    } else {
+    	this.moveL = false;
+    }
+    
+    
     if (this.jumping) {
-        if (this.jumpAnimation.isDone()) {
-            this.jumpAnimation.elapsedTime = 0;
-            this.jumping = false;
+    	if (this.canJump) {
+     	   this.yAccel = -25;
         }
-        var jumpDistance = this.jumpAnimation.elapsedTime / this.jumpAnimation.totalTime;
-        var totalHeight = 200;
-
-        if (jumpDistance > 0.5)
-            jumpDistance = 1 - jumpDistance;
-
-        //var height = jumpDistance * 2 * totalHeight;
-        var height = totalHeight * (-4 * (jumpDistance * jumpDistance - jumpDistance));
-        this.y = this.ground - height;
+       this.canJump = false;
+       
+       this.yAccel = this.yAccel + this.gravity;
+       
     }
-
-    // Move Right
+    
     if (this.moveR) {
-        this.x = this.x + 5;
+    	this.direction = true;
+     if (this.accel > 0) {
+    	 this.accel = 10;
+    	 
+     } else {
+    	 this.accel = 5;
+     }
+     //this.x = this.x + this.accel;
+     //this.moveR = false;
     }
-
-    // Move Left
+    
     if (this.moveL) {
-        this.x = this.x - 5;
-    }
-
+    	this.direction = false;
+    	if (this.accel < 0) {
+       	 this.accel = -10; 
+        } else {
+        	this.accel = -5;
+        }
+        //this.x = this.x + this.accel;
+        //this.moveL = false;
+       }
+    
+    
+    
+    
     Entity.prototype.update.call(this);
 }
 
-Unicorn.prototype.draw = function (ctx) {
+Hero.prototype.draw = function (ctx) {
     if (this.jumping) {
-        this.jumpAnimation.drawFrame(this.game.clockTick, ctx, this.x + 17, this.y - 34);
-    }
-    else {
-        this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+    	
+    	if (this.direction) {
+    		 this.jumpAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+    	} else {
+    		this.jumpAnimationL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+    	}
+       
+    	
+    } 
+    
+    
+    else if (this.accel != 0) {
+    	if (this.direction) {
+    		this.RunningR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+   	} else {
+   		   this.RunningL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+   	}
+      
+    }  else {
+    	
+    	if (this.direction) {
+    		this.idleR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+    	} else {
+    		this.idleL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+    	}
+        
     }
     Entity.prototype.draw.call(this);
 }
@@ -138,20 +230,23 @@ Unicorn.prototype.draw = function (ctx) {
 
 var ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("./img/RobotUnicorn.png");
+ASSET_MANAGER.queueDownload("./img/Hero.png");
+ASSET_MANAGER.queueDownload("./img/Background.png");
+ASSET_MANAGER.queueDownload("./img/52Tile.png");
+ASSET_MANAGER.queueDownload("./img/52Tilea.png");
+ASSET_MANAGER.queueDownload("./img/HudPrototype1.png");
 
 ASSET_MANAGER.downloadAll(function () {
-    console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
     var ctx = canvas.getContext('2d');
 
     var gameEngine = new GameEngine();
     var bg = new Background(gameEngine);
-    var unicorn = new Unicorn(gameEngine);
+    var hero = new Hero(gameEngine);
 
     gameEngine.addEntity(bg);
-    gameEngine.addEntity(unicorn);
-
+    gameEngine.addEntity(hero);
+ 
     gameEngine.init(ctx);
     gameEngine.start();
 });
