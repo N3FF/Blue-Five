@@ -37,11 +37,11 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     var locY = y;
     var offset = vindex === 0 ? this.startX : 0;
     ctx.drawImage(this.spriteSheet,
-                  index * this.frameWidth + offset, vindex * this.frameHeight + this.startY,  // source from sheet
-                  this.frameWidth, this.frameHeight,
-                  locX, locY,
-                  this.frameWidth * scaleBy,
-                  this.frameHeight * scaleBy);
+        index * this.frameWidth + offset, vindex * this.frameHeight + this.startY,  // source from sheet
+        this.frameWidth, this.frameHeight,
+        locX, locY,
+        this.frameWidth * scaleBy,
+        this.frameHeight * scaleBy);
 }
 
 Animation.prototype.currentFrame = function () {
@@ -65,7 +65,7 @@ Background.prototype.update = function () {
 
 Background.prototype.draw = function (ctx) {
     ctx.fillStyle = "#9999CC";
-    ctx.fillRect(0,500,1000,300);
+    ctx.fillRect(0, 500, 1000, 300);
     Entity.prototype.draw.call(this);
 }
 
@@ -85,23 +85,16 @@ Unicorn.prototype.constructor = Unicorn;
 
 // Having the unicorn jump here
 Unicorn.prototype.update = function () {
-    if (this.game.space) {
-    	this.jumping = true;
-    }
-    
-    if (this.game.right) {
-    	this.moveR = true;
-    } else {
-    	this.moveR = false;
-    }
-    
-    if (this.game.left) {
-    	this.moveL = true;
-    } else {
-    	this.moveL = false;
-    }
-    
-    
+
+    // Keys Active gameengine->startinput
+
+    // If the character is already jumping wait until it is done before 
+    // you can start jumping again.
+    if(!this.jumping && this.game.keysActive[' '.charCodeAt(0)])
+        this.jumping = true;
+    this.moveR = this.game.keysActive['D'.charCodeAt(0)];
+    this.moveL = this.game.keysActive['A'.charCodeAt(0)];
+
     if (this.jumping) {
         if (this.jumpAnimation.isDone()) {
             this.jumpAnimation.elapsedTime = 0;
@@ -114,23 +107,20 @@ Unicorn.prototype.update = function () {
             jumpDistance = 1 - jumpDistance;
 
         //var height = jumpDistance * 2 * totalHeight;
-        var height = totalHeight*(-4 * (jumpDistance * jumpDistance - jumpDistance));
+        var height = totalHeight * (-4 * (jumpDistance * jumpDistance - jumpDistance));
         this.y = this.ground - height;
     }
-    
+
+    // Move Right
     if (this.moveR) {
-     this.x = this.x + 10;
-     //this.moveR = false;
+        this.x = this.x + 5;
     }
-    
+
+    // Move Left
     if (this.moveL) {
-        this.x = this.x - 10;
-        //this.moveL = false;
-       }
-    
-    
-    
-    
+        this.x = this.x - 5;
+    }
+
     Entity.prototype.update.call(this);
 }
 
@@ -161,7 +151,7 @@ ASSET_MANAGER.downloadAll(function () {
 
     gameEngine.addEntity(bg);
     gameEngine.addEntity(unicorn);
- 
+
     gameEngine.init(ctx);
     gameEngine.start();
 });
