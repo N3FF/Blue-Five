@@ -13,7 +13,6 @@ window.requestAnimFrame = (function () {
         };
 })();
 
-
 // A timer for the game
 function Timer() {
     this.gameTime = 0;
@@ -98,6 +97,11 @@ GameEngine.prototype.startInput = function () {
         that.keysActive.fill(false);
     });
 
+    // Right click event
+    this.ctx.canvas.addEventListener("contextmenu", (e)=>{ 
+        // Action
+    });
+    
     console.log('Input started');
 }
 
