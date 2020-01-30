@@ -38,6 +38,7 @@ function GameEngine() {
     this.ctx = null;
     this.click = null;
     this.mouse = null;
+    this.leftMouseDown = null;
     this.wheel = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
@@ -49,6 +50,7 @@ GameEngine.prototype.init = function (ctx) {
     this.ctx = ctx;
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
+    this.leftMouseDown = false;
     this.keysActive = new Array(255).fill(false); // Keeps track of active keys on canvas
     this.startInput();
     this.timer = new Timer();
@@ -111,6 +113,23 @@ GameEngine.prototype.startInput = function () {
     this.ctx.canvas.addEventListener("click", (e) => {
         // Action
         console.log("Left Click");
+    });
+
+    this.ctx.canvas.addEventListener("mousedown", function (e) {
+        if (e.which == 1) {
+            that.leftMouseDown = true;
+        }
+    });
+
+    this.ctx.canvas.addEventListener("mouseup", function (e) {
+        if (e.which == 1) {
+            that.leftMouseDown = false;
+        }
+    });
+
+    this.ctx.canvas.addEventListener("mousemove", function (e) {
+        that.mouseX = e.clientX;
+        that.mouseY = e.clientY;
     });
       
 

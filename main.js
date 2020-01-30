@@ -180,7 +180,14 @@ Hero.prototype.update = function () {
         //this.moveL = false;
     }
 
-
+    if (this.game.leftMouseDown) {
+        var that = this;
+        var bullet = new Projectile(this.game);
+        bullet.x = that.x;
+        bullet.y = that.y;
+        bullet.setAngle(that.x, that.y, that.game.mouseX, that.game.mouseY);
+        this.game.addEntity(bullet);
+    }
 
 
     Entity.prototype.update.call(this);
@@ -220,7 +227,7 @@ Hero.prototype.draw = function (ctx) {
 
 function Projectile(game) {
     this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
-    this.speed = 3;
+    this.speed = 20;
     this.xSpeed = 0;
     this.ySpeed = 0; 
     this.angle = 0; // 0 is right, -90/270 is up, etc.
@@ -229,6 +236,20 @@ function Projectile(game) {
 
 Projectile.prototype = new Entity();
 Projectile.prototype.constructor = Projectile;
+
+// Given starting coordinates and ending/target coordinates, sets the angle accordingly
+Projectile.prototype.setAngle = function(startX, startY, endX, endY) {
+    var opp = endY - startY;
+    var adj = endX - startX;
+    var hyp = Math.sqrt(Math.pow(opp, 2) + Math.pow(adj, 2));
+    this.angle = Math.asin(opp / hyp) * 180 / Math.PI;
+    if (opp < 0 && adj < 0) {
+        this.angle = -180 - this.angle;
+    } else if (adj < 0) {
+        this.angle = 180 - this.angle;
+    }
+    console.log("opp", opp, "\nadj", adj, "\nhyp", hyp, "\nangle", this.angle);
+}
 
 Projectile.prototype.update = function () {
     this.xSpeed = this.speed * Math.cos(this.angle * Math.PI / 180.0);
@@ -270,7 +291,7 @@ ASSET_MANAGER.downloadAll(function () {
     gameEngine.addEntity(bg);
     gameEngine.addEntity(hero);
 
-    gameEngine.addEntity(new Projectile(gameEngine));
+    // gameEngine.addEntity(new Projectile(gameEngine));
  
     gameEngine.init(ctx);
     gameEngine.start();
