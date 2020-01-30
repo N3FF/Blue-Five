@@ -180,7 +180,7 @@ Hero.prototype.update = function () {
     if (this.moveL) {
     	this.direction = false;
     	if (this.accel < 0) {
-       	 this.accel = -10; 
+       	    this.accel = -10; 
         } else {
         	this.accel = -5;
         }
@@ -226,6 +226,39 @@ Hero.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 }
 
+function Projectile(game) {
+    this.movingRight = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 55, 60, .20, 1, true, true);
+    this.movingLeft = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 55, 0, 55, 60, .20, 1, true, true);
+    this.moveR = false;
+    this.moveL = false;
+    this.radius = 50;
+    this.ground = 500;
+    this.speed = 0.1;
+    this.angle = true;
+    Entity.call(this, game, 0, 500);
+}
+
+Projectile.prototype = new Entity();
+Projectile.prototype.constructor = Projectile;
+
+Projectile.prototype.update = function () {
+	if (this.moveR) {
+        this.x += this.speed;
+    } else {
+        this.x -= this.speed;
+    }
+    Entity.prototype.update.call(this);
+}
+
+Projectile.prototype.draw = function (ctx) {
+    if (this.moveR) {
+        this.movingRight.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+    } else {
+        this.movingLeft.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+    }
+    Entity.prototype.draw.call(this);
+}
+
 // the "main" code begins here
 
 var ASSET_MANAGER = new AssetManager();
@@ -235,6 +268,7 @@ ASSET_MANAGER.queueDownload("./img/Background.png");
 ASSET_MANAGER.queueDownload("./img/52Tile.png");
 ASSET_MANAGER.queueDownload("./img/52Tilea.png");
 ASSET_MANAGER.queueDownload("./img/HudPrototype1.png");
+ASSET_MANAGER.queueDownload("./img/bullet.png");
 
 ASSET_MANAGER.downloadAll(function () {
     var canvas = document.getElementById('gameWorld');
@@ -246,6 +280,8 @@ ASSET_MANAGER.downloadAll(function () {
 
     gameEngine.addEntity(bg);
     gameEngine.addEntity(hero);
+
+    gameEngine.addEntity(new Projectile(gameEngine));
  
     gameEngine.init(ctx);
     gameEngine.start();
