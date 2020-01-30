@@ -227,14 +227,11 @@ Hero.prototype.draw = function (ctx) {
 }
 
 function Projectile(game) {
-    this.movingRight = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 55, 60, .20, 1, true, true);
-    this.movingLeft = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 55, 0, 55, 60, .20, 1, true, true);
-    this.moveR = false;
-    this.moveL = false;
-    this.radius = 50;
-    this.ground = 500;
-    this.speed = 0.1;
-    this.angle = true;
+    this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
+    this.speed = 3;
+    this.xSpeed = 0;
+    this.ySpeed = 0; 
+    this.angle = 0; // 0 is right, -90/270 is up, etc.
     Entity.call(this, game, 0, 500);
 }
 
@@ -242,20 +239,20 @@ Projectile.prototype = new Entity();
 Projectile.prototype.constructor = Projectile;
 
 Projectile.prototype.update = function () {
-	if (this.moveR) {
-        this.x += this.speed;
-    } else {
-        this.x -= this.speed;
-    }
+    this.xSpeed = this.speed * Math.cos(this.angle * Math.PI / 180.0);
+    this.ySpeed = this.speed * Math.sin(this.angle * Math.PI / 180.0);
+    this.x += this.xSpeed;
+    this.y += this.ySpeed;
     Entity.prototype.update.call(this);
 }
 
+// Reference: https://www.w3schools.com/graphics/game_rotation.asp 
 Projectile.prototype.draw = function (ctx) {
-    if (this.moveR) {
-        this.movingRight.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
-    } else {
-        this.movingLeft.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
-    }
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle * Math.PI / 180.0);
+    this.img.drawFrame(this.game.clockTick, ctx, 0, 0, .3);
+    ctx.restore();
     Entity.prototype.draw.call(this);
 }
 
