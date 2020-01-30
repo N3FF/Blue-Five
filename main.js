@@ -248,7 +248,6 @@ Projectile.prototype.setAngle = function(startX, startY, endX, endY) {
     } else if (adj < 0) {
         this.angle = 180 - this.angle;
     }
-    console.log("opp", opp, "\nadj", adj, "\nhyp", hyp, "\nangle", this.angle);
 }
 
 Projectile.prototype.update = function () {
