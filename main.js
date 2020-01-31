@@ -239,8 +239,8 @@ Hero.prototype.draw = function (ctx) {
 // --- Start of Cannon
 
 function Cannon(game) {
-    this.C1 = new Animation(ASSET_MANAGER.getAsset("./img/Cannon.png"), 0, 0, 130, 85, .20, 3, true, true);
-    this.CR = new Animation(ASSET_MANAGER.getAsset("./img/CannonR.png"), 0, 0, 130, 85, .20, 3, true, true);
+    this.C1 = new Animation(ASSET_MANAGER.getAsset("./img/Cannon.png"), 0, 0, 130, 86, .20, 3, true, true);
+    this.CR = new Animation(ASSET_MANAGER.getAsset("./img/CannonR.png"), 0, 0, 130, 86, .20, 3, true, true);
     this.jumping = false;
     this.attack = false;
     this.moveR = true;
