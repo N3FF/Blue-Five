@@ -184,14 +184,10 @@ Hero.prototype.update = function () {
     }
 
     if (this.game.rightMouseDown) {
-        var that = this;
-        var bullet = new Projectile(this.game);
-        bullet.x = that.x;
-        bullet.y = that.y;
-        bullet.setAngle(that.x, that.y, that.game.mouseX, that.game.mouseY);
+        var bullet = new Projectile(this.game, this.x + 50, this.y + 50, 0.25, 25);
+        bullet.setAngle(bullet.x, bullet.y, bullet.game.mouseX, bullet.game.mouseY);
         this.game.addEntity(bullet);
     }
-
 
     Entity.prototype.update.call(this);
 }
@@ -240,22 +236,25 @@ Hero.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 }
 
-// --- End of hero
+// --- End of hero  
 
-function Projectile(game) {
+// --- Start of Projectile
+
+function Projectile(game, x, y, scale, speed) {
     this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
-    this.scale = 0.3;
-    this.speed = 20;
-    this.xSpeed = 0;
-    this.ySpeed = 0; 
-    this.angle = 0; // 0 is right, -90/270 is up, etc.
-    Entity.call(this, game, 0, 500);
+    this.scale = scale;
+    this.speed = speed;
+    this.setAngle(x, y, game.mouseX, game.mouseY);
+    this.xSpeed = this.speed * Math.cos(this.angle * Math.PI / 180.0);
+    this.ySpeed = this.speed * Math.sin(this.angle * Math.PI / 180.0);
+    Entity.call(this, game, x, y);
 }
 
 Projectile.prototype = new Entity();
 Projectile.prototype.constructor = Projectile;
 
 // Given starting coordinates and ending/target coordinates, sets the angle accordingly
+// 0 is right, 90 is down, -90 is up, etc.
 Projectile.prototype.setAngle = function(startX, startY, endX, endY) {
     var opp = endY - startY;
     var adj = endX - startX;
@@ -269,8 +268,6 @@ Projectile.prototype.setAngle = function(startX, startY, endX, endY) {
 }
 
 Projectile.prototype.update = function () {
-    this.xSpeed = this.speed * Math.cos(this.angle * Math.PI / 180.0);
-    this.ySpeed = this.speed * Math.sin(this.angle * Math.PI / 180.0);
     this.x += this.xSpeed;
     this.y += this.ySpeed;
     Entity.prototype.update.call(this);
@@ -281,10 +278,12 @@ Projectile.prototype.draw = function (ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.rotate(this.angle * Math.PI / 180.0);
-    this.img.drawFrame(this.game.clockTick, ctx, 0, 0, this.scale);
+    this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
     ctx.restore();
     Entity.prototype.draw.call(this);
 }
+
+// --- End of Projectile
 
 // --- Start of Cannon
 
