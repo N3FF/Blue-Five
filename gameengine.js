@@ -39,6 +39,7 @@ function GameEngine() {
     this.click = null;
     this.mouse = null;
     this.leftMouseDown = null;
+    this.rightMouseDown = null;
     this.wheel = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
@@ -51,6 +52,7 @@ GameEngine.prototype.init = function (ctx) {
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.leftMouseDown = false;
+    this.rightMouseDown = false;
     this.keysActive = new Array(255).fill(false); // Keeps track of active keys on canvas
     this.startInput();
     this.timer = new Timer();
@@ -89,11 +91,11 @@ GameEngine.prototype.startInput = function () {
     }, false);
 
     // When a key is released
-    this.ctx.canvas.addEventListener("click", function (e) {
-
-        that.keysActive[e.which] = false;
-
-    }, false);
+//    this.ctx.canvas.addEventListener("click", function (e) {
+//
+//        that.keysActive[e.which] = false;
+//
+//    }, false);
 
     /*
     Set all keys to false when the canvas loses focus so that you character doesn't 
@@ -101,30 +103,37 @@ GameEngine.prototype.startInput = function () {
     */
     this.ctx.canvas.addEventListener("focusout", function (e) {
         that.keysActive.fill(false);
+        //that.attack = false;
     });
 
     // Right click event
     this.ctx.canvas.addEventListener("contextmenu", (e) => {
         // Action
+    	//that.attack = true;
         console.log("Right Click");
     });
 
     // Left click event
-    this.ctx.canvas.addEventListener("click", (e) => {
+    this.ctx.canvas.addEventListener("mousedown", (e) => {
         // Action
+    	//that.keysActive.fill(true);
+    	if (e.which == 1) {
+            that.attack = true;
+        } else if (e.which == 3) {
+            that.rightMouseDown = true;
+        }
         console.log("Left Click");
     });
-
-    this.ctx.canvas.addEventListener("mousedown", function (e) {
-        if (e.which == 1) {
-            that.leftMouseDown = true;
+    
+    this.ctx.canvas.addEventListener("mouseup", (e) => {
+        // Action
+    	//that.keysActive.fill(true);
+    	if (e.which == 1) {
+            that.attack = false;
+        } else if (e.which == 3) {
+            that.rightMouseDown = false;
         }
-    });
-
-    this.ctx.canvas.addEventListener("mouseup", function (e) {
-        if (e.which == 1) {
-            that.leftMouseDown = false;
-        }
+        console.log("Left Click");
     });
 
     this.ctx.canvas.addEventListener("mousemove", function (e) {
@@ -175,6 +184,7 @@ GameEngine.prototype.loop = function () {
     this.space = null;
     this.left = null;
     this.right = null;
+    
 }
 
 function Entity(game, x, y) {
@@ -182,6 +192,7 @@ function Entity(game, x, y) {
     this.x = x;
     this.y = y;
     this.removeFromWorld = false;
+    this.attack = null;
 }
 
 Entity.prototype.update = function () {

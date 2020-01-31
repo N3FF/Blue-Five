@@ -95,7 +95,10 @@ function Hero(game) {
     this.RunningL = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 0, 60, 55, 60, .20, 4, true, false);
     this.jumpAnimation = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 0, 0, 55, 60, .20, 5, true, false);
     this.jumpAnimationL = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 0, 60, 55, 60, .20, 5, true, false);
+    this.SwordR = new Animation(ASSET_MANAGER.getAsset("./img/HeroSword.png"), 0, 0, 60, 60, .15, 9, true, true);
+    this.SwordL = new Animation(ASSET_MANAGER.getAsset("./img/HeroSwordR.png"), 0, 0, 60, 60, .15, 9, true, true);
     this.jumping = false;
+    this.attack = false;
     this.moveR = false;
     this.moveL = false;
     this.radius = 50;
@@ -111,7 +114,7 @@ function Hero(game) {
 Hero.prototype = new Entity();
 Hero.prototype.constructor = Hero;
 
-// Having the unicorn jump here
+// The update function
 Hero.prototype.update = function () {
 
     if (this.y > this.ground) {
@@ -180,7 +183,7 @@ Hero.prototype.update = function () {
         //this.moveL = false;
     }
 
-    if (this.game.leftMouseDown) {
+    if (this.game.rightMouseDown) {
         var that = this;
         var bullet = new Projectile(this.game);
         bullet.x = that.x;
@@ -194,7 +197,19 @@ Hero.prototype.update = function () {
 }
 
 Hero.prototype.draw = function (ctx) {
-    if (this.jumping) {
+	
+	 if (this.game.attack) {
+
+	        if (this.direction) {
+	            this.SwordR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+	        } else {
+	            this.SwordL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+	        }
+
+
+	    }
+	
+	 else if (this.jumping) {
 
         if (this.direction) {
             this.jumpAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
@@ -224,6 +239,8 @@ Hero.prototype.draw = function (ctx) {
     }
     Entity.prototype.draw.call(this);
 }
+
+// --- End of hero
 
 function Projectile(game) {
     this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
@@ -269,16 +286,124 @@ Projectile.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 }
 
+// --- Start of Cannon
+
+function Cannon(game) {
+    this.C1 = new Animation(ASSET_MANAGER.getAsset("./img/Cannon.png"), 0, 0, 130, 85, .20, 3, true, true);
+    this.CR = new Animation(ASSET_MANAGER.getAsset("./img/CannonR.png"), 0, 0, 130, 85, .20, 3, true, true);
+    this.jumping = false;
+    this.attack = false;
+    this.moveR = true;
+    this.moveL = false;
+    this.radius = 50;
+    this.ground = 500;
+    this.accel = 0;
+    this.yAccel = 0;
+    this.direction = true;
+    this.gravity = 1;
+    this.canJump = true;
+    Entity.call(this, game, 200, 500);
+}
+
+Cannon.prototype = new Entity();
+Cannon.prototype.constructor = Cannon;
+
+// The update function
+Cannon.prototype.update = function () {
+
+    if (this.y > this.ground) {
+        this.jumping = false;
+        this.y = this.ground;
+        this.canJump = true;
+        this.yAccel = 0;
+    }
+
+
+    if (this.jumping === false) {
+        if (this.accel < -1) {
+            this.accel += .2;
+        } else if (this.accel > 1) {
+            this.accel -= .2;
+        } else {
+            this.accel = 0;
+        }
+    }
+
+
+    this.x = this.x + this.accel;
+    
+    
+    
+    if (this.x < 150) {
+    	this.moveR = true;
+    	this.moveL = false;
+    }
+    if (this.x > 700) {
+    	this.moveL = true;
+    	this.moveR = false
+    }
+  
+
+    if (this.moveR) {
+        this.direction = true;
+        if (this.accel > 0) {
+            this.accel = 5;
+
+        } else {
+            this.accel = 3;
+       }
+    }
+
+    if (this.moveL) {
+        this.direction = false;
+        if (this.accel < 0) {
+            this.accel = -5;
+        } else {
+            this.accel = -3;
+        }
+
+    }
+
+
+
+
+    Entity.prototype.update.call(this);
+}
+
+Cannon.prototype.draw = function (ctx) {
+	
+	  if (this.accel != 0) {
+        if (this.direction) {
+            this.C1.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        } else {
+            this.CR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        }
+
+    } else {
+
+        if (this.direction) {
+            this.C1.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        } else {
+            this.CR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        }
+
+    }
+    Entity.prototype.draw.call(this);
+}
 // the "main" code begins here
 
 var ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./img/Hero.png");
+ASSET_MANAGER.queueDownload("./img/HeroSword.png");
+ASSET_MANAGER.queueDownload("./img/HeroSwordR.png");
 ASSET_MANAGER.queueDownload("./img/Background.png");
 ASSET_MANAGER.queueDownload("./img/52Tile.png");
 ASSET_MANAGER.queueDownload("./img/52Tilea.png");
 ASSET_MANAGER.queueDownload("./img/HudPrototype1.png");
 ASSET_MANAGER.queueDownload("./img/bullet.png");
+ASSET_MANAGER.queueDownload("./img/Cannon.png");
+ASSET_MANAGER.queueDownload("./img/CannonR.png");
 
 ASSET_MANAGER.downloadAll(function () {
     var canvas = document.getElementById('gameWorld');
@@ -287,9 +412,11 @@ ASSET_MANAGER.downloadAll(function () {
     var gameEngine = new GameEngine();
     var bg = new Background(gameEngine);
     var hero = new Hero(gameEngine);
+    var e1 = new Cannon(gameEngine);
 
     gameEngine.addEntity(bg);
     gameEngine.addEntity(hero);
+    gameEngine.addEntity(e1);
 
     // gameEngine.addEntity(new Projectile(gameEngine));
  
