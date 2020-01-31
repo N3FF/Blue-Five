@@ -227,6 +227,7 @@ Hero.prototype.draw = function (ctx) {
 
 function Projectile(game) {
     this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
+    this.scale = 0.3;
     this.speed = 20;
     this.xSpeed = 0;
     this.ySpeed = 0; 
@@ -263,7 +264,7 @@ Projectile.prototype.draw = function (ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.rotate(this.angle * Math.PI / 180.0);
-    this.img.drawFrame(this.game.clockTick, ctx, 0, 0, .3);
+    this.img.drawFrame(this.game.clockTick, ctx, 0, 0, this.scale);
     ctx.restore();
     Entity.prototype.draw.call(this);
 }
