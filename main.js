@@ -53,11 +53,12 @@ Animation.prototype.isDone = function () {
 }
 
 function Background(game) {
-    //this.img = document.getElementById("Background");
     this.back1 = new Animation(ASSET_MANAGER.getAsset("./img/Background.png"), 0, 0, 1680, 1050, 1, 1, true, true);
-    //this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tile.png"), 0, 0, 52, 52, 1, 1, true, true);
     this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tilea.png"), 0, 0, 52, 52, 1, 1, true, true);
     this.hud = new Animation(ASSET_MANAGER.getAsset("./img/HudPrototype1.png"), 0, 0, 250, 360, 1, 1, true, true);
+    
+    this.instructions = new Animation(ASSET_MANAGER.getAsset("./img/Instructions.png"), 0, 0, 370, 202, 1, 1, true, true);
+    
     Entity.call(this, game, 0, 400);
     this.radius = 200;
 }
@@ -69,11 +70,8 @@ Background.prototype.update = function () {
 }
 
 Background.prototype.draw = function (ctx) {
-    ctx.fillStyle = "#808080";
-    //ctx.drawImage(this.idlrL, 10, 10);
-    //ctx.fillRect(0,500,1000,300);  
+    ctx.fillStyle = "#808080"; 
     this.back1.drawFrame(this.game.clockTick, ctx, 0, 0, 1);
-    //ctx.fillRect(0,500,1000,300);
 
     var tileSize = 52;
     for (i = 0; i < 20; i++) {
@@ -83,7 +81,9 @@ Background.prototype.draw = function (ctx) {
 
     }
 
+    
     this.hud.drawFrame(this.game.clockTick, ctx, 875, 0, 1 / 2);
+    this.instructions.drawFrame(this.game.clockTick, ctx, 0, 0, .75);
     Entity.prototype.draw.call(this);
 }
 
@@ -168,8 +168,6 @@ Hero.prototype.update = function () {
         } else {
             this.accel = 5;
         }
-        //this.x = this.x + this.accel;
-        //this.moveR = false;
     }
 
     if (this.moveL) {
@@ -179,19 +177,21 @@ Hero.prototype.update = function () {
         } else {
             this.accel = -5;
         }
-        //this.x = this.x + this.accel;
-        //this.moveL = false;
     }
 
-
-
+    if (this.game.rightMouseDown) {
+        var bullet = new Projectile(this.game, this.x + 50, this.y + 50, 0.25, 25);
+        bullet.setAngle(bullet.x, bullet.y, bullet.game.mouseX, bullet.game.mouseY);
+        this.game.addEntity(bullet);
+    }
 
     Entity.prototype.update.call(this);
 }
 
 Hero.prototype.draw = function (ctx) {
 	
-	 if (this.game.attack) {
+	// was this.game.attack
+	 if (this.game.keysActive['F'.charCodeAt(0)] || this.game.attack) {
 
 	        if (this.direction) {
 	            this.SwordR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
@@ -233,8 +233,54 @@ Hero.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 }
 
-// --- End of hero
+// --- End of hero  
 
+// --- Start of Projectile
+
+function Projectile(game, x, y, scale, speed) {
+    this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
+    this.scale = scale;
+    this.speed = speed;
+    this.setAngle(x, y, game.mouseX, game.mouseY);
+    this.xSpeed = this.speed * Math.cos(this.angle * Math.PI / 180.0);
+    this.ySpeed = this.speed * Math.sin(this.angle * Math.PI / 180.0);
+    Entity.call(this, game, x, y);
+}
+
+Projectile.prototype = new Entity();
+Projectile.prototype.constructor = Projectile;
+
+// Given starting coordinates and ending/target coordinates, sets the angle accordingly
+// 0 is right, 90 is down, -90 is up, etc.
+Projectile.prototype.setAngle = function(startX, startY, endX, endY) {
+    var opp = endY - startY;
+    var adj = endX - startX;
+    var hyp = Math.sqrt(Math.pow(opp, 2) + Math.pow(adj, 2));
+    this.angle = Math.asin(opp / hyp) * 180 / Math.PI;
+    if (opp < 0 && adj < 0) {
+        this.angle = -180 - this.angle;
+    } else if (adj < 0) {
+        this.angle = 180 - this.angle;
+    }
+}
+
+Projectile.prototype.update = function () {
+    this.x += this.xSpeed;
+    this.y += this.ySpeed;
+    Entity.prototype.update.call(this);
+}
+
+// Reference: https://www.w3schools.com/graphics/game_rotation.asp 
+Projectile.prototype.draw = function (ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle * Math.PI / 180.0);
+    this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
+    ctx.restore();
+    Entity.prototype.draw.call(this);
+}
+
+// --- End of Projectile
 
 // --- Start of Cannon
 
@@ -279,10 +325,7 @@ Cannon.prototype.update = function () {
         }
     }
 
-
-    this.x = this.x + this.accel;
-    
-    
+    this.x = this.x + this.accel;  
     
     if (this.x < 150) {
     	this.moveR = true;
@@ -314,9 +357,6 @@ Cannon.prototype.update = function () {
 
     }
 
-
-
-
     Entity.prototype.update.call(this);
 }
 
@@ -340,9 +380,12 @@ Cannon.prototype.draw = function (ctx) {
     }
     Entity.prototype.draw.call(this);
 }
+
 // the "main" code begins here
 
 var ASSET_MANAGER = new AssetManager();
+
+ASSET_MANAGER.queueDownload("./img/Instructions.png");
 
 ASSET_MANAGER.queueDownload("./img/Hero.png");
 ASSET_MANAGER.queueDownload("./img/HeroSword.png");
@@ -351,6 +394,7 @@ ASSET_MANAGER.queueDownload("./img/Background.png");
 ASSET_MANAGER.queueDownload("./img/52Tile.png");
 ASSET_MANAGER.queueDownload("./img/52Tilea.png");
 ASSET_MANAGER.queueDownload("./img/HudPrototype1.png");
+ASSET_MANAGER.queueDownload("./img/bullet.png");
 ASSET_MANAGER.queueDownload("./img/Cannon.png");
 ASSET_MANAGER.queueDownload("./img/CannonR.png");
 
@@ -367,6 +411,8 @@ ASSET_MANAGER.downloadAll(function () {
     gameEngine.addEntity(hero);
     gameEngine.addEntity(e1);
 
+    // gameEngine.addEntity(new Projectile(gameEngine));
+ 
     gameEngine.init(ctx);
     gameEngine.start();
 });
