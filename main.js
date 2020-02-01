@@ -53,9 +53,7 @@ Animation.prototype.isDone = function () {
 }
 
 function Background(game) {
-    //this.img = document.getElementById("Background");
     this.back1 = new Animation(ASSET_MANAGER.getAsset("./img/Background.png"), 0, 0, 1680, 1050, 1, 1, true, true);
-    //this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tile.png"), 0, 0, 52, 52, 1, 1, true, true);
     this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tilea.png"), 0, 0, 52, 52, 1, 1, true, true);
     this.hud = new Animation(ASSET_MANAGER.getAsset("./img/HudPrototype1.png"), 0, 0, 250, 360, 1, 1, true, true);
     Entity.call(this, game, 0, 400);
@@ -69,11 +67,8 @@ Background.prototype.update = function () {
 }
 
 Background.prototype.draw = function (ctx) {
-    ctx.fillStyle = "#808080";
-    //ctx.drawImage(this.idlrL, 10, 10);
-    //ctx.fillRect(0,500,1000,300);  
+    ctx.fillStyle = "#808080"; 
     this.back1.drawFrame(this.game.clockTick, ctx, 0, 0, 1);
-    //ctx.fillRect(0,500,1000,300);
 
     var tileSize = 52;
     for (i = 0; i < 20; i++) {
@@ -168,8 +163,6 @@ Hero.prototype.update = function () {
         } else {
             this.accel = 5;
         }
-        //this.x = this.x + this.accel;
-        //this.moveR = false;
     }
 
     if (this.moveL) {
@@ -179,8 +172,6 @@ Hero.prototype.update = function () {
         } else {
             this.accel = -5;
         }
-        //this.x = this.x + this.accel;
-        //this.moveL = false;
     }
 
     if (this.game.rightMouseDown) {
@@ -194,7 +185,8 @@ Hero.prototype.update = function () {
 
 Hero.prototype.draw = function (ctx) {
 	
-	 if (this.game.attack) {
+	// was this.game.attack
+	 if (this.game.keysActive['F'.charCodeAt(0)] || this.game.attack) {
 
 	        if (this.direction) {
 	            this.SwordR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
@@ -328,10 +320,7 @@ Cannon.prototype.update = function () {
         }
     }
 
-
-    this.x = this.x + this.accel;
-    
-    
+    this.x = this.x + this.accel;  
     
     if (this.x < 150) {
     	this.moveR = true;
@@ -363,9 +352,6 @@ Cannon.prototype.update = function () {
 
     }
 
-
-
-
     Entity.prototype.update.call(this);
 }
 
@@ -389,6 +375,7 @@ Cannon.prototype.draw = function (ctx) {
     }
     Entity.prototype.draw.call(this);
 }
+
 // the "main" code begins here
 
 var ASSET_MANAGER = new AssetManager();

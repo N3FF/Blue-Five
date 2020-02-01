@@ -90,13 +90,6 @@ GameEngine.prototype.startInput = function () {
 
     }, false);
 
-    // When a key is released
-//    this.ctx.canvas.addEventListener("click", function (e) {
-//
-//        that.keysActive[e.which] = false;
-//
-//    }, false);
-
     /*
     Set all keys to false when the canvas loses focus so that you character doesn't 
     keep moving without the key pressed
