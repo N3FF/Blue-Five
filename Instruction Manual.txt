@@ -8,5 +8,5 @@ Jump:        Spacebar
 
 Attack
 
-Sword:      Hold down left mouse of 'F' key
+Sword:      Hold down left mouse
 Projectile: Hold down right mouse

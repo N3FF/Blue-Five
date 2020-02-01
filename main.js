@@ -56,6 +56,9 @@ function Background(game) {
     this.back1 = new Animation(ASSET_MANAGER.getAsset("./img/Background.png"), 0, 0, 1680, 1050, 1, 1, true, true);
     this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tilea.png"), 0, 0, 52, 52, 1, 1, true, true);
     this.hud = new Animation(ASSET_MANAGER.getAsset("./img/HudPrototype1.png"), 0, 0, 250, 360, 1, 1, true, true);
+    
+    this.instructions = new Animation(ASSET_MANAGER.getAsset("./img/Instructions.png"), 0, 0, 370, 202, 1, 1, true, true);
+    
     Entity.call(this, game, 0, 400);
     this.radius = 200;
 }
@@ -78,7 +81,9 @@ Background.prototype.draw = function (ctx) {
 
     }
 
+    
     this.hud.drawFrame(this.game.clockTick, ctx, 875, 0, 1 / 2);
+    this.instructions.drawFrame(this.game.clockTick, ctx, 0, 0, .75);
     Entity.prototype.draw.call(this);
 }
 
@@ -379,6 +384,8 @@ Cannon.prototype.draw = function (ctx) {
 // the "main" code begins here
 
 var ASSET_MANAGER = new AssetManager();
+
+ASSET_MANAGER.queueDownload("./img/Instructions.png");
 
 ASSET_MANAGER.queueDownload("./img/Hero.png");
 ASSET_MANAGER.queueDownload("./img/HeroSword.png");
