@@ -108,6 +108,7 @@ function Hero(game) {
     this.direction = true;
     this.gravity = 1;
     this.canJump = true;
+    this.ticksSinceShot = 0;
     Entity.call(this, game, 0, 500);
 }
 
@@ -180,12 +181,20 @@ Hero.prototype.update = function () {
     }
 
     if (this.game.rightMouseDown) {
-        var bullet = new Projectile(this.game, this.x + 50, this.y + 50, 0.25, 25);
-        bullet.setAngle(bullet.x, bullet.y, bullet.game.mouseX, bullet.game.mouseY);
-        this.game.addEntity(bullet);
+        this.shoot();
     }
+    this.ticksSinceShot++;
 
     Entity.prototype.update.call(this);
+}
+
+Hero.prototype.shoot = function () {
+    var bullet = new Projectile(this.game, this.x + 50, this.y + 50, 1, 5, 30);
+    if(this.ticksSinceShot >= bullet.fireRate) {
+        bullet.setAngle(bullet.x, bullet.y, bullet.game.mouseX, bullet.game.mouseY);
+        this.game.addEntity(bullet);
+        this.ticksSinceShot = 0;
+    } 
 }
 
 Hero.prototype.draw = function (ctx) {
@@ -237,10 +246,11 @@ Hero.prototype.draw = function (ctx) {
 
 // --- Start of Projectile
 
-function Projectile(game, x, y, scale, speed) {
+function Projectile(game, x, y, scale, speed, fireRate) {
     this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
     this.scale = scale;
     this.speed = speed;
+    this.fireRate = fireRate; // fireRate = # of update() calls between bullets
     this.setAngle(x, y, game.mouseX, game.mouseY);
     this.xSpeed = this.speed * Math.cos(this.angle * Math.PI / 180.0);
     this.ySpeed = this.speed * Math.sin(this.angle * Math.PI / 180.0);
