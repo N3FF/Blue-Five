@@ -224,28 +224,30 @@ Hero.prototype.draw = function (ctx) {
 // --- Start of Projectile
 
 function Projectile(game, x, y, scale, type) {
-    var imgSrc = null;
     var velocity = 0;
     var gravity = 0;
     var accel = 0;
     var timeAlive = 0;
-    if (type === "bullet") {
-        imgSrc = "./img/bullet.png";
+    this.scale = scale;
+    this.type = type
+    if (this.type === "bullet") {
+        this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
         velocity = 15;
         gravity = 0;
         accel = 0;
         timeAlive = 25; //-1 forever
-    } else if (type === "fire"){
-        imgSrc = "./img/bullet.png";
+    } else if (this.type === "fire") {
+        //Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse)
+        this.img = new Animation(ASSET_MANAGER.getAsset("./img/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
+        imgSrc = "./img/fire.png";
         velocity = 3;
-        var rand = Math.random()*.2-.1;
+        var rand = Math.random() * .075 - .03;
         console.log(rand);
         gravity = rand;
         accel = 0;
-        timeAlive = 25; //-1 forever
+        timeAlive = 60; //-1 forever
+        this.scale = 1;
     }
-    this.img = new Animation(ASSET_MANAGER.getAsset(imgSrc), 0, 0, 51, 60, .20, 1, true, true);
-    this.scale = scale;
     /* (startx, starty, timeAlive, mousex, mousey, gravity, velocity, acceleration) */
     this.physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
     Entity.call(this, game, x, y);
@@ -272,7 +274,10 @@ Projectile.prototype.draw = function (ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.rotate(this.physics.getAngle("rad"));
-    this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
+    if (this.type === "bullet")
+        this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
+    else
+        this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width / 2 + 25, -1 * this.img.spriteSheet.height / 2 + 50, this.scale);
     ctx.restore();
     Entity.prototype.draw.call(this);
 }
@@ -392,6 +397,7 @@ ASSET_MANAGER.queueDownload("./img/52Tile.png");
 ASSET_MANAGER.queueDownload("./img/52Tilea.png");
 ASSET_MANAGER.queueDownload("./img/HudPrototype1.png");
 ASSET_MANAGER.queueDownload("./img/bullet.png");
+ASSET_MANAGER.queueDownload("./img/fire.png");
 ASSET_MANAGER.queueDownload("./img/Cannon.png");
 ASSET_MANAGER.queueDownload("./img/CannonR.png");
 
