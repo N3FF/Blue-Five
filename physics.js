@@ -1,5 +1,5 @@
 function Physics(startX, startY, duration, cursorX, cursorY, gravity, velocity, acceleration) {
-    console.log(startX, startY);
+    // console.log(startX, startY);
     this.velocity = Math.ceil(velocity);
     this.cursorX = cursorX;
     this.cursorY = cursorY
