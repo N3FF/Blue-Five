@@ -17,8 +17,8 @@ function Physics(startX, startY, duration, cursorX, cursorY, gravity, velocity, 
     this.velocity = velocity;
     this.acceleration = acceleration;
     this.dead = false;
-    this.angle = this.getAngle();
-    //console.log(this.x, this.cursorX, this.y, this.cursorY, this.angle);
+    this.initialAngle = this.getAngle();
+    this.currentAngle = this.initialAngle;
 }
 
 Physics.prototype.tick = function () {
@@ -30,31 +30,31 @@ Physics.prototype.tick = function () {
 }
 
 Physics.prototype.projectile = function () {
-    if (this.gravity != 0) {
-        this.y = this.startY + Math.sin(this.angle) * this.velocity * this.time + .5 * this.gravity * (this.time * this.time);
-    } else {
-        this.y = this.startY + Math.sin(this.angle) * this.velocity * this.time;
-    }
-    if (this.acceleration != 0) {
-        this.x = this.startX + Math.cos(this.angle) * this.velocity * this.time + .5 * this.acceleration * (this.time * this.time);
-    } else {
-        this.x = this.startX + Math.cos(this.angle) * this.velocity * this.time;
-    }
+    var lastX = this.x;
+    var lastY = this.y;
+    this.y = this.startY + Math.sin(this.initialAngle) * this.velocity * this.time + .5 * this.gravity * (this.time * this.time);
+    this.x = this.startX + Math.cos(this.initialAngle) * this.velocity * this.time + .5 * this.acceleration * (this.time * this.time);
+    if (this.gravity || this.acceleration) this.currentAngle = this.calculateAngle(lastX, lastY, this.x, this.y);
     this.y = Math.ceil(this.y);
     this.x = Math.ceil(this.x);
+}
+
+Physics.prototype.calculateAngle = function(startX, startY, endX, endY) {
+    var deltaX = endX - startX;
+    var deltaY = endY - startY;
+    return Math.atan2(deltaY, deltaX);
 }
 
 Physics.prototype.collision = function (bounces, sticks) {
 
 }
+
 Physics.prototype.setGravity = function (gravity) {
     this.gravity = gravity;
 }
 
 Physics.prototype.getAngle = function (type = "rad") {
-    var deltaX = this.cursorX - this.startX;
-    var deltaY = this.cursorY - this.startY;
-    var angle = Math.atan2(deltaY, deltaX)
+    var angle = this.calculateAngle(this.startX, this.startY, this.cursorX, this.cursorY);
     return type === "deg" ? angle * Math.PI / 180.0 : angle;
 }
 

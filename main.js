@@ -184,8 +184,8 @@ Hero.prototype.update = function () {
 }
 
 Hero.prototype.shoot = function () {
-    // var bullet = new Bullet(this.game, this.x + 50, this.y + 50);
-    var bullet = new Fire(this.game, this.x + 50, this.y + 50);
+    var bullet = new Bullet(this.game, this.x + 50, this.y + 50);
+    // var bullet = new Fire(this.game, this.x + 50, this.y + 50);
     if(this.ticksSinceShot >= bullet.fireRate) {
         this.game.addEntity(bullet);
         this.ticksSinceShot = 0;
@@ -260,7 +260,7 @@ Projectile.prototype.update = function () {
 Projectile.prototype.draw = function (ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
-    ctx.rotate(this.physics.getAngle("rad"));
+    ctx.rotate(this.physics.currentAngle);
     this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
     ctx.restore();
     Entity.prototype.draw.call(this);
@@ -274,7 +274,7 @@ function Bullet (game, x, y) {
     var scale = 0.25;
     var fireRate = 20;
     var velocity = 10;
-    var gravity = 0;
+    var gravity = 0.1;
     var accel = 0;
     var timeAlive = 600;
     var physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
