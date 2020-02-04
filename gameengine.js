@@ -103,7 +103,6 @@ GameEngine.prototype.startInput = function () {
     this.ctx.canvas.addEventListener("contextmenu", (e) => {
         // Action
     	//that.attack = true;
-        console.log("Right Click");
     });
 
     // Left click event
@@ -115,7 +114,6 @@ GameEngine.prototype.startInput = function () {
         } else if (e.which == 3) {
             that.rightMouseDown = true;
         }
-        console.log("Left Click");
     });
     
     this.ctx.canvas.addEventListener("mouseup", (e) => {

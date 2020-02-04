@@ -56,9 +56,9 @@ function Background(game) {
     this.back1 = new Animation(ASSET_MANAGER.getAsset("./img/Background.png"), 0, 0, 1680, 1050, 1, 1, true, true);
     this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tilea.png"), 0, 0, 52, 52, 1, 1, true, true);
     this.hud = new Animation(ASSET_MANAGER.getAsset("./img/HudPrototype1.png"), 0, 0, 250, 360, 1, 1, true, true);
-    
+
     this.instructions = new Animation(ASSET_MANAGER.getAsset("./img/Instructions.png"), 0, 0, 370, 202, 1, 1, true, true);
-    
+
     Entity.call(this, game, 0, 400);
     this.radius = 200;
 }
@@ -70,7 +70,7 @@ Background.prototype.update = function () {
 }
 
 Background.prototype.draw = function (ctx) {
-    ctx.fillStyle = "#808080"; 
+    ctx.fillStyle = "#808080";
     this.back1.drawFrame(this.game.clockTick, ctx, 0, 0, 1);
 
     var tileSize = 52;
@@ -81,7 +81,6 @@ Background.prototype.draw = function (ctx) {
 
     }
 
-    
     this.hud.drawFrame(this.game.clockTick, ctx, 875, 0, 1 / 2);
     this.instructions.drawFrame(this.game.clockTick, ctx, 0, 0, .75);
     Entity.prototype.draw.call(this);
@@ -125,7 +124,6 @@ Hero.prototype.update = function () {
         this.yAccel = 0;
     }
 
-
     if (this.jumping === false) {
         if (this.accel < -1) {
             this.accel += .2;
@@ -135,7 +133,6 @@ Hero.prototype.update = function () {
             this.accel = 0;
         }
     }
-
 
     this.x = this.x + this.accel;
     this.y = this.y + this.yAccel;
@@ -150,7 +147,6 @@ Hero.prototype.update = function () {
     this.moveL = this.game.keysActive['A'.charCodeAt(0)] ||
         this.game.keysActive[37]; //39 = Right arrow key code
 
-
     if (this.jumping) {
         if (this.canJump) {
             this.yAccel = -25;
@@ -158,7 +154,6 @@ Hero.prototype.update = function () {
         this.canJump = false;
 
         this.yAccel = this.yAccel + this.gravity;
-
     }
 
     if (this.moveR) {
@@ -189,39 +184,32 @@ Hero.prototype.update = function () {
 }
 
 Hero.prototype.shoot = function () {
-    var bullet = new Projectile(this.game, this.x + 50, this.y + 50, 1, 5, 30);
+    var bullet = new Projectile(this.game, this.x + 50, this.y + 50, 0.25, 30, "bullet");
     if(this.ticksSinceShot >= bullet.fireRate) {
-        bullet.setAngle(bullet.x, bullet.y, bullet.game.mouseX, bullet.game.mouseY);
         this.game.addEntity(bullet);
         this.ticksSinceShot = 0;
     } 
 }
 
 Hero.prototype.draw = function (ctx) {
-	
-	// was this.game.attack
-	 if (this.game.keysActive['F'.charCodeAt(0)] || this.game.attack) {
 
-	        if (this.direction) {
-	            this.SwordR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
-	        } else {
-	            this.SwordL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
-	        }
+    // was this.game.attack
+    if (this.game.keysActive['F'.charCodeAt(0)] || this.game.attack) {
 
+        if (this.direction) {
+            this.SwordR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        } else {
+            this.SwordL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        }
+    }
 
-	    }
-	
-	 else if (this.jumping) {
-
+    else if (this.jumping) {
         if (this.direction) {
             this.jumpAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
         } else {
             this.jumpAnimationL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
         }
-
-
     }
-
 
     else if (this.accel != 0) {
         if (this.direction) {
@@ -231,13 +219,11 @@ Hero.prototype.draw = function (ctx) {
         }
 
     } else {
-
         if (this.direction) {
             this.idleR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
         } else {
             this.idleL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
         }
-
     }
     Entity.prototype.draw.call(this);
 }
@@ -246,37 +232,49 @@ Hero.prototype.draw = function (ctx) {
 
 // --- Start of Projectile
 
-function Projectile(game, x, y, scale, speed, fireRate) {
-    this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
+function Projectile(game, x, y, scale, fireRate, type) {
+    var velocity = 0;
+    var gravity = 0;
+    var accel = 0;
+    var timeAlive = 0;
     this.scale = scale;
-    this.speed = speed;
-    this.fireRate = fireRate; // fireRate = # of update() calls between bullets
-    this.setAngle(x, y, game.mouseX, game.mouseY);
-    this.xSpeed = this.speed * Math.cos(this.angle);
-    this.ySpeed = this.speed * Math.sin(this.angle);
+    this.fireRate = fireRate;
+    this.type = type;
+    if (this.type === "bullet") {
+        this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
+        velocity = 15;
+        gravity = 0;
+        accel = 0;
+        timeAlive = 25; //-1 forever
+    } else if (this.type === "fire") {
+        //Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse)
+        this.img = new Animation(ASSET_MANAGER.getAsset("./img/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
+        imgSrc = "./img/fire.png";
+        velocity = 3;
+        var rand = Math.random() * .075 - .03;
+        console.log(rand);
+        gravity = rand;
+        accel = 0;
+        timeAlive = 60; //-1 forever
+        this.scale = 1;
+    }
+    /* (startx, starty, timeAlive, mousex, mousey, gravity, velocity, acceleration) */
+    this.physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
     Entity.call(this, game, x, y);
 }
 
 Projectile.prototype = new Entity();
 Projectile.prototype.constructor = Projectile;
 
-// Given starting coordinates and ending/target coordinates, sets the angle accordingly
-// 0 is right, 90 is down, -90 is up, etc.
-Projectile.prototype.setAngle = function(startX, startY, endX, endY) {
-    var opp = endY - startY;
-    var adj = endX - startX;
-    var hyp = Math.sqrt(Math.pow(opp, 2) + Math.pow(adj, 2));
-    this.angle = Math.asin(opp / hyp);
-    if (opp < 0 && adj < 0) {
-        this.angle = -Math.PI - this.angle;
-    } else if (adj < 0) {
-        this.angle = Math.PI - this.angle;
-    }
-}
-
 Projectile.prototype.update = function () {
-    this.x += this.xSpeed;
-    this.y += this.ySpeed;
+    if (!this.physics.isDone()) {
+        this.physics.tick();
+        var pos = this.physics.getPosition();
+        this.x = pos.x;
+        this.y = pos.y;
+    } else {
+        this.removeFromWorld = true;
+    }
     Entity.prototype.update.call(this);
 }
 
@@ -284,8 +282,11 @@ Projectile.prototype.update = function () {
 Projectile.prototype.draw = function (ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
-    ctx.rotate(this.angle);
-    this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
+    ctx.rotate(this.physics.getAngle("rad"));
+    if (this.type === "bullet")
+        this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
+    else
+        this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width / 2 + 25, -1 * this.img.spriteSheet.height / 2 + 50, this.scale);
     ctx.restore();
     Entity.prototype.draw.call(this);
 }
@@ -335,17 +336,17 @@ Cannon.prototype.update = function () {
         }
     }
 
-    this.x = this.x + this.accel;  
-    
+    this.x = this.x + this.accel;
+
     if (this.x < 150) {
-    	this.moveR = true;
-    	this.moveL = false;
+        this.moveR = true;
+        this.moveL = false;
     }
     if (this.x > 700) {
-    	this.moveL = true;
-    	this.moveR = false
+        this.moveL = true;
+        this.moveR = false
     }
-  
+
 
     if (this.moveR) {
         this.direction = true;
@@ -354,7 +355,7 @@ Cannon.prototype.update = function () {
 
         } else {
             this.accel = 3;
-       }
+        }
     }
 
     if (this.moveL) {
@@ -371,8 +372,8 @@ Cannon.prototype.update = function () {
 }
 
 Cannon.prototype.draw = function (ctx) {
-	
-	  if (this.accel != 0) {
+
+    if (this.accel != 0) {
         if (this.direction) {
             this.C1.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
         } else {
@@ -405,6 +406,7 @@ ASSET_MANAGER.queueDownload("./img/52Tile.png");
 ASSET_MANAGER.queueDownload("./img/52Tilea.png");
 ASSET_MANAGER.queueDownload("./img/HudPrototype1.png");
 ASSET_MANAGER.queueDownload("./img/bullet.png");
+ASSET_MANAGER.queueDownload("./img/fire.png");
 ASSET_MANAGER.queueDownload("./img/Cannon.png");
 ASSET_MANAGER.queueDownload("./img/CannonR.png");
 
@@ -422,7 +424,7 @@ ASSET_MANAGER.downloadAll(function () {
     gameEngine.addEntity(e1);
 
     // gameEngine.addEntity(new Projectile(gameEngine));
- 
+
     gameEngine.init(ctx);
     gameEngine.start();
 });
