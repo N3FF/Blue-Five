@@ -100,21 +100,58 @@ function Hero(game) {
     this.attack = false;
     this.moveR = false;
     this.moveL = false;
-    this.radius = 50;
     this.ground = 500;
     this.accel = 0;
     this.yAccel = 0;
     this.direction = true;
     this.gravity = 1;
     this.canJump = true;
-    Entity.call(this, game, 0, 500);
+    
+    
+    this.lastY = this.y;
+    
+    /* Collison code work
+       NOTE: Standard sprites are 55x60 this will need to be updated on different
+       sprites
+    */
+    
+    this.width = 55;
+    this.height = 60;
+    this.radius = 50;
+
+    
+    
+    Entity.call(this, game, 0, 500);           
 }
 
 Hero.prototype = new Entity();
 Hero.prototype.constructor = Hero;
 
+Hero.prototype.collide = function (other) {
+	
+	if (this.x < other.x + other.width 
+	&& this.x + this.width > other.x
+	&& this.y < other.y + other.height
+	&& this.y + this.height > other.y) {
+		// Collision detected
+		return true;
+	}
+	
+    return false;
+}
+
 // The update function
 Hero.prototype.update = function () {
+	
+	for (var i = 0; i < this.game.entities.length; i++) {
+		var ent = this.game.entities[i];
+		if (ent !== this && this.collide(ent)) {
+			this.y = ent.y - 52;
+			this.jumping = false;
+			this.canJump = true;
+			this.yAccel = this.gravity;
+		}
+	}
 
     if (this.y > this.ground) {
         this.jumping = false;
@@ -133,9 +170,15 @@ Hero.prototype.update = function () {
         }
     }
 
-    this.x = this.x + this.accel;
+    //this.x = this.x + this.accel;
     this.y = this.y + this.yAccel;
-
+    this.yAccel = this.yAccel + this.gravity;
+    
+//    if (this.lastY === this.y) {
+//		this.jumping = false;
+//		this.canJump = true;
+//	}
+    
 
     if (!this.jumping && this.game.keysActive[' '.charCodeAt(0)]) {
         this.jumping = true;
@@ -152,11 +195,12 @@ Hero.prototype.update = function () {
         }
         this.canJump = false;
 
-        this.yAccel = this.yAccel + this.gravity;
+        
     }
 
     if (this.moveR) {
         this.direction = true;
+        this.x = this.x + 5;
         if (this.accel > 0) {
             this.accel = 10;
 
@@ -166,6 +210,7 @@ Hero.prototype.update = function () {
     }
 
     if (this.moveL) {
+    	 this.x = this.x - 5;
         this.direction = false;
         if (this.accel < 0) {
             this.accel = -10;
@@ -179,6 +224,7 @@ Hero.prototype.update = function () {
         this.game.addEntity(bullet);
     }
 
+    this.LastY = this.y;
     Entity.prototype.update.call(this);
 }
 
@@ -383,6 +429,39 @@ Cannon.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 }
 
+function Platform(game, setX, setY) {
+    this.Tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tile.png"), 0, 0, 52, 52, .20, 1, true, true);
+    this.radius = 52;
+    this.width = 52;
+    this.height = 52;
+    
+    
+    //
+    //this.x = setX - 54;
+    //this.y = setY - 400;
+    
+    // For future
+    this.walkableTerrain = false;
+    
+    Entity.call(this, game, setX, setY);
+}
+
+Platform.prototype = new Entity();
+Platform.prototype.constructor = Platform;
+
+// The update function
+Platform.prototype.update = function () {
+ 
+    Entity.prototype.update.call(this);
+}
+
+Platform.prototype.draw = function (ctx) {
+	
+	this.Tile1.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+
+    Entity.prototype.draw.call(this);
+}
+
 // the "main" code begins here
 
 var ASSET_MANAGER = new AssetManager();
@@ -409,10 +488,22 @@ ASSET_MANAGER.downloadAll(function () {
     var bg = new Background(gameEngine);
     var hero = new Hero(gameEngine);
     var e1 = new Cannon(gameEngine);
+    
+    
+    // We can add a for loop here
+    
+    var t1 = new Platform(gameEngine, 450, 400);
+    var t2 = new Platform(gameEngine, 500, 400);
+    var t3 = new Platform(gameEngine, 550, 400);
+    var t4 = new Platform(gameEngine, 600, 400);
 
     gameEngine.addEntity(bg);
     gameEngine.addEntity(hero);
     gameEngine.addEntity(e1);
+    gameEngine.addEntity(t1);
+    gameEngine.addEntity(t2);
+    gameEngine.addEntity(t3);
+    gameEngine.addEntity(t4);
 
     // gameEngine.addEntity(new Projectile(gameEngine));
 
