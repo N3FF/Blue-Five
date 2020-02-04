@@ -307,7 +307,7 @@ Fire.prototype.constructor = Fire;
 Fire.prototype.draw = function (ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
-    ctx.rotate(this.physics.getAngle("rad"));
+    ctx.rotate(this.physics.currentAngle);
     this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width / 2 + 25, -1 * this.img.spriteSheet.height / 2 + 50, this.scale);
     ctx.restore();
     Entity.prototype.draw.call(this);
