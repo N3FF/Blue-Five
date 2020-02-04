@@ -252,8 +252,8 @@ function Projectile(game, x, y, scale, speed, fireRate) {
     this.speed = speed;
     this.fireRate = fireRate; // fireRate = # of update() calls between bullets
     this.setAngle(x, y, game.mouseX, game.mouseY);
-    this.xSpeed = this.speed * Math.cos(this.angle * Math.PI / 180.0);
-    this.ySpeed = this.speed * Math.sin(this.angle * Math.PI / 180.0);
+    this.xSpeed = this.speed * Math.cos(this.angle);
+    this.ySpeed = this.speed * Math.sin(this.angle);
     Entity.call(this, game, x, y);
 }
 
@@ -266,11 +266,11 @@ Projectile.prototype.setAngle = function(startX, startY, endX, endY) {
     var opp = endY - startY;
     var adj = endX - startX;
     var hyp = Math.sqrt(Math.pow(opp, 2) + Math.pow(adj, 2));
-    this.angle = Math.asin(opp / hyp) * 180 / Math.PI;
+    this.angle = Math.asin(opp / hyp);
     if (opp < 0 && adj < 0) {
-        this.angle = -180 - this.angle;
+        this.angle = -Math.PI - this.angle;
     } else if (adj < 0) {
-        this.angle = 180 - this.angle;
+        this.angle = Math.PI - this.angle;
     }
 }
 
@@ -284,7 +284,7 @@ Projectile.prototype.update = function () {
 Projectile.prototype.draw = function (ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
-    ctx.rotate(this.angle * Math.PI / 180.0);
+    ctx.rotate(this.angle);
     this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
     ctx.restore();
     Entity.prototype.draw.call(this);
