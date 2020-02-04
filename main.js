@@ -184,7 +184,8 @@ Hero.prototype.update = function () {
 }
 
 Hero.prototype.shoot = function () {
-    var bullet = new Projectile(this.game, this.x + 50, this.y + 50, 0.25, 30, "bullet");
+    // var bullet = new Bullet(this.game, this.x + 50, this.y + 50);
+    var bullet = new Fire(this.game, this.x + 50, this.y + 50);
     if(this.ticksSinceShot >= bullet.fireRate) {
         this.game.addEntity(bullet);
         this.ticksSinceShot = 0;
@@ -232,34 +233,11 @@ Hero.prototype.draw = function (ctx) {
 
 // --- Start of Projectile
 
-function Projectile(game, x, y, scale, fireRate, type) {
-    var velocity = 0;
-    var gravity = 0;
-    var accel = 0;
-    var timeAlive = 0;
+function Projectile(game, x, y, scale, fireRate, physics, img) {
     this.scale = scale;
     this.fireRate = fireRate;
-    this.type = type;
-    if (this.type === "bullet") {
-        this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
-        velocity = 15;
-        gravity = 0;
-        accel = 0;
-        timeAlive = 25; //-1 forever
-    } else if (this.type === "fire") {
-        //Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse)
-        this.img = new Animation(ASSET_MANAGER.getAsset("./img/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
-        imgSrc = "./img/fire.png";
-        velocity = 3;
-        var rand = Math.random() * .075 - .03;
-        console.log(rand);
-        gravity = rand;
-        accel = 0;
-        timeAlive = 60; //-1 forever
-        this.scale = 1;
-    }
-    /* (startx, starty, timeAlive, mousex, mousey, gravity, velocity, acceleration) */
-    this.physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
+    this.physics = physics;
+    this.img = img;
     Entity.call(this, game, x, y);
 }
 
@@ -283,15 +261,59 @@ Projectile.prototype.draw = function (ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.rotate(this.physics.getAngle("rad"));
-    if (this.type === "bullet")
-        this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
-    else
-        this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width / 2 + 25, -1 * this.img.spriteSheet.height / 2 + 50, this.scale);
+    this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
     ctx.restore();
     Entity.prototype.draw.call(this);
 }
 
 // --- End of Projectile
+
+// --- Start of Bullet
+
+function Bullet (game, x, y) {
+    var scale = 0.25;
+    var fireRate = 20;
+    var velocity = 10;
+    var gravity = 0;
+    var accel = 0;
+    var timeAlive = 600;
+    var physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
+    var img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
+    Projectile.call(this, game, x, y, scale, fireRate, physics, img);
+}
+
+Bullet.prototype = new Projectile();
+Bullet.prototype.constructor = Bullet;
+
+// --- End of Bullet
+
+// --- Start of Fire
+
+function Fire (game, x, y) {
+    var scale = 1;
+    var fireRate = 1;
+    var velocity = 3;
+    var gravity = Math.random() * 0.075 - 0.03;;
+    var accel = 0;
+    var timeAlive = 60;
+    var physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
+    var img = new Animation(ASSET_MANAGER.getAsset("./img/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
+    Projectile.call(this, game, x, y, scale, fireRate, physics, img);
+}
+
+Fire.prototype = new Projectile();
+Fire.prototype.constructor = Fire;
+
+Fire.prototype.draw = function (ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.physics.getAngle("rad"));
+    this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width / 2 + 25, -1 * this.img.spriteSheet.height / 2 + 50, this.scale);
+    ctx.restore();
+    Entity.prototype.draw.call(this);
+}
+
+// --- End of Fire
 
 // --- Start of Cannon
 
