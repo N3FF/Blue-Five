@@ -30,8 +30,8 @@ function Physics(startX, startY, duration, cursorX, cursorY, gravity, velocity, 
     this.velocity = velocity;
     this.acceleration = acceleration;
     this.dead = false;
-    this.angle = this.getAngle();
-    //console.log(this.x, this.cursorX, this.y, this.cursorY, this.angle);
+    this.initialAngle = this.getAngle();
+    this.currentAngle = this.initialAngle;
 }
 
 /**
@@ -49,18 +49,25 @@ Physics.prototype.tick = function () {
  * @description Updates the X and Y position
  */
 Physics.prototype.projectile = function () {
-    if (this.gravity != 0) {
-        this.y = this.startY + Math.sin(this.angle) * this.velocity * this.time + .5 * this.gravity * (this.time * this.time);
-    } else {
-        this.y = this.startY + Math.sin(this.angle) * this.velocity * this.time;
-    }
-    if (this.acceleration != 0) {
-        this.x = this.startX + Math.cos(this.angle) * this.velocity * this.time + .5 * this.acceleration * (this.time * this.time);
-    } else {
-        this.x = this.startX + Math.cos(this.angle) * this.velocity * this.time;
-    }
+    var lastX = this.x;
+    var lastY = this.y;
+    this.y = this.startY + Math.sin(this.initialAngle) * this.velocity * this.time + .5 * this.gravity * (this.time * this.time);
+    this.x = this.startX + Math.cos(this.initialAngle) * this.velocity * this.time + .5 * this.acceleration * (this.time * this.time);
+    if (this.gravity || this.acceleration) this.currentAngle = this.calculateAngle(lastX, lastY, this.x, this.y);
     this.y = Math.ceil(this.y);
     this.x = Math.ceil(this.x);
+}
+
+/**
+ * @param {Number} startX - starting point on x axis
+ * @param {Number} startY - starting point on y axis
+ * @param {Number} endX - ending point on x axis
+ * @param {Number} endY - ending point on y axis
+ */
+Physics.prototype.calculateAngle = function(startX, startY, endX, endY) {
+    var deltaX = endX - startX;
+    var deltaY = endY - startY;
+    return Math.atan2(deltaY, deltaX);
 }
 
 /**
@@ -72,6 +79,7 @@ Physics.prototype.projectile = function () {
 Physics.prototype.collision = function (bounces, sticks) {
 
 }
+
 /**
  * @param {Number} gravity - Graviational Constant in pixels per second
  */
@@ -82,9 +90,7 @@ Physics.prototype.setGravity = function (gravity) {
  * @param {String} type - Angle type "rad" (radians) or "deg" (degrees)
  */
 Physics.prototype.getAngle = function (type = "rad") {
-    var deltaX = this.cursorX - this.startX;
-    var deltaY = this.cursorY - this.startY;
-    var angle = Math.atan2(deltaY, deltaX)
+    var angle = this.calculateAngle(this.startX, this.startY, this.cursorX, this.cursorY);
     return type === "deg" ? angle * Math.PI / 180.0 : angle;
 }
 
