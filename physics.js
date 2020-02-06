@@ -56,10 +56,28 @@ Physics.prototype.update = function () {
     var lastY = this.y;
     //x - x0 = v0 * t + 1/2 a t^2
     //x = x0 + v0 * t + 1/2 a t^2
-    this.y = this.startY + Math.sin(this.initialAngle) * this.initialVelocity * this.time + .5 * this.gravity * (this.time * this.time);
-    this.x = this.startX + Math.cos(this.initialAngle) * this.initialVelocity * this.time + .5 * this.acceleration * (this.time * this.time);
+
+    //Reduce Calculations if gravity is 0
+    if (gravity === 0) {
+        this.y = this.startY + Math.sin(this.initialAngle) * this.initialVelocity * this.time;
+        // Else calculate full equation if gravity is included
+    } else {
+        this.y = this.startY + Math.sin(this.initialAngle) * this.initialVelocity * this.time + .5 * this.gravity * (this.time * this.time);
+    }
+    //Reduce Calculations if acceleration is 0
+    if (acceleration === 0) {
+        this.x = this.startX + Math.cos(this.initialAngle) * this.initialVelocity * this.time;
+        // Else calculate full equation if acceleration is included
+    } else {
+        this.x = this.startX + Math.cos(this.initialAngle) * this.initialVelocity * this.time + .5 * this.acceleration * (this.time * this.time);
+    }
+
     //v = v0 + a t
-    this.currentVelocity = this.initialVelocity + this.acceleration * this.time;
+    //We only need to include if we need to get the current velocity for some reason
+    //if (acceleration != 0) {
+    //    this.currentVelocity = this.initialVelocity + this.acceleration * this.time;
+    //}
+
     if (this.gravity || this.acceleration) this.currentAngle = this.calculateAngle(lastX, lastY, this.x, this.y);
     this.y = Math.ceil(this.y);
     this.x = Math.ceil(this.x);
@@ -71,7 +89,7 @@ Physics.prototype.update = function () {
  * @param {Number} endX - ending point on x axis
  * @param {Number} endY - ending point on y axis
  */
-Physics.prototype.calculateAngle = function(startX, startY, endX, endY) {
+Physics.prototype.calculateAngle = function (startX, startY, endX, endY) {
     var deltaX = endX - startX;
     var deltaY = endY - startY;
     return Math.atan2(deltaY, deltaX);
@@ -100,7 +118,7 @@ Physics.prototype.setGravity = function (gravity) {
  */
 Physics.prototype.setVelocity = function (velocity) {
     //Update initialVelocity so equations will calculate the proper currentVelocity
-    this.initialVelocity = velocity; 
+    this.initialVelocity = velocity;
 }
 
 /**
@@ -108,7 +126,7 @@ Physics.prototype.setVelocity = function (velocity) {
  */
 Physics.prototype.setAcceleration = function (acceleration) {
     //update acceleration so equations will calculate the proper currentVelocity
-    this.acceleration = acceleration; 
+    this.acceleration = acceleration;
 }
 
 /**
