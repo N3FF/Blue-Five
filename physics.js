@@ -13,7 +13,8 @@
  */
 function Physics(startX, startY, duration, cursorX, cursorY, gravity, velocity, acceleration) {
     // console.log(startX, startY);
-    this.velocity = Math.ceil(velocity);
+    this.initialVelocity = Math.ceil(velocity);
+    this.currentVelocity = initialVelocity;
     this.cursorX = cursorX;
     this.cursorY = cursorY
     this.gravity = gravity;
@@ -39,7 +40,9 @@ function Physics(startX, startY, duration, cursorX, cursorY, gravity, velocity, 
  */
 Physics.prototype.tick = function () {
     this.time += 1;
-    this.projectile();
+    // Update values with time
+    this.update();
+    // Kill off the object if it has a time alive duration
     if (this.time === this.endTime) {
         this.dead = true;
     }
@@ -48,11 +51,15 @@ Physics.prototype.tick = function () {
 /**
  * @description Updates the X and Y position
  */
-Physics.prototype.projectile = function () {
+Physics.prototype.update = function () {
     var lastX = this.x;
     var lastY = this.y;
-    this.y = this.startY + Math.sin(this.initialAngle) * this.velocity * this.time + .5 * this.gravity * (this.time * this.time);
-    this.x = this.startX + Math.cos(this.initialAngle) * this.velocity * this.time + .5 * this.acceleration * (this.time * this.time);
+    //x - x0 = v0 * t + 1/2 a t^2
+    //x = x0 + v0 * t + 1/2 a t^2
+    this.y = this.startY + Math.sin(this.initialAngle) * this.initialVelocity * this.time + .5 * this.gravity * (this.time * this.time);
+    this.x = this.startX + Math.cos(this.initialAngle) * this.initialVelocity * this.time + .5 * this.acceleration * (this.time * this.time);
+    //v = v0 + a t
+    this.currentVelocity = this.initialVelocity + this.acceleration * this.time;
     if (this.gravity || this.acceleration) this.currentAngle = this.calculateAngle(lastX, lastY, this.x, this.y);
     this.y = Math.ceil(this.y);
     this.x = Math.ceil(this.x);
@@ -81,13 +88,34 @@ Physics.prototype.collision = function (bounces, sticks) {
 }
 
 /**
- * @param {Number} gravity - Graviational Constant in pixels per second
+ * @param {Number} gravity - Graviational Constant in pixels per frame
  */
 Physics.prototype.setGravity = function (gravity) {
+    //Update gravity
     this.gravity = gravity;
 }
+
 /**
- * @param {String} type - Angle type "rad" (radians) or "deg" (degrees)
+ * @param {Number} velocity - Velocity Constant in pixels per frame
+ */
+Physics.prototype.setVelocity = function (velocity) {
+    //Update initialVelocity so equations will calculate the proper currentVelocity
+    this.initialVelocity = velocity; 
+}
+
+/**
+ * @param {Number} velocity - Velocity Constant in pixels per frame
+ */
+Physics.prototype.setAcceleration = function (acceleration) {
+    //update acceleration so equations will calculate the proper currentVelocity
+    this.acceleration = acceleration; 
+}
+
+/**
+ * @param {String} type - Angle type "deg" (degrees)
+ * 
+ * @description Returns the current angle. By default it returns the value in radians,
+ * insert the a parameter "deg" to get the angle in degrees
  */
 Physics.prototype.getAngle = function (type = "rad") {
     var angle = this.calculateAngle(this.startX, this.startY, this.cursorX, this.cursorY);
