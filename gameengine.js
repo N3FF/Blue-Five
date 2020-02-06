@@ -124,6 +124,7 @@ GameEngine.prototype.startInput = function () {
         } else if (e.which == 3) {
             that.rightMouseDown = false;
         }
+        console.log("Left Click");
     });
 
     this.ctx.canvas.addEventListener("mousemove", function (e) {
@@ -162,7 +163,6 @@ GameEngine.prototype.update = function () {
 
     for (var i = this.entities.length - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
-            console.log("removed entity"); 
             this.entities.splice(i, 1);
         }
     }

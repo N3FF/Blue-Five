@@ -100,22 +100,60 @@ function Hero(game) {
     this.attack = false;
     this.moveR = false;
     this.moveL = false;
-    this.radius = 50;
     this.ground = 500;
     this.accel = 0;
     this.yAccel = 0;
     this.direction = true;
     this.gravity = 1;
     this.canJump = true;
-    this.ticksSinceShot = 0;
-    Entity.call(this, game, 0, 500);
+    
+    
+    this.lastY = this.y;
+    
+    /* Collison code work
+       NOTE: Standard sprites are 55x60 this will need to be updated on different
+       sprites
+    */
+    
+    this.width = 55;
+    this.height = 60;
+    this.radius = 50;
+
+    
+    
+    Entity.call(this, game, 0, 500);           
 }
 
 Hero.prototype = new Entity();
 Hero.prototype.constructor = Hero;
 
+Hero.prototype.collide = function (other) {
+	
+	if (this.x + this.width < other.myX + other.width 
+	&& this.x + this.width > other.myX
+	&& this.y + this.height < other.myY + other.height
+	&& this.y + this.height + this.height > other.myY) {
+		// Collision detected
+		return true;
+	}
+	
+    return false;
+}
+
 // The update function
 Hero.prototype.update = function () {
+	
+	for (var i = 0; i < this.game.entities.length; i++) {
+		var ent = this.game.entities[i];
+		if (ent !== this && this.collide(ent)) {
+			this.jumping = false;
+			this.y = ent.myY - this.height - ent.height;
+			this.canJump = true;
+			if (this.yAccel > 0) {
+				this.yAccel = 0;
+			}
+		}
+	}
 
     if (this.y > this.ground) {
         this.jumping = false;
@@ -134,9 +172,15 @@ Hero.prototype.update = function () {
         }
     }
 
-    this.x = this.x + this.accel;
+    //this.x = this.x + this.accel;
     this.y = this.y + this.yAccel;
-
+    this.yAccel = this.yAccel + this.gravity;
+    
+//    if (this.lastY === this.y) {
+//		this.jumping = false;
+//		this.canJump = true;
+//	}
+    
 
     if (!this.jumping && this.game.keysActive[' '.charCodeAt(0)]) {
         this.jumping = true;
@@ -153,11 +197,12 @@ Hero.prototype.update = function () {
         }
         this.canJump = false;
 
-        this.yAccel = this.yAccel + this.gravity;
+        
     }
 
     if (this.moveR) {
         this.direction = true;
+        this.x = this.x + 5;
         if (this.accel > 0) {
             this.accel = 10;
 
@@ -167,6 +212,7 @@ Hero.prototype.update = function () {
     }
 
     if (this.moveL) {
+    	 this.x = this.x - 5;
         this.direction = false;
         if (this.accel < 0) {
             this.accel = -10;
@@ -176,22 +222,12 @@ Hero.prototype.update = function () {
     }
 
     if (this.game.rightMouseDown) {
-        this.shoot();
-    }
-    this.ticksSinceShot++;
-
-    Entity.prototype.update.call(this);
-}
-
-Hero.prototype.shoot = function () {
-    var bullet = new Bullet(this.game, this.x + 50, this.y + 50);
-    // var bullet = new Fire(this.game, this.x + 50, this.y + 50);
-
-    
-    if(this.ticksSinceShot >= bullet.fireRate) {
+        var bullet = new Projectile(this.game, this.x + 50, this.y + 50, 0.25, "fire");
         this.game.addEntity(bullet);
-        this.ticksSinceShot = 0;
-    } 
+    }
+
+    this.LastY = this.y;
+    Entity.prototype.update.call(this);
 }
 
 Hero.prototype.draw = function (ctx) {
@@ -233,7 +269,68 @@ Hero.prototype.draw = function (ctx) {
 
 // --- End of hero  
 
+// --- Start of Projectile
 
+function Projectile(game, x, y, scale, type) {
+    var velocity = 0;
+    var gravity = 0;
+    var accel = 0;
+    var timeAlive = 0;
+    this.scale = scale;
+    this.type = type
+    if (this.type === "bullet") {
+        this.img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
+        velocity = 15;
+        gravity = 0;
+        accel = 0;
+        timeAlive = 25; //-1 forever
+    } else if (this.type === "fire") {
+        //Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse)
+        this.img = new Animation(ASSET_MANAGER.getAsset("./img/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
+        imgSrc = "./img/fire.png";
+        velocity = 3;
+        var rand = Math.random() * .075 - .03;
+        console.log(rand);
+        gravity = rand;
+        accel = 0;
+        timeAlive = 60; //-1 forever
+        this.scale = 1;
+    }
+    /* (startx, starty, timeAlive, mousex, mousey, gravity, velocity, acceleration) */
+    this.physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
+    Entity.call(this, game, x, y);
+}
+
+Projectile.prototype = new Entity();
+Projectile.prototype.constructor = Projectile;
+
+Projectile.prototype.update = function () {
+    if (!this.physics.isDone()) {
+        this.physics.tick();
+        var pos = this.physics.getPosition();
+        this.x = pos.x;
+        this.y = pos.y;
+    } else {
+        //Remove Entity from game
+    }
+
+    Entity.prototype.update.call(this);
+}
+
+// Reference: https://www.w3schools.com/graphics/game_rotation.asp 
+Projectile.prototype.draw = function (ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.physics.getAngle("rad"));
+    if (this.type === "bullet")
+        this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
+    else
+        this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width / 2 + 25, -1 * this.img.spriteSheet.height / 2 + 50, this.scale);
+    ctx.restore();
+    Entity.prototype.draw.call(this);
+}
+
+// --- End of Projectile
 
 // --- Start of Cannon
 
@@ -334,6 +431,42 @@ Cannon.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 }
 
+function Platform(game, setX, setY) {
+    this.Tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tile.png"), 0, 0, 52, 52, .20, 1, true, true);
+    this.radius = 52;
+    this.width = 52;
+    this.height = 52;
+    
+    this.myX = setX;
+    this.myY = setY;
+    
+    
+    //
+    //this.x = setX - 54;
+    //this.y = setY - 400;
+    
+    // For future
+    this.walkableTerrain = false;
+    
+    Entity.call(this, game, setX, setY);
+}
+
+Platform.prototype = new Entity();
+Platform.prototype.constructor = Platform;
+
+// The update function
+Platform.prototype.update = function () {
+ 
+    Entity.prototype.update.call(this);
+}
+
+Platform.prototype.draw = function (ctx) {
+	
+	this.Tile1.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+
+    Entity.prototype.draw.call(this);
+}
+
 // the "main" code begins here
 
 var ASSET_MANAGER = new AssetManager();
@@ -360,10 +493,22 @@ ASSET_MANAGER.downloadAll(function () {
     var bg = new Background(gameEngine);
     var hero = new Hero(gameEngine);
     var e1 = new Cannon(gameEngine);
+    
+    
+    // We can add a for loop here
+    
+    var t1 = new Platform(gameEngine, 450, 400);
+    var t2 = new Platform(gameEngine, 500, 400);
+    var t3 = new Platform(gameEngine, 550, 400);
+    var t4 = new Platform(gameEngine, 600, 400);
 
     gameEngine.addEntity(bg);
     gameEngine.addEntity(hero);
     gameEngine.addEntity(e1);
+    gameEngine.addEntity(t1);
+    gameEngine.addEntity(t2);
+    gameEngine.addEntity(t3);
+    gameEngine.addEntity(t4);
 
     // gameEngine.addEntity(new Projectile(gameEngine));
 
