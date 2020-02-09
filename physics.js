@@ -14,7 +14,7 @@
 function Physics(startX, startY, duration, cursorX, cursorY, gravity, velocity, acceleration) {
     // console.log(startX, startY);
     this.initialVelocity = Math.ceil(velocity);
-    this.currentVelocity = initialVelocity;
+    this.currentVelocity = this.initialVelocity;
     this.cursorX = cursorX;
     this.cursorY = cursorY
     this.gravity = gravity;
