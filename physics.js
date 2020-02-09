@@ -58,14 +58,14 @@ Physics.prototype.update = function () {
     //x = x0 + v0 * t + 1/2 a t^2
 
     //Reduce Calculations if gravity is 0
-    if (gravity === 0) {
+    if (this.gravity === 0) {
         this.y = this.startY + Math.sin(this.initialAngle) * this.initialVelocity * this.time;
         // Else calculate full equation if gravity is included
     } else {
         this.y = this.startY + Math.sin(this.initialAngle) * this.initialVelocity * this.time + .5 * this.gravity * (this.time * this.time);
     }
     //Reduce Calculations if acceleration is 0
-    if (acceleration === 0) {
+    if (this.acceleration === 0) {
         this.x = this.startX + Math.cos(this.initialAngle) * this.initialVelocity * this.time;
         // Else calculate full equation if acceleration is included
     } else {
