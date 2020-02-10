@@ -46,9 +46,6 @@ function Camera(xView, yView, viewportWidth, viewportHeight, worldWidth, worldHe
     this.wView = viewportWidth;
     this.hView = viewportHeight;
 
-    // allow camera to move in vertical and horizontal axis
-    // this.axis = AXIS.BOTH;
-
     // object that should be followed
     this.followed = null;
 
@@ -99,7 +96,5 @@ function Camera(xView, yView, viewportWidth, viewportHeight, worldWidth, worldHe
         this.yView = this.worldRect.bottom - this.hView;
 
     }
-
-    console.log("xView: ", this.xView, "yView: ", this.yView);
 
   }

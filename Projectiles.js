@@ -26,7 +26,7 @@ Projectile.prototype.update = function () {
 // Reference: https://www.w3schools.com/graphics/game_rotation.asp 
 Projectile.prototype.draw = function (ctx) {
     ctx.save();
-    ctx.translate(this.x, this.y);
+    ctx.translate(this.x - xView, this.y - yView);
     ctx.rotate(this.physics.currentAngle);
     this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
     ctx.restore();
@@ -45,7 +45,7 @@ function Bullet (game, x, y) {
     var accel = 0;
     var timeAlive = 600;
     var physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
-    var img = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
+    var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
     Projectile.call(this, game, x, y, scale, fireRate, physics, img);
 }
 
@@ -64,7 +64,7 @@ function Fire (game, x, y) {
     var accel = 0;
     var timeAlive = 60;
     var physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
-    var img = new Animation(ASSET_MANAGER.getAsset("./img/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
+    var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
     Projectile.call(this, game, x, y, scale, fireRate, physics, img);
 }
 

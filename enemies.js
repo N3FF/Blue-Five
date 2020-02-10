@@ -1,6 +1,6 @@
 function Cannon(game) {
-    this.C1 = new Animation(ASSET_MANAGER.getAsset("./img/Cannon.png"), 0, 0, 130, 85, .20, 3, true, true);
-    this.CR = new Animation(ASSET_MANAGER.getAsset("./img/CannonR.png"), 0, 0, 130, 85, .20, 3, true, true);
+    this.C1 = new Animation(ASSET_MANAGER.getAsset("./img/enemies/Cannon.png"), 0, 0, 130, 85, .20, 3, true, true);
+    this.CR = new Animation(ASSET_MANAGER.getAsset("./img/enemies/CannonR.png"), 0, 0, 130, 85, .20, 3, true, true);
     this.jumping = false;
     this.attack = false;
     this.moveR = true;
@@ -45,7 +45,7 @@ Cannon.prototype.update = function () {
         this.moveR = true;
         this.moveL = false;
     }
-    if (this.x > 700) {
+    if (this.x > 1400) {
         this.moveL = true;
         this.moveR = false
     }
@@ -77,22 +77,22 @@ Cannon.prototype.update = function () {
 
 Cannon.prototype.draw = function (ctx, xView, yView) {
 
-    var xDraw = this.x - xView;
-    var yDraw = this.y - yView;
+    var drawX = this.x - xView;
+    var drawY = this.y - yView;
 
     if (this.accel != 0) {
         if (this.direction) {
-            this.C1.drawFrame(this.game.clockTick, ctx, xDraw, yDraw, 2);
+            this.C1.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         } else {
-            this.CR.drawFrame(this.game.clockTick, ctx, xDraw, yDraw, 2);
+            this.CR.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         }
 
     } else {
 
         if (this.direction) {
-            this.C1.drawFrame(this.game.clockTick, ctx, xDraw, yDraw, 2);
+            this.C1.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         } else {
-            this.CR.drawFrame(this.game.clockTick, ctx, xDraw, yDraw, 2);
+            this.CR.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         }
 
     }

@@ -33,6 +33,7 @@ Timer.prototype.tick = function () {
 
 // Game engine
 function GameEngine() {
+    this.camera = null;
     this.entities = [];
     this.showOutlines = false;
     this.ctx = null;
@@ -47,8 +48,9 @@ function GameEngine() {
 }
 
 // The initialized function
-GameEngine.prototype.init = function (ctx) {
+GameEngine.prototype.init = function (ctx, camera) {
     this.ctx = ctx;
+    this.camera = camera;
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.leftMouseDown = false;

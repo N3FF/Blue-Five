@@ -1,12 +1,12 @@
 function Hero(game) {
-    this.idleR = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 0, 0, 55, 60, .20, 1, true, true);
-    this.idleL = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 220, 60, 55, 60, .20, 1, true, true);
-    this.RunningR = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 55, 0, 55, 60, .20, 4, true, false);
-    this.RunningL = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 0, 60, 55, 60, .20, 4, true, false);
-    this.jumpAnimation = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 0, 0, 55, 60, .20, 5, true, false);
-    this.jumpAnimationL = new Animation(ASSET_MANAGER.getAsset("./img/Hero.png"), 0, 60, 55, 60, .20, 5, true, false);
-    this.SwordR = new Animation(ASSET_MANAGER.getAsset("./img/HeroSword.png"), 0, 0, 60, 60, .15, 9, true, true);
-    this.SwordL = new Animation(ASSET_MANAGER.getAsset("./img/HeroSwordR.png"), 0, 0, 60, 60, .15, 9, true, true);
+    this.idleR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 0, 55, 60, .20, 1, true, true);
+    this.idleL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 220, 60, 55, 60, .20, 1, true, true);
+    this.RunningR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 55, 0, 55, 60, .20, 4, true, false);
+    this.RunningL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 60, 55, 60, .20, 4, true, false);
+    this.jumpAnimation = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 0, 55, 60, .20, 5, true, false);
+    this.jumpAnimationL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 60, 55, 60, .20, 5, true, false);
+    this.SwordR = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSword.png"), 0, 0, 60, 60, .15, 9, true, true);
+    this.SwordL = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSwordR.png"), 0, 0, 60, 60, .15, 9, true, true);
     this.jumping = false;
     this.attack = false;
     this.moveR = false;
@@ -150,45 +150,40 @@ Hero.prototype.shoot = function () {
 
 Hero.prototype.draw = function (ctx, xView, yView) {
 
-    var lastX = this.x;
-    var lastY = this.y;
-    this.x -= xView;
-    this.y -= yView;
-    console.log("X: ", lastX, "Y: ", lastY);
+    var drawX = this.x - xView;
+    var drawY = this.y - yView;
 
     // was this.game.attack
     if (this.game.keysActive['F'.charCodeAt(0)] || this.game.attack) {
 
         if (this.direction) {
-            this.SwordR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.SwordR.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         } else {
-            this.SwordL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.SwordL.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         }
     }
 
     else if (this.jumping) {
         if (this.direction) {
-            this.jumpAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.jumpAnimation.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         } else {
-            this.jumpAnimationL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.jumpAnimationL.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         }
     }
 
     else if (this.accel != 0) {
         if (this.direction) {
-            this.RunningR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.RunningR.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         } else {
-            this.RunningL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.RunningL.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         }
 
     } else {
         if (this.direction) {
-            this.idleR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.idleR.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         } else {
-            this.idleL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.idleL.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
         }
     }
-    this.x = lastX;
-    this.y = lastY;
     Entity.prototype.draw.call(this);
 }

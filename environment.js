@@ -1,6 +1,6 @@
 function Background(game) {
-    this.back1 = new Animation(ASSET_MANAGER.getAsset("./img/Background.png"), 0, 0, 1680, 1050, 1, 1, true, true);
-    this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tilea.png"), 0, 0, 52, 52, 1, 1, true, true);
+    this.back1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/Background.png"), 0, 0, 1680, 1050, 1, 1, true, true);
+    this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/52Tilea.png"), 0, 0, 52, 52, 1, 1, true, true);
     this.hud = new Animation(ASSET_MANAGER.getAsset("./img/HudPrototype1.png"), 0, 0, 250, 360, 1, 1, true, true);
 
     this.instructions = new Animation(ASSET_MANAGER.getAsset("./img/Instructions.png"), 0, 0, 370, 202, 1, 1, true, true);
@@ -20,8 +20,8 @@ Background.prototype.draw = function (ctx, xView, yView) {
     this.back1.drawFrame(this.game.clockTick, ctx, -xView, -yView, 1);
 
     var tileSize = 52;
-    for (i = 0; i < 40; i++) {
-        for (j = 0; j < 6; j++) {
+    for (i = 0; i < 35; i++) {
+        for (j = 0; j < 3; j++) {
             this.tile1.drawFrame(this.game.clockTick, ctx, i * tileSize - xView, (600 + j * tileSize) - yView, 1);
         }
 
@@ -33,7 +33,7 @@ Background.prototype.draw = function (ctx, xView, yView) {
 }
 
 function Platform(game, setX, setY) {
-    this.Tile1 = new Animation(ASSET_MANAGER.getAsset("./img/52Tile.png"), 0, 0, 52, 52, .20, 1, true, true);
+    this.Tile1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/52Tile.png"), 0, 0, 52, 52, .20, 1, true, true);
     this.radius = 52;
     this.width = 52;
     this.height = 52;
