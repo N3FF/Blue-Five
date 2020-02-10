@@ -129,8 +129,8 @@ GameEngine.prototype.startInput = function () {
     });
 
     this.ctx.canvas.addEventListener("mousemove", function (e) {
-        that.mouseX = e.clientX;
-        that.mouseY = e.clientY;
+        that.mouseX = e.clientX + that.camera.xView;
+        that.mouseY = e.clientY + that.camera.yView;
     });
       
 
