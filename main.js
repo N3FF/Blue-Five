@@ -1,5 +1,3 @@
-// the "main" code begins here
-
 var ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./img/Instructions.png");
@@ -23,6 +21,11 @@ ASSET_MANAGER.downloadAll(function () {
     var gameEngine = new GameEngine();
     var bg = new Background(gameEngine);
     var hero = new Hero(gameEngine);
+
+    var camera = new Camera(0, 0, ctx.canvas.width, ctx.canvas.height, 1680, 1050);
+    camera.follow(hero, ctx.canvas.width / 2, ctx.canvas.height / 2);
+    gameEngine.camera = camera;
+
     var e1 = new Cannon(gameEngine);
     
     var t1 = new Platform(gameEngine, 450, 400);
@@ -37,8 +40,6 @@ ASSET_MANAGER.downloadAll(function () {
     gameEngine.addEntity(t2);
     gameEngine.addEntity(t3);
     gameEngine.addEntity(t4);
-
-    // gameEngine.addEntity(new Projectile(gameEngine));
 
     gameEngine.init(ctx);
     gameEngine.start();

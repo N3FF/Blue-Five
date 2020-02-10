@@ -71,9 +71,10 @@ function Fire (game, x, y) {
 Fire.prototype = new Projectile();
 Fire.prototype.constructor = Fire;
 
-Fire.prototype.draw = function (ctx) {
+Fire.prototype.draw = function (ctx, xView, yView) {
+
     ctx.save();
-    ctx.translate(this.x, this.y);
+    ctx.translate(this.x - xView, this.y - yView);
     ctx.rotate(this.physics.currentAngle);
     this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width / 2 + 25, -1 * this.img.spriteSheet.height / 2 + 50, this.scale);
     ctx.restore();

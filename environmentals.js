@@ -15,14 +15,14 @@ Background.prototype.constructor = Background;
 Background.prototype.update = function () {
 }
 
-Background.prototype.draw = function (ctx) {
+Background.prototype.draw = function (ctx, xView, yView) {
     ctx.fillStyle = "#808080";
-    this.back1.drawFrame(this.game.clockTick, ctx, 0, 0, 1);
+    this.back1.drawFrame(this.game.clockTick, ctx, -xView, -yView, 1);
 
     var tileSize = 52;
-    for (i = 0; i < 20; i++) {
-        for (j = 0; j < 3; j++) {
-            this.tile1.drawFrame(this.game.clockTick, ctx, i * tileSize, (600 + j * tileSize), 1);
+    for (i = 0; i < 40; i++) {
+        for (j = 0; j < 6; j++) {
+            this.tile1.drawFrame(this.game.clockTick, ctx, i * tileSize - xView, (600 + j * tileSize) - yView, 1);
         }
 
     }
@@ -61,9 +61,9 @@ Platform.prototype.update = function () {
     Entity.prototype.update.call(this);
 }
 
-Platform.prototype.draw = function (ctx) {
+Platform.prototype.draw = function (ctx, xView, yView) {
 	
-	this.Tile1.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+	this.Tile1.drawFrame(this.game.clockTick, ctx, this.x - xView, this.y - yView, 1);
 
     Entity.prototype.draw.call(this);
 }

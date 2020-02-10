@@ -138,8 +138,8 @@ Hero.prototype.update = function () {
 }
 
 Hero.prototype.shoot = function () {
-    var bullet = new Bullet(this.game, this.x + 50, this.y + 50);
-    // var bullet = new Fire(this.game, this.x + 50, this.y + 50);
+    // var bullet = new Bullet(this.game, this.x + 50, this.y + 50);
+    var bullet = new Fire(this.game, this.x + 50, this.y + 50);
 
     
     if(this.ticksSinceShot >= bullet.fireRate) {
@@ -148,7 +148,13 @@ Hero.prototype.shoot = function () {
     } 
 }
 
-Hero.prototype.draw = function (ctx) {
+Hero.prototype.draw = function (ctx, xView, yView) {
+
+    var lastX = this.x;
+    var lastY = this.y;
+    this.x -= xView;
+    this.y -= yView;
+    console.log("X: ", lastX, "Y: ", lastY);
 
     // was this.game.attack
     if (this.game.keysActive['F'.charCodeAt(0)] || this.game.attack) {
@@ -182,5 +188,7 @@ Hero.prototype.draw = function (ctx) {
             this.idleL.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
         }
     }
+    this.x = lastX;
+    this.y = lastY;
     Entity.prototype.draw.call(this);
 }

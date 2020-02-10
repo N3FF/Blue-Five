@@ -75,21 +75,24 @@ Cannon.prototype.update = function () {
     Entity.prototype.update.call(this);
 }
 
-Cannon.prototype.draw = function (ctx) {
+Cannon.prototype.draw = function (ctx, xView, yView) {
+
+    var xDraw = this.x - xView;
+    var yDraw = this.y - yView;
 
     if (this.accel != 0) {
         if (this.direction) {
-            this.C1.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.C1.drawFrame(this.game.clockTick, ctx, xDraw, yDraw, 2);
         } else {
-            this.CR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.CR.drawFrame(this.game.clockTick, ctx, xDraw, yDraw, 2);
         }
 
     } else {
 
         if (this.direction) {
-            this.C1.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.C1.drawFrame(this.game.clockTick, ctx, xDraw, yDraw, 2);
         } else {
-            this.CR.drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.CR.drawFrame(this.game.clockTick, ctx, xDraw, yDraw, 2);
         }
 
     }
