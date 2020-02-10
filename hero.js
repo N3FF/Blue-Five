@@ -138,8 +138,8 @@ Hero.prototype.update = function () {
 }
 
 Hero.prototype.shoot = function () {
-    // var bullet = new Bullet(this.game, this.x + 50, this.y + 50);
-    var bullet = new Fire(this.game, this.x + 50, this.y + 50);
+    var bullet = new Bullet(this.game, this.x + 50, this.y + 50);
+    // var bullet = new Fire(this.game, this.x + 50, this.y + 50);
 
     
     if(this.ticksSinceShot >= bullet.fireRate) {

@@ -25,14 +25,6 @@ Rectangle.prototype.within = function(r) {
       r.bottom >= this.bottom);
 }
 
-Rectangle.prototype.overlaps = function(r) {
-    return (this.left < r.right &&
-      r.left < this.right &&
-      this.top < r.bottom &&
-      r.top < this.bottom);
-}
-
-
 function Camera(xView, yView, viewportWidth, viewportHeight, worldWidth, worldHeight) {
     // position of camera (left-top coordinate)
     this.xView = xView || 0;

@@ -1,5 +1,3 @@
-// --- Start of Projectile
-
 function Projectile(game, x, y, scale, fireRate, physics, img) {
     this.scale = scale;
     this.fireRate = fireRate;
@@ -24,7 +22,7 @@ Projectile.prototype.update = function () {
 }
 
 // Reference: https://www.w3schools.com/graphics/game_rotation.asp 
-Projectile.prototype.draw = function (ctx) {
+Projectile.prototype.draw = function (ctx, xView, yView) {
     ctx.save();
     ctx.translate(this.x - xView, this.y - yView);
     ctx.rotate(this.physics.currentAngle);

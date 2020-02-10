@@ -192,7 +192,7 @@ function Entity(game, x, y) {
 Entity.prototype.update = function () {
 }
 
-Entity.prototype.draw = function (ctx) {
+Entity.prototype.draw = function (ctx, xView, yView) {
     if (this.game.showOutlines && this.radius) {
         this.game.ctx.beginPath();
         this.game.ctx.strokeStyle = "green";
