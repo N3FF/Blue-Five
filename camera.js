@@ -1,5 +1,12 @@
 // Reference: http://jsfiddle.net/gfcarv/QKgHs/ 
 
+/**
+ * @description Rectangle class used mostly to represent camera viewport and map dimensions
+ * @param {number} left     starting X coordinate
+ * @param {number} top      starting Y coordinate
+ * @param {number} width    width
+ * @param {number} height   height
+ */
 function Rectangle(left, top, width, height) {
     this.left = left || 0;
     this.top = top || 0;
@@ -9,7 +16,14 @@ function Rectangle(left, top, width, height) {
     this.bottom = this.top + this.height;
 }
 
-Rectangle.prototype.set = function(left, top, /*optional*/ width, /*optional*/ height) {
+/**
+ * @description Sets rectangle to specified coordinates and dimensions
+ * @param {number} left     starting X coordinate
+ * @param {number} top      starting Y coordinate
+ * @param {number} width    width
+ * @param {number} height   height
+ */
+Rectangle.prototype.set = function(left, top, width, height) {
     this.left = left;
     this.top = top;
     this.width = width || this.width;
@@ -18,27 +32,37 @@ Rectangle.prototype.set = function(left, top, /*optional*/ width, /*optional*/ h
     this.bottom = (this.top + this.height);
 }
 
-Rectangle.prototype.within = function(r) {
-    return (r.left <= this.left &&
-      r.right >= this.right &&
-      r.top <= this.top &&
-      r.bottom >= this.bottom);
+/**
+ * @param {Rectangle} rectangle  Rectangle that's being checked if this rectangle is inside of
+ * 
+ * @returns true if this rectangle is fully within rectangle, false otherwise
+ */
+Rectangle.prototype.within = function(rectangle) {
+    return (rectangle.left <= this.left &&
+      rectangle.right >= this.right &&
+      rectangle.top <= this.top &&
+      rectangle.bottom >= this.bottom);
 }
 
+/**
+ * @description Camera class
+ * @param {number} xView            x coordinate of top left of camera's view
+ * @param {number} yView            y coordinate of top left of camera's view
+ * @param {number} viewportWidth    width of camera's view
+ * @param {number} viewportHeight   height of camera's view
+ * @param {number} worldWidth       width of entire map 
+ * @param {number} worldHeight      height of entire map
+ */
 function Camera(xView, yView, viewportWidth, viewportHeight, worldWidth, worldHeight) {
-    // position of camera (left-top coordinate)
     this.xView = xView || 0;
     this.yView = yView || 0;
 
-    // distance from followed object to border before camera starts move
-    this.xDeadZone = 0; // min distance to horizontal borders
-    this.yDeadZone = 0; // min distance to vertical borders
+    this.xDeadZone = 0; 
+    this.yDeadZone = 0; 
 
-    // viewport dimensions
     this.wView = viewportWidth;
     this.hView = viewportHeight;
 
-    // object that should be followed
     this.followed = null;
 
     // rectangle that represents the viewport
@@ -50,8 +74,13 @@ function Camera(xView, yView, viewportWidth, viewportHeight, worldWidth, worldHe
   }
 
   // gameObject needs to have "x" and "y" properties (as world(or room) position)
-  Camera.prototype.follow = function(gameObject, xDeadZone, yDeadZone) {
-    this.followed = gameObject;
+  /**
+   * @param {Entity} entity       entity camera is to follow   
+   * @param {number} xDeadZone    minimum distance from entity to viewport's edge on x axis
+   * @param {number} yDeadZone    minimum distance from entity to viewport's edge on y axis
+   */
+  Camera.prototype.follow = function(entity, xDeadZone, yDeadZone) {
+    this.followed = entity;
     this.xDeadZone = xDeadZone;
     this.yDeadZone = yDeadZone;
   }
