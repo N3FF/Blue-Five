@@ -5,7 +5,7 @@ function Hero(game) {
     this.RunningL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 60, 55, 60, .20, 4, true, false);
     this.jumpAnimation = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 0, 55, 60, .20, 5, true, false);
     this.jumpAnimationL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 60, 55, 60, .20, 5, true, false);
-    this.SwordR = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSword.png"), 0, 0, 60, 60, .15, 9, true, true);
+    this.SwordR = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSword.png"), 0, 0, 60, 60, .15, 9, true, false);
     this.SwordL = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSwordR.png"), 0, 0, 60, 60, .15, 9, true, true);
     this.jumping = false;
     this.attack = false;
