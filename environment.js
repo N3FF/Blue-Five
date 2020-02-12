@@ -19,32 +19,32 @@ Background.prototype.draw = function (ctx, xView, yView) {
     ctx.fillStyle = "#808080";
     this.back1.drawFrame(this.game.clockTick, ctx, -xView, -yView, 1);
 
-    var tileSize = 52;
-    for (i = 0; i < 35; i++) {
-        for (j = 0; j < 3; j++) {
-            this.tile1.drawFrame(this.game.clockTick, ctx, i * tileSize - xView, (600 + j * tileSize) - yView, 1);
-        }
-
-    }
+//    var tileSize = 52;
+//    for (i = 0; i < 35; i++) {
+//        for (j = 0; j < 3; j++) {
+//            this.tile1.drawFrame(this.game.clockTick, ctx, i * tileSize - xView, (600 + j * tileSize) - yView, 1);
+//        }
+//
+//    }
 
     this.hud.drawFrame(this.game.clockTick, ctx, 875, 0, 1 / 2);
     this.instructions.drawFrame(this.game.clockTick, ctx, 0, 0, .75);
     Entity.prototype.draw.call(this);
 }
 
-function Platform(game, setX, setY) {
-    this.Tile1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/52Tile.png"), 0, 0, 52, 52, .20, 1, true, true);
+function Platform(game, setX, setY, type) {
+	
+	if( type === 1) {
+    this.Tile1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/52Tilea.png"), 0, 0, 52, 52, .20, 1, true, true);
+	} else {
+		this.Tile1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/52Tile.png"), 0, 0, 52, 52, .20, 1, true, true);
+	}
+	
     this.radius = 52;
     this.width = 52;
-    this.height = 52;
-    
+    this.height = 52;  
     this.myX = setX;
     this.myY = setY;
-    
-    
-    //
-    //this.x = setX - 54;
-    //this.y = setY - 400;
     
     // For future
     this.walkableTerrain = false;
