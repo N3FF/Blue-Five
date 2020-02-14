@@ -54,10 +54,10 @@ Hero.prototype.collideCounter = function (collideCounter) {
 
 Hero.prototype.collide = function (other) {
 	
-	if (this.x + this.width < other.myX + other.width 
-	&& this.x + this.width > other.myX
-	&& this.y + this.height < other.myY + other.height
-	&& this.y + this.height + this.height > other.myY) {
+	if (this.x + this.width < other.x + other.width 
+	&& this.x + this.width > other.x
+	&& this.y + this.height < other.y + other.height
+	&& this.y + this.height + this.height > other.y) {
 		// Collision detected
 		//this.direction = !this.direction;
 		return true;
@@ -69,23 +69,23 @@ Hero.prototype.collide = function (other) {
 Hero.prototype.handler = function (other) {
 	
 	// Above the collison
-	if (this.y + this.height <= other.myY) {
+	if (this.y + this.height <= other.y) {
 		this.jumping = false;
-		this.y = other.myY - this.height - other.height;
+		this.y = other.y - this.height - other.height;
 		this.canJump = true;
 		if (this.yAccel > 0) {
 			this.yAccel = 0;
 		}
-	} else if (this.y >= other.myY - other.height) {
+	} else if (this.y >= other.y - other.height) {
 		this.yAccel = 1;
-		this.y = other.myY;
+		this.y = other.y;
 		
 	} 
 	
 	if (other.cannon === true) {
-		if ((this.x + this.width < other.myX + other.width)) {
-			//else if (this.x + this.width >= other.myX) {
-				this.x = other.myX - this.width -1;
+		if ((this.x + this.width < other.x + other.width)) {
+			//else if (this.x + this.width >= other.x) {
+				this.x = other.x - this.width -1;
 				//this.collideCounter;
 				if (this.collideCounter <= 0) {
 					this.direction = !this.direction;
@@ -95,8 +95,8 @@ Hero.prototype.handler = function (other) {
 				}
 				//this.direction = !this.direction;
 				
-			} else { //((this.x + this.width > other.myX)) {
-				this.x = other.myX + other.width +1;
+			} else { //((this.x + this.width > other.x)) {
+				this.x = other.x + other.width +1;
 				this.collideCounter;
 				if (this.collideCounter <= 0) {
 					this.direction = !this.direction;

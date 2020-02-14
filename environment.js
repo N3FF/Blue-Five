@@ -32,7 +32,7 @@ Background.prototype.draw = function (ctx, xView, yView) {
     Entity.prototype.draw.call(this);
 }
 
-function Platform(game, setX, setY, type) {
+function Platform(game, x, y, type) {
 	
 	if( type === 1) {
     this.Tile1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/52Tilea.png"), 0, 0, 52, 52, .20, 1, true, true);
@@ -43,13 +43,11 @@ function Platform(game, setX, setY, type) {
     this.radius = 52;
     this.width = 52;
     this.height = 52;  
-    this.myX = setX;
-    this.myY = setY;
     
     // For future
     this.walkableTerrain = false;
     
-    Entity.call(this, game, setX, setY);
+    Entity.call(this, game, x, y);
 }
 
 Platform.prototype = new Entity();

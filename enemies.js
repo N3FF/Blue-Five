@@ -1,4 +1,4 @@
-function Cannon(game, setX, setY) {
+function Cannon(game, x, y) {
     this.C1 = new Animation(ASSET_MANAGER.getAsset("./img/enemies/Cannon.png"), 0, 0, 130, 85, .20, 3, true, true);
     this.CR = new Animation(ASSET_MANAGER.getAsset("./img/enemies/CannonR.png"), 0, 0, 130, 85, .20, 3, true, true);
     this.jumping = false;
@@ -14,13 +14,11 @@ function Cannon(game, setX, setY) {
     this.canJump = true;
     this.width = 130;
     this.height = 85;
-    this.myX = this.x;
-    this.myY = this.y;
     this.cannon = true;
     
     
     // Needs location parameters set
-    Entity.call(this, game, setX, setY);
+    Entity.call(this, game, x, y);
 }
 
 Cannon.prototype = new Entity();
@@ -28,10 +26,10 @@ Cannon.prototype.constructor = Cannon;
 
 Cannon.prototype.collide = function (other) {
 	
-	if (this.x + this.width < other.myX + other.width 
-	&& this.x + this.width > other.myX
-	&& this.y + this.height < other.myY + other.height
-	&& this.y + this.height + this.height > other.myY) {
+	if (this.x + this.width < other.x + other.width 
+	&& this.x + this.width > other.x
+	&& this.y + this.height < other.y + other.height
+	&& this.y + this.height + this.height > other.y) {
 		// Collision detected
 		this.direction = !this.direction;
 		return true;
@@ -43,23 +41,21 @@ Cannon.prototype.collide = function (other) {
 Cannon.prototype.handler = function (other) {
 	
 	// Above the collison
-	if (this.y + this.height <= other.myY) {
+	if (this.y + this.height <= other.y) {
 		this.jumping = false;
-		this.y = other.myY - this.height - other.height-32;
+		this.y = other.y - this.height - other.height-32;
 		this.canJump = true;
 		if (this.yAccel > 0) {
 			this.yAccel = 0;
 		}
-	} else if (this.y >= other.myY - other.height) {
+	} else if (this.y >= other.y - other.height) {
 		this.yAccel = 1;
-		this.y = other.myY;
-		
+		this.y = other.y;
 	} 
 }
 
 // The update function
 Cannon.prototype.update = function () {
-	
 
 	for (var i = 0; i < this.game.entities.length; i++) {
 		var ent = this.game.entities[i];
@@ -118,8 +114,6 @@ Cannon.prototype.update = function () {
 
     }
     
-    this.myX = this.x;
-    //this.myY = this.y;
     this.y = this.y + this.yAccel;
     this.yAccel = this.yAccel + this.gravity;
     Entity.prototype.update.call(this);
