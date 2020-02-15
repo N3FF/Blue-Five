@@ -6,6 +6,8 @@ ASSET_MANAGER.queueDownload("./img/hero/HeroSwordR.png");
 ASSET_MANAGER.queueDownload("./img/environment/Background.png");
 ASSET_MANAGER.queueDownload("./img/environment/52Tile.png");
 ASSET_MANAGER.queueDownload("./img/environment/52Tilea.png");
+ASSET_MANAGER.queueDownload("./img/hud/HP_bars.png");
+ASSET_MANAGER.queueDownload("./img/hud/HP_bars_background.png");
 ASSET_MANAGER.queueDownload("./img/projectiles/bullet.png");
 ASSET_MANAGER.queueDownload("./img/projectiles/fire.png");
 ASSET_MANAGER.queueDownload("./img/enemies/Cannon.png");

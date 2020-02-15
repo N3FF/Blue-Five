@@ -23,9 +23,11 @@ function Hero(game) {
     this.canJump = true;
     this.ticksSinceShot = 0;
     
-    this.hp = 100; // hitpoints
-    this.mp = 100; // magic
     
+    this.maxHP = 100; // hitpoints
+    this.currentHP = 100;
+    this.maxMP = 100; // magic
+    this.currentMP = 100;
     
     /* Collison code work
     NOTE: Standard sprites are 55x60 this will need to be updated on different
