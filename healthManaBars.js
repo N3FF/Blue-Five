@@ -1,10 +1,10 @@
-function HealthManaBars(game) {
+function HealthManaBars(game, x, y) {
     this.backgroundBars = new Animation(ASSET_MANAGER.getAsset("./img/hud/HP_bars_background.png"), 0, 0, 658, 164, 1, 1, true, false);
     this.overlay = new Animation(ASSET_MANAGER.getAsset("./img/hud/HP_bars.png"), 0, 0, 658, 164, 1, 1, true, false);
     this.healthPercent = 100;
     this.manaPercent = 100;
     this.scale = 0.4;
-    Entity.call(this, game, 0, 0);
+    Entity.call(this, game, x, y);
 }
 
 HealthManaBars.prototype = new Entity();
@@ -23,7 +23,7 @@ HealthManaBars.prototype.draw = function (ctx, xView, yView) {
     var mpWidth = 323 * this.manaPercent;       // width of mp bar in pixels
 
     // draw background bars
-    this.backgroundBars.drawFrame(this.game.clockTick, ctx, 0, 0, this.scale);
+    this.backgroundBars.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
 
     // draw health bar
     ctx.save();
@@ -35,25 +35,25 @@ HealthManaBars.prototype.draw = function (ctx, xView, yView) {
         ctx.fillStyle = "green";
     }
     ctx.beginPath();
-    ctx.moveTo(210 * this.scale, 40 * this.scale);
-    ctx.lineTo((210 + hpWidth) * this.scale, 40 * this.scale);
-    ctx.lineTo((183 + hpWidth) * this.scale, 90 * this.scale);
-    ctx.lineTo(183 * this.scale, 90 * this.scale);
+    ctx.moveTo(this.x + 210 * this.scale, this.y + 40 * this.scale);
+    ctx.lineTo(this.x + (210 + hpWidth) * this.scale, this.y + 40 * this.scale);
+    ctx.lineTo(this.x + (183 + hpWidth) * this.scale, this.y + 90 * this.scale);
+    ctx.lineTo(this.x + 183 * this.scale, this.y + 90 * this.scale);
     ctx.closePath();
     ctx.fill();
 
     // draw mana bar
     ctx.fillStyle = "blue";
     ctx.beginPath();
-    ctx.moveTo(187 * this.scale, 90 * this.scale);
-    ctx.lineTo((187 + mpWidth) * this.scale, 90 * this.scale);
-    ctx.lineTo((166 + mpWidth) * this.scale, 130 * this.scale);
-    ctx.lineTo(166 * this.scale, 130 * this.scale);
+    ctx.moveTo(this.x + 187 * this.scale, this.y + 90 * this.scale);
+    ctx.lineTo(this.x + (187 + mpWidth) * this.scale, this.y + 90 * this.scale);
+    ctx.lineTo(this.x + (166 + mpWidth) * this.scale, this.y + 130 * this.scale);
+    ctx.lineTo(this.x + 166 * this.scale, this.y + 130 * this.scale);
     ctx.closePath();
     ctx.fill();
     ctx.restore();
 
     // draw overlay
-    this.overlay.drawFrame(this.game.clockTick, ctx, 0, 0, this.scale);
+    this.overlay.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     Entity.prototype.draw.call(this);
 }
