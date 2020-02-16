@@ -26,7 +26,6 @@ HealthManaBars.prototype.draw = function (ctx, xView, yView) {
     this.backgroundBars.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
 
     // draw health bar
-    ctx.save();
     if (this.healthPercent <= 0.25) {
         ctx.fillStyle = "red";
     } else if (this.healthPercent <= 0.75) {
@@ -51,7 +50,6 @@ HealthManaBars.prototype.draw = function (ctx, xView, yView) {
     ctx.lineTo(this.x + 166 * this.scale, this.y + 130 * this.scale);
     ctx.closePath();
     ctx.fill();
-    ctx.restore();
 
     // draw overlay
     this.overlay.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
