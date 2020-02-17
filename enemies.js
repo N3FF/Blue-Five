@@ -83,7 +83,7 @@ Cannon.prototype.update = function () {
 
     this.x = this.x + this.accel;
 
-    if (this.x < 150) {
+    if (this.x < 300) {
         this.moveR = true;
         this.moveL = false;
     }
