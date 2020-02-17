@@ -1,3 +1,7 @@
+/**
+ * @param {number} game       The game 
+ * @description The hero class
+ */
 function Hero(game) {
     this.idleR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 0, 55, 60, .20, 1, true, true);
     this.idleL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 220, 60, 55, 60, .20, 1, true, true);
@@ -5,11 +9,11 @@ function Hero(game) {
     this.RunningL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 60, 55, 60, .20, 4, true, false);
     this.jumpAnimation = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 0, 55, 60, .20, 5, true, false);
     this.jumpAnimationL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 60, 55, 60, .20, 5, true, false);
-    this.SwordR = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSword.png"), 0, 0, 60, 60, .15, 9, true, true);
+    this.SwordR = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSword.png"), 0, 0, 60, 60, .15, 9, true, false);
     this.SwordL = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSwordR.png"), 0, 0, 60, 60, .15, 9, true, true);
-    this.jumping = false;
-    this.attack = false;
-    this.moveR = false;
+    this.jumping = false; // if the hero is jumping
+    this.attack = false; // if the hero is attacking
+    this.moveR = false; 
     this.moveL = false;
     this.ground = 500;
     this.accel = 0;
@@ -20,14 +24,19 @@ function Hero(game) {
     this.ticksSinceShot = 0;
     
     
+    this.maxHP = 100; // hitpoints
+    this.currentHP = 100;
+    this.maxMP = 100; // magic
+    this.currentMP = 100;
+    
     /* Collison code work
     NOTE: Standard sprites are 55x60 this will need to be updated on different
     sprites
  */  
     this.width = 55;
     this.height = 60;
-    this.radius = 50;
-    
+    this.radius = 50;  
+    this.collideCounter = 0;
     
     Entity.call(this, game, 0, 500);
 }
@@ -35,17 +44,90 @@ function Hero(game) {
 Hero.prototype = new Entity();
 Hero.prototype.constructor = Hero;
 
+Hero.prototype.collideCounter = function (collideCounter) {
+	
+	if (this.collideCounter <= 0) {
+		this.direction = !this.direction;
+		collideCounter = 10;
+	} else {
+		this.collideCounter--;
+	}
+}
+
 Hero.prototype.collide = function (other) {
 	
-	if (this.x + this.width < other.myX + other.width 
-	&& this.x + this.width > other.myX
-	&& this.y + this.height < other.myY + other.height
-	&& this.y + this.height + this.height > other.myY) {
-		// Collision detected
-		return true;
+	if (!(other.cannon === true)) {
+		if (this.x + this.width < other.x + other.width 
+				&& this.x + this.width > other.x
+				&& this.y + this.height < other.y + other.height
+				&& this.y + this.height > other.y - other.height) {
+					// Collision detected
+					//this.direction = !this.direction;
+					return true;
+				}
+	} else {
+		if (this.x < other.x + other.width 
+				&& this.x + this.width > other.x
+				&& this.y < other.y + other.height
+				&& this.y + this.height > other.y) {
+					// Collision detected
+					//this.direction = !this.direction;
+					return true;
+				}
 	}
 	
+	
     return false;
+}
+
+Hero.prototype.handler = function (other) {
+	
+	// Above the collison
+	if (!(other.cannon === true)) {
+		if (this.y + this.height <= other.y) {
+			this.jumping = false;
+			this.y = other.y - this.height - other.height;
+			this.canJump = true;
+			if (this.yAccel > 0) {
+				this.yAccel = 0;
+			}
+		} else if (this.y >= other.y - other.height) {
+			this.yAccel = 1;
+			this.y = other.y;
+			
+		} 
+	}
+	
+	
+	if (other.cannon === true) {
+		if ((this.x + this.width < other.x + other.width)) {
+			//else if (this.x + this.width >= other.x) {
+				this.x = other.x - this.width -1;
+				//this.collideCounter;
+				if (this.collideCounter <= 0) {
+					this.direction = !this.direction;
+					this.collideCounter = 10;
+				} else {
+					this.collideCounter--;
+				}
+				//this.direction = !this.direction;
+				
+			} else { //((this.x + this.width > other.x)) {
+				this.x = other.x + other.width +1;
+				this.collideCounter;
+				if (this.collideCounter <= 0) {
+					this.direction = !this.direction;
+					this.collideCounter = 10;
+				} else {
+					this.collideCounter--;
+				}
+				//this.direction = !this.direction;
+			}	
+	}
+	
+	
+	
+	return;
 }
 
 // The update function
@@ -54,40 +136,33 @@ Hero.prototype.update = function () {
 	for (var i = 0; i < this.game.entities.length; i++) {
 		var ent = this.game.entities[i];
 		if (ent !== this && this.collide(ent)) {
-			this.jumping = false;
-			this.y = ent.myY - this.height - ent.height;
-			this.canJump = true;
-			if (this.yAccel > 0) {
-				this.yAccel = 0;
-			}
+			this.handler(ent);
 		}
 	}
 
-    if (this.y > this.ground) {
-        this.jumping = false;
-        this.y = this.ground;
-        this.canJump = true;
-        this.yAccel = 0;
-    }
+//    if (this.y > this.ground) {
+//        this.jumping = false;
+//        this.y = this.ground;
+//        this.canJump = true;
+//        this.yAccel = 0;
+//    }
 
+    // Handles acceleration for a jump
     if (this.jumping === false) {
         if (this.accel < -1) {
-            this.accel += .2;
+            this.accel += .4;
         } else if (this.accel > 1) {
-            this.accel -= .2;
+            this.accel -= .4;
         } else {
             this.accel = 0;
         }
     }
 
-    //this.x = this.x + this.accel;
+    if (this.yAccel != 0) {
+    	this.canJump = false;
+    }
     this.y = this.y + this.yAccel;
     this.yAccel = this.yAccel + this.gravity;
-    
-//    if (this.lastY === this.y) {
-//		this.jumping = false;
-//		this.canJump = true;
-//	}
 
 
     if (!this.jumping && this.game.keysActive[' '.charCodeAt(0)]) {
@@ -104,8 +179,6 @@ Hero.prototype.update = function () {
             this.yAccel = -25;
         }
         this.canJump = false;
-
-        //this.yAccel = this.yAccel + this.gravity;
     }
 
     if (this.moveR) {
@@ -140,8 +213,7 @@ Hero.prototype.update = function () {
 Hero.prototype.shoot = function () {
     var bullet = new Bullet(this.game, this.x + 50, this.y + 50);
     // var bullet = new Fire(this.game, this.x + 50, this.y + 50);
-
-    
+  
     if(this.ticksSinceShot >= bullet.fireRate) {
         this.game.addEntity(bullet);
         this.ticksSinceShot = 0;

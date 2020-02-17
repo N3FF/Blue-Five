@@ -1,3 +1,13 @@
+/**
+ * @description Super class for projectiles
+ * @param {GameEngine} game     the game engine
+ * @param {number} x            starting X value 
+ * @param {number} y            starting Y value 
+ * @param {number} scale        scale projectile should be drawn in
+ * @param {number} fireRate     fire rate measured in number of update calls per shot
+ * @param {Physics} physics     Physics object with projectile's physics properties
+ * @param {Animation} img       Animation object for when projectile is in flight
+ */
 function Projectile(game, x, y, scale, fireRate, physics, img) {
     this.scale = scale;
     this.fireRate = fireRate;
@@ -31,10 +41,12 @@ Projectile.prototype.draw = function (ctx, xView, yView) {
     Entity.prototype.draw.call(this);
 }
 
-// --- End of Projectile
-
-// --- Start of Bullet
-
+/**
+ * @description Bullet class - extends Projectile
+ * @param {GameEngine} game     the game engine
+ * @param {number} x            starting X coordinate 
+ * @param {number} y            starting Y coordinate 
+ */
 function Bullet (game, x, y) {
     var scale = 0.25;
     var fireRate = 20;
@@ -50,10 +62,12 @@ function Bullet (game, x, y) {
 Bullet.prototype = new Projectile();
 Bullet.prototype.constructor = Bullet;
 
-// --- End of Bullet
-
-// --- Start of Fire
-
+/**
+ * @description Fire class - extends Projectile
+ * @param {GameEngine} game     the game engine
+ * @param {number} x            starting X coordinate
+ * @param {number} y            starting Y coordinate
+ */
 function Fire (game, x, y) {
     var scale = 1;
     var fireRate = 1;
@@ -70,7 +84,6 @@ Fire.prototype = new Projectile();
 Fire.prototype.constructor = Fire;
 
 Fire.prototype.draw = function (ctx, xView, yView) {
-
     ctx.save();
     ctx.translate(this.x - xView, this.y - yView);
     ctx.rotate(this.physics.currentAngle);
@@ -78,5 +91,3 @@ Fire.prototype.draw = function (ctx, xView, yView) {
     ctx.restore();
     Entity.prototype.draw.call(this);
 }
-
-// --- End of Fire
