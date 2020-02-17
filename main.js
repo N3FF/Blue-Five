@@ -13,7 +13,6 @@ ASSET_MANAGER.queueDownload("./img/projectiles/bullet.png");
 ASSET_MANAGER.queueDownload("./img/projectiles/fire.png");
 ASSET_MANAGER.queueDownload("./img/enemies/Cannon.png");
 ASSET_MANAGER.queueDownload("./img/enemies/CannonR.png");
-ASSET_MANAGER.queueDownload("./img/HudPrototype1.png");
 
 ASSET_MANAGER.downloadAll(function () {
     var canvas = document.getElementById('gameWorld');
