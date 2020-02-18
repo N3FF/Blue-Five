@@ -1,8 +1,12 @@
 /**
  * @param {number} game       The game 
- * @description The hero class
+ * @description The Hero class - the main character controlled by the player
  */
 function Hero(game) {
+	
+	
+	
+	// Animations
     this.idleR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 0, 0, 55, 60, .20, 1, true, true);
     this.idleL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 220, 60, 55, 60, .20, 1, true, true);
     this.RunningR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Hero.png"), 55, 0, 55, 60, .20, 4, true, false);
@@ -12,16 +16,20 @@ function Hero(game) {
     this.SwordR = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSword.png"), 0, 0, 60, 60, .15, 9, true, false);
     this.SwordL = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSwordR.png"), 0, 0, 60, 60, .15, 9, true, true);
 
+
+    // Hero variables
     this.jumping = false; // if the hero is jumping
     this.attack = false; // if the hero is attacking
-    this.moveR = false;
-    this.moveL = false;
-    this.ground = 500;
-    this.accel = 0;
-    this.yAccel = 0;
+    this.moveR = false; // if the hero is moving right
+    this.moveL = false; // if the hero is moving left
+    
+    this.accel = 0; // acceleration to make the hero look like they are running
+    // it does not really do anything else
+    
+    this.yAccel = 0; // the heros vertical acceleration for gravity
     this.movingRight = true;
-    this.gravity = 1;
-    this.canJump = true;
+    this.gravity = 1; // The effect of gravity
+    this.jumpStart = true; // whether the hero gets y accel at the beginning of a jump
     this.ticksSinceShot = 0;
     this.heroScale = 2;
 
@@ -30,18 +38,23 @@ function Hero(game) {
     this.maxMP = 100; // magic
     this.currentMP = 100;
 
-    /* Collison code work
-        NOTE: Standard sprites are 55x60 this will need to be updated on different
-        sprites
-    */
+     //  Collison code work
+     //   NOTE: Standard sprites are 55x60 this will need to be updated on different
+     //   sprites
+    
+    
     this.width = 55;
     this.height = 60;
     this.radius = 50;
     this.collideCounter = 0;
+    
+
 
     //Delete everything above
 
-    /* New Character Sprite sheets 
+      /*
+      
+     //New Character Sprite sheets 
     this.idleR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Idle_R.png"), 0, 0, 191, 351, 0.06, 10, true, false);
     this.idleL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Idle_L.png"), 0, 0, 191, 351, 0.06, 10, true, false);
     this.RunningR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Walk_R.png"), 0, 0, 295, 343, 0.05, 10, true, false);
@@ -75,7 +88,8 @@ function Hero(game) {
     this.height = 60;
     this.radius = 50;
     this.collideCounter = 0;
-    */
+    
+     */
 
     Entity.call(this, game, 0, 500);
 }
@@ -83,6 +97,7 @@ function Hero(game) {
 Hero.prototype = new Entity();
 Hero.prototype.constructor = Hero;
 
+// This is to prevent collisons from happening too fast with the enemy
 Hero.prototype.collideCounter = function (collideCounter) {
 
     if (this.collideCounter <= 0) {
@@ -93,15 +108,16 @@ Hero.prototype.collideCounter = function (collideCounter) {
     }
 }
 
-Hero.prototype.collide = function (other) {
 
+Hero.prototype.collide = function (other) { // other entity comparing collison with
+
+	// Checking the the entity is not a cannon
     if (!(other.cannon === true)) {
         if (this.x + this.width < other.x + other.width
             && this.x + this.width > other.x
             && this.y + this.height < other.y + other.height
             && this.y + this.height > other.y - other.height) {
             // Collision detected
-            //this.direction = !this.direction;
             return true;
         }
     } else {
@@ -110,26 +126,24 @@ Hero.prototype.collide = function (other) {
             && this.y < other.y + other.height
             && this.y + this.height > other.y) {
             // Collision detected
-            //this.direction = !this.direction;
             return true;
         }
     }
-
-
     return false;
 }
 
 Hero.prototype.handler = function (other) {
 
-    // Above the collison
+    // Above the collison, also checking that the entity is not a cannon
     if (!(other.cannon === true)) {
         if (this.y + this.height <= other.y) {
             this.jumping = false;
             this.y = other.y - this.height - other.height;
-            this.canJump = true;
+            this.jumpStart = true;
             if (this.yAccel > 0) {
                 this.yAccel = 0;
             }
+          // Collison from below, ie mario hitting a block from below  
         } else if (this.y >= other.y - other.height) {
             this.yAccel = 1;
             this.y = other.y;
@@ -137,21 +151,19 @@ Hero.prototype.handler = function (other) {
         }
     }
 
-
+    // If the other entity is a cannon we add the push collison
     if (other.cannon === true) {
         if ((this.x + this.width < other.x + other.width)) {
-            //else if (this.x + this.width >= other.x) {
+            
             this.x = other.x - this.width - 1;
-            //this.collideCounter;
             if (this.collideCounter <= 0) {
                 this.movingRight = !this.movingRight;
                 this.collideCounter = 10;
             } else {
                 this.collideCounter--;
             }
-            //this.direction = !this.direction;
 
-        } else { //((this.x + this.width > other.x)) {
+        } else {
             this.x = other.x + other.width + 1;
             this.collideCounter;
             if (this.collideCounter <= 0) {
@@ -160,12 +172,9 @@ Hero.prototype.handler = function (other) {
             } else {
                 this.collideCounter--;
             }
-            //this.direction = !this.direction;
         }
     }
-
-
-
+    
     return;
 }
 
@@ -179,13 +188,6 @@ Hero.prototype.update = function () {
         }
     }
 
-    //    if (this.y > this.ground) {
-    //        this.jumping = false;
-    //        this.y = this.ground;
-    //        this.canJump = true;
-    //        this.yAccel = 0;
-    //    }
-
     /*  Need this in the jumping if statement.
         When physics is applied to the entity we
         can check if the 
@@ -195,7 +197,8 @@ Hero.prototype.update = function () {
         }
     */
 
-    // Handles acceleration for a jump
+    // Handles running animations on the ground
+    // all this code does is make the hero look like he is running
     if (this.jumping === false) {
         if (this.accel < -1) {
             this.accel += .4;
@@ -206,13 +209,17 @@ Hero.prototype.update = function () {
         }
     }
 
+    // If the yaccel is not 0 it means the hero is jumping or falling
     if (this.yAccel != 0) {
-        this.canJump = false;
+        this.jumpStart = false;
     }
+    
+    // Updating the heros y location
     this.y = this.y + this.yAccel;
+    // Applying the effects of gravity
     this.yAccel = this.yAccel + this.gravity;
 
-
+    // Setting the hero to jump if the key is pressed and the hero is not jumping
     if (!this.jumping && this.game.keysActive[' '.charCodeAt(0)]) {
         this.jumping = true;
     }
@@ -222,13 +229,15 @@ Hero.prototype.update = function () {
     this.moveL = this.game.keysActive['A'.charCodeAt(0)] ||
         this.game.keysActive[37]; //39 = Right arrow key code
 
+    // The jumping function of the hero
     if (this.jumping) {
-        if (this.canJump) {
+        if (this.jumpStart) {
             this.yAccel = -25;
         }
-        this.canJump = false;
+        this.jumpStart = false;
     }
 
+    // Move right function of the hero
     if (this.moveR) {
         this.movingRight = true;
         this.x = this.x + 7;
@@ -240,6 +249,7 @@ Hero.prototype.update = function () {
         }
     }
 
+    // Move left function of the hero
     if (this.moveL) {
         this.movingRight = false;
         this.x = this.x - 7;
@@ -250,6 +260,7 @@ Hero.prototype.update = function () {
         }
     }
 
+    // Shooting function for the hero
     if (this.game.rightMouseDown) {
         this.shoot();
     }
