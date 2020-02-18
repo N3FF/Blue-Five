@@ -153,3 +153,10 @@ Physics.prototype.getPosition = function () {
 Physics.prototype.isDone = function () {
     return this.dead;
 }
+
+/**
+ * @description Stops all physics 
+ */
+Physics.prototype.stop = function(){
+    this.dead = true;
+}
