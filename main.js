@@ -3,6 +3,18 @@ var ASSET_MANAGER = new AssetManager();
 ASSET_MANAGER.queueDownload("./img/hero/Hero.png");
 ASSET_MANAGER.queueDownload("./img/hero/HeroSword.png");
 ASSET_MANAGER.queueDownload("./img/hero/HeroSwordR.png");
+
+/*  New Character Sprites
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Walk_L.png");
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Walk_R.png");
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Idle_L.png");
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Idle_R.png");
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Jump_L.png");
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Jump_R.png");
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Shoot2_L.png");
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Shoot2_R.png");
+*/
+
 ASSET_MANAGER.queueDownload("./img/environment/Background.png");
 ASSET_MANAGER.queueDownload("./img/environment/52Tile.png");
 ASSET_MANAGER.queueDownload("./img/environment/52Tilea.png");
