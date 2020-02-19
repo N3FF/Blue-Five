@@ -15,6 +15,7 @@ function Cannon(game, x, y) {
     this.scale = 2;
     this.width = 130 * this.scale;
     this.height = 85 * this.scale;
+    this.type = TYPES.CANNON;
     
     
     // Needs location parameters set

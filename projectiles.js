@@ -5,21 +5,53 @@
  * @param {number} y            starting Y value 
  * @param {number} scale        scale projectile should be drawn in
  * @param {number} fireRate     fire rate measured in number of update calls per shot
+ * @param {number} damage       amount of damage each shot does
+ * @param {boolean} friendly    true if hero fired it, false if enemy fired it
  * @param {Physics} physics     Physics object with projectile's physics properties
  * @param {Animation} img       Animation object for when projectile is in flight
  */
-function Projectile(game, x, y, scale, fireRate, physics, img) {
+function Projectile(game, x, y, scale, fireRate, damage, friendly, physics, img) {
     this.scale = scale;
     this.fireRate = fireRate;
+    this.damage = damage;
+    this.friendly = friendly;
     this.physics = physics;
     this.img = img;
+    this.type = TYPES.PROJECTILE;
     Entity.call(this, game, x, y);
 }
 
 Projectile.prototype = new Entity();
 Projectile.prototype.constructor = Projectile;
 
+Projectile.prototype.collisionDetected = function (entity) { // other entity comparing collison with
+
+    return this.x + this.width >= entity.x  
+            && this.x <= entity.x + entity.width
+            && this.y + this.height >= entity.y
+            && this.y < entity.y + entity.height;
+
+}
+
+Projectile.prototype.handleCollision = function (entity) {
+    switch (entity.type) {
+        case TYPES.PLATFORM:
+            this.removeFromWorld = true;
+            break;
+        default:
+            break;
+    }
+}
+
 Projectile.prototype.update = function () {
+
+    for (var i = 0; i < this.game.entities.length; i++) {
+        var ent = this.game.entities[i];
+        if (ent !== this && this.collisionDetected(ent)) {
+            this.handleCollision(ent);
+        }
+    }
+
     if (!this.physics.isDone()) {
         this.physics.tick();
         var pos = this.physics.getPosition();
@@ -37,6 +69,7 @@ Projectile.prototype.draw = function (ctx, xView, yView) {
     ctx.translate(this.x - xView, this.y - yView);
     ctx.rotate(this.physics.currentAngle);
     this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
+    // this.img.drawFrame(this.game.clockTick, ctx, 0, 0, this.scale);
     ctx.restore();
     Entity.prototype.draw.call(this);
 }
@@ -47,16 +80,19 @@ Projectile.prototype.draw = function (ctx, xView, yView) {
  * @param {number} x            starting X coordinate 
  * @param {number} y            starting Y coordinate 
  */
-function Bullet (game, x, y) {
+function Bullet (game, x, y, friendly) {
     var scale = 0.25;
     var fireRate = 20;
+    var damage = 5;
     var velocity = 10;
     var gravity = 0.1;
     var accel = 0;
     var timeAlive = 600;
     var physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
     var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
-    Projectile.call(this, game, x, y, scale, fireRate, physics, img);
+    this.width = 51 * scale;
+    this.height = 60 * scale;
+    Projectile.call(this, game, x, y, scale, fireRate, damage, friendly, physics, img);
 }
 
 Bullet.prototype = new Projectile();
@@ -68,16 +104,19 @@ Bullet.prototype.constructor = Bullet;
  * @param {number} x            starting X coordinate
  * @param {number} y            starting Y coordinate
  */
-function Fire (game, x, y) {
+function Fire (game, x, y, friendly) {
     var scale = 1;
     var fireRate = 1;
+    var damage = 0.5;
     var velocity = 3;
     var gravity = Math.random() * 0.075 - 0.03;;
     var accel = 0;
     var timeAlive = 60;
     var physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
     var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
-    Projectile.call(this, game, x, y, scale, fireRate, physics, img);
+    this.width = 25 * scale;
+    this.height = 12 * scale;
+    Projectile.call(this, game, x, y, scale, fireRate, damage, friendly, physics, img);
 }
 
 Fire.prototype = new Projectile();

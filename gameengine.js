@@ -190,6 +190,13 @@ GameEngine.prototype.loop = function () {
     
 }
 
+const TYPES = {
+    HERO: 0,
+    CANNON: 1,
+    PLATFORM: 2,
+    PROJECTILE: 3
+};
+
 function Entity(game, x, y) {
     this.game = game;
     this.x = x;

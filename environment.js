@@ -31,6 +31,7 @@ function Platform(game, x, y, type) {
     this.radius = 52;
     this.width = 52;
     this.height = 52;  
+    this.type = TYPES.PLATFORM;
     
     // For future
     this.walkableTerrain = false;

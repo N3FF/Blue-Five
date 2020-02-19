@@ -37,6 +37,7 @@ function Hero(game, x, y) {
     this.currentHP = 100;
     this.maxMP = 100; // magic
     this.currentMP = 100;
+    this.type = TYPES.HERO;
 
      //  Collison code work
      //   NOTE: Standard sprites are 55x60 this will need to be updated on different
@@ -54,36 +55,44 @@ function Hero(game, x, y) {
 Hero.prototype = new Entity();
 Hero.prototype.constructor = Hero;
 
-Hero.prototype.collisionDetected = function (other) { // other entity comparing collison with
+Hero.prototype.collisionDetected = function (entity) { // other entity comparing collison with
 
-    return this.x + this.width >= other.x  
-            && this.x <= other.x + other.width
-            && this.y + this.height >= other.y
-            && this.y < other.y + other.height;
+    return this.x + this.width >= entity.x  
+            && this.x <= entity.x + entity.width
+            && this.y + this.height >= entity.y
+            && this.y < entity.y + entity.height;
+
 }
 
-Hero.prototype.handleCollision = function (other) {
-    
-    if (this.y + this.height >= other.y
-        && this.y + this.height < other.y + other.height / 2) {
-        this.y = other.y - this.height;
-        this.jumping = false;
-        this.jumpStart = true;
-        if (this.yAccel > 0) this.yAccel = 0;
-    } else if (other.y + other.height >= this.y
-                && other.y + other.height < this.y + this.height / 2) {
-        this.y = other.y + other.height;
-        this.yAccel = 1;
-    } else {
-        if (this.x + this.width >= other.x
-            && this.x + this.width < other.x + other.width / 2) {
-            this.x = other.x - this.width;
-        } else if (other.x + other.width >= this.x
-                    && other.x + other.width < this.x + this.width / 2) {
-            this.x = other.x + other.width;
-        }
-    }   
-
+Hero.prototype.handleCollision = function (entity) {
+    switch (entity.type) {
+        case TYPES.PROJECTILE:
+            if (!entity.friendly) {
+                this.currentHP -= entity.damage;
+                entity.removeFromWorld = true;
+            }
+            break;
+        default:
+            if (this.y + this.height >= entity.y
+                && this.y + this.height < entity.y + entity.height / 2) {
+                this.y = entity.y - this.height;
+                this.jumping = false;
+                this.jumpStart = true;
+                if (this.yAccel > 0) this.yAccel = 0;
+            } else if (entity.y + entity.height >= this.y
+                        && entity.y + entity.height < this.y + this.height / 2) {
+                this.y = entity.y + entity.height;
+                this.yAccel = 1;
+            } else {
+                if (this.x + this.width >= entity.x
+                    && this.x + this.width < entity.x + entity.width / 2) {
+                    this.x = entity.x - this.width;
+                } else if (entity.x + entity.width >= this.x
+                            && entity.x + entity.width < this.x + this.width / 2) {
+                    this.x = entity.x + entity.width;
+                }
+            } 
+    }
 }
 
 Hero.prototype.updateDimensions = function () {
@@ -192,8 +201,8 @@ Hero.prototype.update = function () {
 }
 
 Hero.prototype.shoot = function () {
-    var bullet = new Bullet(this.game, this.x + 50, this.y + 50);
-    // var bullet = new Fire(this.game, this.x + 50, this.y + 50);
+    var bullet = new Bullet(this.game, this.x + 50, this.y + 50, true);
+    // var bullet = new Fire(this.game, this.x + 50, this.y + 50, true);
 
     if (this.ticksSinceShot >= bullet.fireRate) {
         this.game.addEntity(bullet);
