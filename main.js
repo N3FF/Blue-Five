@@ -1,6 +1,5 @@
 var ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("./img/hero/Hero.png");
 ASSET_MANAGER.queueDownload("./img/hero/HeroSword.png");
 ASSET_MANAGER.queueDownload("./img/hero/HeroSwordR.png");
 

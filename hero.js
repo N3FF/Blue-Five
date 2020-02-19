@@ -54,39 +54,7 @@ function Hero(game) {
 Hero.prototype = new Entity();
 Hero.prototype.constructor = Hero;
 
-// This is to prevent collisons from happening too fast with the enemy
-Hero.prototype.collideCounter = function (collideCounter) {
-
-    if (this.collideCounter <= 0) {
-        this.movingRight = !this.movingRight;
-        collideCounter = 10;
-    } else {
-        this.collideCounter--;
-    }
-}
-
-
-Hero.prototype.collide = function (other) { // other entity comparing collison with
-
-	// Checking the the entity is not a cannon
-    // if (!(other.cannon === true)) {
-    //     if (this.x + this.width < other.x + other.width
-    //         && this.x + this.width > other.x
-    //         && this.y + this.height < other.y + other.height
-    //         && this.y + this.height > other.y - other.height) {
-    //         // Collision detected
-    //         return true;
-    //     }
-    // } else {
-    //     if (this.x < other.x + other.width
-    //         && this.x + this.width > other.x
-    //         && this.y < other.y + other.height
-    //         && this.y + this.height > other.y) {
-    //         // Collision detected
-    //         return true;
-    //     }
-    // }
-    // return false;
+Hero.prototype.collisionDetected = function (other) { // other entity comparing collison with
 
     return this.x + this.width >= other.x  
             && this.x <= other.x + other.width
@@ -95,66 +63,26 @@ Hero.prototype.collide = function (other) { // other entity comparing collison w
 }
 
 Hero.prototype.handleCollision = function (other) {
-
-    // // Above the collison, also checking that the entity is not a cannon
-    // if (!other.cannon) {
-    //     if (this.y + this.height <= other.y) {
-    //         this.jumping = false;
-    //         this.y = other.y - this.height - other.height;
-    //         this.jumpStart = true;
-    //         if (this.yAccel > 0) {
-    //             this.yAccel = 0;
-    //         }
-    //       // Collison from below, ie mario hitting a block from below  
-    //     } else if (this.y >= other.y - other.height) {
-    //         this.yAccel = 1;
-    //         this.y = other.y;
-
-    //     }
-    // }
-
-    // // If the other entity is a cannon we add the push collison
-    // if (other.cannon) {
-    //     if ((this.x + this.width < other.x + other.width)) {
-            
-    //         this.x = other.x - this.width - 1;
-    //         if (this.collideCounter <= 0) {
-    //             this.movingRight = !this.movingRight;
-    //             this.collideCounter = 10;
-    //         } else {
-    //             this.collideCounter--;
-    //         }
-
-    //     } else {
-    //         this.x = other.x + other.width + 1;
-    //         this.collideCounter;
-    //         if (this.collideCounter <= 0) {
-    //             this.movingRight = !this.movingRight;
-    //             this.collideCounter = 10;
-    //         } else {
-    //             this.collideCounter--;
-    //         }
-    //     }
-    // }
     
-    if (this.y + this.height - other.y < 100) {
-        this.y = other.y - this.height - 1;
+    if (this.y + this.height >= other.y
+        && this.y + this.height < other.y + other.height / 2) {
+        this.y = other.y - this.height;
         this.jumping = false;
         this.jumpStart = true;
         if (this.yAccel > 0) this.yAccel = 0;
-    } else if (other.y + other.height - this.y < 100) {
-        this.y = other.y + other.height + 1;
+    } else if (other.y + other.height >= this.y
+                && other.y + other.height < this.y + this.height / 2) {
+        this.y = other.y + other.height;
         this.yAccel = 1;
     } else {
-        if (this.x + this.width - other.x < 100 ) {
-            this.x = other.x - this.width - 1;
-            
-        } else if (other.x + other.width - this.x < 100) {
-            this.x = other.x + other.width + 1;
+        if (this.x + this.width >= other.x
+            && this.x + this.width < other.x + other.width / 2) {
+            this.x = other.x - this.width;
+        } else if (other.x + other.width >= this.x
+                    && other.x + other.width < this.x + this.width / 2) {
+            this.x = other.x + other.width;
         }
-    }
-
-    
+    }   
 
 }
 
@@ -176,7 +104,7 @@ Hero.prototype.update = function () {
 
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
-        if (ent !== this && this.collide(ent)) {
+        if (ent !== this && this.collisionDetected(ent)) {
             this.handleCollision(ent);
         }
     }
