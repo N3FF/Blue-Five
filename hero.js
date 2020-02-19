@@ -2,7 +2,7 @@
  * @param {number} game       The game 
  * @description The Hero class - the main character controlled by the player
  */
-function Hero(game) {
+function Hero(game, x, y) {
 	
 	// Animations
     this.idleR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Idle_R.png"), 0, 0, 191, 351, 0.06, 10, true, false);
@@ -48,7 +48,7 @@ function Hero(game) {
     this.radius = 50;
     this.collideCounter = 0;
 
-    Entity.call(this, game, 0, 500);
+    Entity.call(this, game, x, y);
 }
 
 Hero.prototype = new Entity();
