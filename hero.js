@@ -2,7 +2,7 @@
  * @param {number} game       The game 
  * @description The Hero class - the main character controlled by the player
  */
-function Hero(game) {
+function Hero(game, x , y) {
 	
 	
 	
@@ -48,6 +48,12 @@ function Hero(game) {
     this.radius = 50;
     this.collideCounter = 0;
     
+    this.getBounds = new Rectangle(this.x+(this.width/2) - (this.width/4),this.y+(this.height/2),this.width/2,this.height/2);
+    this.getBoundsTop = new Rectangle(this.x+(this.width/2) - (this.width/4),this.y,this.width/4,this.height/2);
+    this.getBoundsRight = new Rectangle(this.x+this.width -.15*this.width,this.y+5,.15*this.width,this.height-9);
+    this.getBoundsLeft = new Rectangle(this.x-1,this.y+5,10,this.height-9);
+    this.testBounds = new Rectangle(this.x,this.y,this.width,this.height);
+    
 
 
     //Delete everything above
@@ -91,7 +97,7 @@ function Hero(game) {
     
      */
 
-    Entity.call(this, game, 0, 500);
+    Entity.call(this, game, x, y);
 }
 
 Hero.prototype = new Entity();
@@ -108,84 +114,132 @@ Hero.prototype.collideCounter = function (collideCounter) {
     }
 }
 
+//An entirely revamped general collison detection
 
-Hero.prototype.collide = function (other) { // other entity comparing collison with
+Hero.prototype.collide = function (rect1, rect2) {
 
-	// Checking the the entity is not a cannon
-    if (!(other.cannon === true)) {
-        if (this.x + this.width < other.x + other.width
-            && this.x + this.width > other.x
-            && this.y + this.height < other.y + other.height
-            && this.y + this.height > other.y - other.height) {
-            // Collision detected
-            return true;
-        }
-    } else {
-        if (this.x < other.x + other.width
-            && this.x + this.width > other.x
-            && this.y < other.y + other.height
-            && this.y + this.height > other.y) {
-            // Collision detected
-            return true;
-        }
-    }
-    return false;
+if (rect1.x < rect2.x + rect2.width &&
+		   rect1.x + rect1.width > rect2.x &&
+		   rect1.y < rect2.y + rect2.height &&
+		   rect1.y  + rect1.height  > rect2.y) {
+		    // collision detected!
+		return true;
+		}
+	return false;
 }
 
-Hero.prototype.handler = function (other) {
 
-    // Above the collison, also checking that the entity is not a cannon
-    if (!(other.cannon === true)) {
-        if (this.y + this.height <= other.y) {
-            this.jumping = false;
-            this.y = other.y - this.height - other.height;
-            this.jumpStart = true;
-            if (this.yAccel > 0) {
-                this.yAccel = 0;
-            }
-          // Collison from below, ie mario hitting a block from below  
-        } else if (this.y >= other.y - other.height) {
-            this.yAccel = 1;
-            this.y = other.y;
+//Hero.prototype.collide = function (other) { // other entity comparing collison with
+//
+//	// Checking the the entity is not a cannon
+//    if (!(other.cannon === true)) {
+//        if (this.x + this.width < other.x + other.width
+//            && this.x + this.width > other.x
+//            && this.y + this.height < other.y + other.height
+//            && this.y + this.height > other.y - other.height) {
+//            // Collision detected
+//            return true;
+//        }
+//    } else {
+//        if (this.x < other.x + other.width
+//            && this.x + this.width > other.x
+//            && this.y < other.y + other.height
+//            && this.y + this.height > other.y) {
+//            // Collision detected
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
-        }
-    }
-
-    // If the other entity is a cannon we add the push collison
-    if (other.cannon === true) {
-        if ((this.x + this.width < other.x + other.width)) {
-            
-            this.x = other.x - this.width - 1;
-            if (this.collideCounter <= 0) {
-                this.movingRight = !this.movingRight;
-                this.collideCounter = 10;
-            } else {
-                this.collideCounter--;
-            }
-
-        } else {
-            this.x = other.x + other.width + 1;
-            this.collideCounter;
-            if (this.collideCounter <= 0) {
-                this.movingRight = !this.movingRight;
-                this.collideCounter = 10;
-            } else {
-                this.collideCounter--;
-            }
-        }
-    }
-    
-    return;
-}
+//Hero.prototype.handler = function (other) {
+//
+//    // Above the collison, also checking that the entity is not a cannon
+//    if (!(other.cannon === true)) {
+//        if (this.y + this.height <= other.y) {
+//            this.jumping = false;
+//            this.y = other.y - this.height - other.height;
+//            this.jumpStart = true;
+//            if (this.yAccel > 0) {
+//                this.yAccel = 0;
+//            }
+//          // Collison from below, ie mario hitting a block from below  
+//        } else if (this.y >= other.y - other.height) {
+//            this.yAccel = 1;
+//            this.y = other.y;
+//
+//        }  
+//        
+////        if (!(other.cannon === true)){
+////       	 if ((this.x + this.width < other.x + other.width)) {   
+////             this.x = other.x - this.width - 1;
+////         } else {
+////             this.x = other.x + other.width + 1;
+////             this.collideCounter;      
+////         }
+////        }
+//    }
+//
+//    // If the other entity is a cannon we add the push collison
+//    if (other.cannon === true) {
+//        if ((this.x + this.width < other.x + other.width)) {
+//            
+//            this.x = other.x - this.width - 1;
+//            if (this.collideCounter <= 0) {
+//                this.movingRight = !this.movingRight;
+//                this.collideCounter = 10;
+//            } else {
+//                this.collideCounter--;
+//            }
+//
+//        } else {
+//            this.x = other.x + other.width + 1;
+//            this.collideCounter;
+//            if (this.collideCounter <= 0) {
+//                this.movingRight = !this.movingRight;
+//                this.collideCounter = 10;
+//            } else {
+//                this.collideCounter--;
+//            }
+//        }
+//    }
+//    
+//    return;
+//}
 
 // The update function
 Hero.prototype.update = function () {
 
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
-        if (ent !== this && this.collide(ent)) {
-            this.handler(ent);
+        
+        if (ent !== this && this.collide(ent, this.getBoundsTop)) {
+            this.y = ent.y + this.height;
+            this.yAccel = 0;
         }
+    
+        if (ent !== this && this.collide(ent, this.getBounds)) {
+            //this.handler(ent);
+        	this.jumping = false;
+            this.y = ent.y - this.height;
+            this.jumpStart = true;
+            if (this.yAccel > 0) {
+                this.yAccel = 0;
+            }
+        	
+        }
+        
+        // Right
+        if (ent !== this && this.collide(ent, this.getBoundsRight)) {
+            this.x = ent.x - ent.width;
+        }
+        
+        // Left
+        if (ent !== this && this.collide(ent, this.getBoundsLeft)) {
+        	this.x = ent.x + ent.width;
+        }
+        
+
     }
 
     /*  Need this in the jumping if statement.
@@ -265,6 +319,20 @@ Hero.prototype.update = function () {
         this.shoot();
     }
     this.ticksSinceShot++;
+    
+    
+    // Collison boundaries
+    this.getBounds.y = this.y + this.height/2;
+    this.getBounds.x = this.x + this.width/4;
+    
+    this.getBoundsTop.y = this.y;
+    this.getBoundsTop.x = this.x + this.width/2;
+    
+    this.getBoundsRight.y = this.y + 5;
+    this.getBoundsRight.x = this.x + this.width - 5;
+    
+    this.getBoundsLeft.y = this.y + 5;
+    this.getBoundsLeft.x = this.x;
 
     Entity.prototype.update.call(this);
 }

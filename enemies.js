@@ -17,6 +17,12 @@ function Cannon(game, x, y) {
     this.cannon = true;
     
     
+    this.getBounds = new Rectangle(this.x+(this.width/2) - (this.width/4),this.y+(this.height/2),this.width/2,this.height/2);
+    this.getBoundsTop = new Rectangle(this.x+(this.width/2) - (this.width/4),this.y,this.width/2,this.height/2);
+    this.getBoundsRight = new Rectangle(this.x+this.width -5,this.y+5,5,this.height-10);
+    this.getBoundsLeft = new Rectangle(this.x,this.y+5,5,this.height-10);
+    this.testBounds = new Rectangle(this.x,this.y,this.width,this.height);
+    
     // Needs location parameters set
     Entity.call(this, game, x, y);
 }
@@ -24,45 +30,66 @@ function Cannon(game, x, y) {
 Cannon.prototype = new Entity();
 Cannon.prototype.constructor = Cannon;
 
-Cannon.prototype.collide = function (other) {
-	
-	if (this.x + this.width < other.x + other.width 
-	&& this.x + this.width > other.x
-	&& this.y + this.height < other.y + other.height
-	&& this.y + this.height + this.height > other.y) {
-		// Collision detected
-		this.direction = !this.direction;
-		return true;
-	}
-	
-    return false;
-}
+Cannon.prototype.collide = function (rect1, rect2) {
 
-Cannon.prototype.handler = function (other) {
-	
-	// Above the collison
-	if (this.y + this.height <= other.y) {
-		this.jumping = false;
-		this.y = other.y - this.height - other.height-32;
-		this.canJump = true;
-		if (this.yAccel > 0) {
-			this.yAccel = 0;
-		}
-	} else if (this.y >= other.y - other.height) {
-		this.yAccel = 1;
-		this.y = other.y;
-	} 
-}
+	if (rect1.x < rect2.x + rect2.width &&
+			   rect1.x + rect1.width > rect2.x &&
+			   rect1.y < rect2.y + rect2.height &&
+			   rect1.y  + rect1.height  > rect2.y) {
+			    // collision detected!
+			return true;
+			}
+		return false;
+	}
+
+//Cannon.prototype.handler = function (other) {
+//	
+//	// Above the collison
+//	if (this.y + this.height <= other.y) {
+//		this.jumping = false;
+//		this.y = other.y - this.height - other.height-32;
+//		this.canJump = true;
+//		if (this.yAccel > 0) {
+//			this.yAccel = 0;
+//		}
+//	} else if (this.y >= other.y - other.height) {
+//		this.yAccel = 1;
+//		this.y = other.y;
+//	} 
+//}
 
 // The update function
 Cannon.prototype.update = function () {
 
 	for (var i = 0; i < this.game.entities.length; i++) {
-		var ent = this.game.entities[i];
-		if (ent !== this && this.collide(ent)) {
-			this.handler(ent);
-		}
-	}
+        var ent = this.game.entities[i];
+        
+        if (ent !== this && this.collide(ent, this.getBoundsTop)) {
+            this.y = ent.y + this.height;
+            this.yAccel = 0;
+        }
+    
+        if (ent !== this && this.collide(ent, this.getBounds)) {
+            //this.handler(ent);
+        	this.jumping = false;
+            this.y = ent.y - this.height;
+            //this.jumpStart = true;
+            if (this.yAccel > 0) {
+                this.yAccel = 0;
+            }
+        	
+        }
+        
+        if (ent !== this && this.collide(ent, this.getBoundsRight)) {
+            this.x = ent.x - this.width;
+        }
+        
+        if (ent !== this && this.collide(ent, this.getBoundsLeft)) {
+        	this.x = ent.x + this.width;
+        }
+        
+
+    }
 //    if (this.y > this.ground) {
 //        this.jumping = false;
 //        this.y = this.ground;
@@ -116,6 +143,18 @@ Cannon.prototype.update = function () {
     
     this.y = this.y + this.yAccel;
     this.yAccel = this.yAccel + this.gravity;
+    // Collison boundaries
+    this.getBounds.y = this.y + this.height/2;
+    this.getBounds.x = this.x + this.width/4;
+    
+    this.getBoundsTop.y = this.y;
+    this.getBoundsTop.x = this.x + this.width/2;
+    
+    this.getBoundsRight.y = this.y;
+    this.getBoundsRight.x = this.x + this.width -5;
+    
+    this.getBoundsLeft.y = this.y;
+    this.getBoundsLeft.x = this.x;
     Entity.prototype.update.call(this);
 }
 
