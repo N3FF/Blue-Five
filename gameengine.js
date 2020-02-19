@@ -151,9 +151,10 @@ GameEngine.prototype.draw = function () {
         // visualize hitboxes
         var ent = this.entities[i];
         if (ent.width && ent.height) {
+            this.ctx.save();
             this.ctx.strokeStyle = "white";
-            this.ctx.rect(ent.x - this.camera.xView, ent.y - this.camera.yView, ent.width, ent.height);
-            this.ctx.stroke();
+            this.ctx.strokeRect(ent.x - this.camera.xView, ent.y - this.camera.yView, ent.width, ent.height);
+            this.ctx.restore();
         }
     }
     this.ctx.restore();

@@ -12,8 +12,9 @@ function Cannon(game, x, y) {
     this.direction = true;
     this.gravity = 1;
     this.canJump = true;
-    this.width = 130;
-    this.height = 85;
+    this.scale = 2;
+    this.width = 130 * this.scale;
+    this.height = 85 * this.scale;
     this.cannon = true;
     
     
@@ -126,17 +127,17 @@ Cannon.prototype.draw = function (ctx, xView, yView) {
 
     if (this.accel != 0) {
         if (this.direction) {
-            this.C1.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
+            this.C1.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
         } else {
-            this.CR.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
+            this.CR.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
         }
 
     } else {
 
         if (this.direction) {
-            this.C1.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
+            this.C1.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
         } else {
-            this.CR.drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
+            this.CR.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
         }
 
     }
