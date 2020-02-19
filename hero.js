@@ -218,7 +218,7 @@ Hero.prototype.update = function () {
             this.yAccel = 0;
         }
     
-        if (ent !== this && this.collide(ent, this.getBounds)) {
+        else if (ent !== this && this.collide(ent, this.getBounds)) {
             //this.handler(ent);
         	this.jumping = false;
             this.y = ent.y - this.height;
@@ -230,12 +230,12 @@ Hero.prototype.update = function () {
         }
         
         // Right
-        if (ent !== this && this.collide(ent, this.getBoundsRight)) {
+        else if (ent !== this && this.collide(ent, this.getBoundsRight)) {
             this.x = ent.x - ent.width;
         }
         
         // Left
-        if (ent !== this && this.collide(ent, this.getBoundsLeft)) {
+        else if (ent !== this && this.collide(ent, this.getBoundsLeft)) {
         	this.x = ent.x + ent.width;
         }
         
