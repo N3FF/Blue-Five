@@ -49,6 +49,12 @@ function Hero(game, x, y) {
     this.radius = 50;
     this.collideCounter = 0;
 
+    this.getBounds = new Rectangle(this.x+(this.width/2) - (this.width/4),this.y+(this.height/2),this.width/2,this.height/2);
+    this.getBoundsTop = new Rectangle(this.x+(this.width/2) - (this.width/4),this.y,this.width/4,this.height/2);
+    this.getBoundsRight = new Rectangle(this.x+this.width -.15*this.width,this.y+5,.15*this.width,this.height-9);
+    this.getBoundsLeft = new Rectangle(this.x-1,this.y+5,10,this.height-9);
+    this.testBounds = new Rectangle(this.x,this.y,this.width,this.height);
+
     Entity.call(this, game, x, y);
 }
 
@@ -63,25 +69,22 @@ Hero.prototype.handleCollision = function (entity) {
             }
             break;
         default:
-            if (this.y + this.height >= entity.y
-                && this.y + this.height < entity.y + entity.height / 2) {
-                this.y = entity.y - this.height;
+            if (collisionDetected(entity, this.getBoundsTop)) {
+                this.y = entity.y + this.height;
+                this.yAccel = 0;
+            } else if (collisionDetected(entity, this.getBounds)) {     
+                //this.handler(ent);
                 this.jumping = false;
+                this.y = entity.y - this.height;
                 this.jumpStart = true;
-                if (this.yAccel > 0) this.yAccel = 0;
-            } else if (entity.y + entity.height >= this.y
-                        && entity.y + entity.height < this.y + this.height / 2) {
-                this.y = entity.y + entity.height;
-                this.yAccel = 1;
-            } else {
-                if (this.x + this.width >= entity.x
-                    && this.x + this.width < entity.x + entity.width / 2) {
-                    this.x = entity.x - this.width;
-                } else if (entity.x + entity.width >= this.x
-                            && entity.x + entity.width < this.x + this.width / 2) {
-                    this.x = entity.x + entity.width;
+                if (this.yAccel > 0) {
+                    this.yAccel = 0;
                 }
-            } 
+            } else if (collisionDetected(entity, this.getBoundsRight)) {
+                this.x = entity.x - entity.width;
+            } else if (collisionDetected(entity, this.getBoundsLeft)) {
+                this.x = entity.x + entity.width;
+            }
     }
 }
 
@@ -186,7 +189,20 @@ Hero.prototype.update = function () {
     }
     this.ticksSinceShot++;
 
-    this.updateDimensions();
+    // this.updateDimensions();
+
+    // Collison boundaries
+    this.getBounds.y = this.y + this.height/2;
+    this.getBounds.x = this.x + this.width/4;
+    
+    this.getBoundsTop.y = this.y;
+    this.getBoundsTop.x = this.x + this.width/2;
+    
+    this.getBoundsRight.y = this.y + 5;
+    this.getBoundsRight.x = this.x + this.width - 5;
+    
+    this.getBoundsLeft.y = this.y + 5;
+    this.getBoundsLeft.x = this.x;
     Entity.prototype.update.call(this);
 }
 
