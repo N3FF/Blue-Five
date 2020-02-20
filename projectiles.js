@@ -24,22 +24,13 @@ function Projectile(game, x, y, scale, fireRate, damage, friendly, physics, img)
 Projectile.prototype = new Entity();
 Projectile.prototype.constructor = Projectile;
 
-Projectile.prototype.collisionDetected = function (entity) { // other entity comparing collison with
-
-    return this.x + this.width >= entity.x  
-            && this.x <= entity.x + entity.width
-            && this.y + this.height >= entity.y
-            && this.y < entity.y + entity.height;
-
-}
-
 Projectile.prototype.handleCollision = function (entity) {
     switch (entity.type) {
-        case TYPES.PLATFORM:
-            this.removeFromWorld = true;
+        case TYPES.HERO:
+            if (!this.friendly) this.removeFromWorld = true;
             break;
         default:
-            break;
+            this.removeFromWorld = true;
     }
 }
 
@@ -47,7 +38,7 @@ Projectile.prototype.update = function () {
 
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
-        if (ent !== this && this.collisionDetected(ent)) {
+        if (ent !== this && collisionDetected(this, ent)) {
             this.handleCollision(ent);
         }
     }

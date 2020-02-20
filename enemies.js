@@ -25,14 +25,6 @@ function Cannon(game, x, y) {
 Cannon.prototype = new Entity();
 Cannon.prototype.constructor = Cannon;
 
-Cannon.prototype.collisionDetected = function (entity) {
-	
-    return this.x + this.width >= entity.x  
-            && this.x <= entity.x + entity.width
-            && this.y + this.height >= entity.y
-            && this.y < entity.y + entity.height;
-}
-
 Cannon.prototype.handleCollision = function (entity) {
 	   
     if (this.y + this.height >= entity.y
@@ -62,7 +54,7 @@ Cannon.prototype.update = function () {
 
 	for (var i = 0; i < this.game.entities.length; i++) {
 		var ent = this.game.entities[i];
-		if (ent !== this && this.collisionDetected(ent)) {
+		if (ent !== this && collisionDetected(this, ent)) {
 			this.handleCollision(ent);
 		}
 	}

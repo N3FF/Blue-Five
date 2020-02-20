@@ -3,16 +3,11 @@
  */
 
 
-collisonDetection = function (other) {
+function collisionDetected (entity1, entity2) {
 	
-	if (this.x + this.width < other.x + other.width 
-	&& this.x + this.width > other.x
-	&& this.y + this.height < other.y + other.height
-	&& this.y + this.height + this.height > other.y) {
-		// Collision detected
-		//this.direction = !this.direction;
-		return true;
-	}
+	return entity1.x + entity1.width >= entity2.x  
+            && entity1.x <= entity2.x + entity2.width
+            && entity1.y + entity1.height >= entity2.y
+            && entity1.y < entity2.y + entity2.height;
 	
-    return false;
 }

@@ -15,6 +15,8 @@ HealthManaBars.prototype.update = function () {
 
     this.healthPercent = hero.currentHP / hero.maxHP;
     this.manaPercent = hero.currentMP / hero.maxMP;
+    if (this.healthPercent < 0) this.healthPercent = 0;
+    if (this.manaPercent < 0) this.manaPercent = 0;
     Entity.prototype.update.call(this);
 }
 

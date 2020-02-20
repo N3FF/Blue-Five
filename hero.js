@@ -55,21 +55,11 @@ function Hero(game, x, y) {
 Hero.prototype = new Entity();
 Hero.prototype.constructor = Hero;
 
-Hero.prototype.collisionDetected = function (entity) { // other entity comparing collison with
-
-    return this.x + this.width >= entity.x  
-            && this.x <= entity.x + entity.width
-            && this.y + this.height >= entity.y
-            && this.y < entity.y + entity.height;
-
-}
-
 Hero.prototype.handleCollision = function (entity) {
     switch (entity.type) {
         case TYPES.PROJECTILE:
             if (!entity.friendly) {
-                this.currentHP -= entity.damage;
-                entity.removeFromWorld = true;
+                this.takeDamage(entity.damage);
             }
             break;
         default:
@@ -113,7 +103,7 @@ Hero.prototype.update = function () {
 
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
-        if (ent !== this && this.collisionDetected(ent)) {
+        if (ent !== this && collisionDetected(this, ent)) {
             this.handleCollision(ent);
         }
     }
@@ -198,6 +188,13 @@ Hero.prototype.update = function () {
 
     this.updateDimensions();
     Entity.prototype.update.call(this);
+}
+
+Hero.prototype.takeDamage = function (damage) {
+    this.currentHP -= damage;
+    if (this.currentHP < 0) {
+        this.currentHP = 0;
+    }
 }
 
 Hero.prototype.shoot = function () {
