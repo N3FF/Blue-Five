@@ -203,12 +203,12 @@ Hero.prototype.takeDamage = function (damage) {
 }
 
 Hero.prototype.shoot = function () {
-    if (this.movingRight) {
-        // var bullet = new Bullet(this.game, this.x + 50, this.y + 45, true);
-        var bullet = new Fire(this.game, this.x + 50, this.y + 45, this.game.mouseX, this.game.mouseY, true);
+    if (this.game.mouseX > this.x + this.width / 2) {
+        var bullet = new Bullet(this.game, this.x + 50, this.y + 45, this.game.mouseX, this.game.mouseY, true);
+        // var bullet = new Fire(this.game, this.x + 50, this.y + 45, this.game.mouseX, this.game.mouseY, true);
     } else {
-        // var bullet = new Bullet(this.game, this.x + 5, this.y + 45, true);
-        var bullet = new Fire(this.game, this.x + 5, this.y + 45, this.game.mouseX, this.game.mouseY, true);
+        var bullet = new Bullet(this.game, this.x + 5, this.y + 45, this.game.mouseX, this.game.mouseY, true);
+        // var bullet = new Fire(this.game, this.x + 5, this.y + 45, this.game.mouseX, this.game.mouseY, true);
     }
     
 
@@ -224,15 +224,16 @@ Hero.prototype.draw = function (ctx, xView, yView) {
     var drawY = this.y - yView;
 
     // was this.game.attack
-    if (this.game.keysActive['F'.charCodeAt(0)] || this.game.attack) {
-        //If this.moving right use SwordR else use SwordL
-        (this.movingRight ? this.SwordR : this.SwordL)
-            //Draw image returned in statement above.
-            .drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
-    }
+    // if (this.game.keysActive['F'.charCodeAt(0)] || this.game.attack) {
+    //     //If this.moving right use SwordR else use SwordL
+    //     (this.movingRight ? this.SwordR : this.SwordL)
+    //         //Draw image returned in statement above.
+    //         .drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
+    // }
 
-    else if (this.shooting) {
-        (this.movingRight ? this.shootAnimationR : this.shootAnimationL)
+    // else
+     if (this.shooting) {
+        (this.game.mouseX > this.x + this.width / 2 ? this.shootAnimationR : this.shootAnimationL)
             .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.heroScale);
     }
 

@@ -79,8 +79,8 @@ function Bullet (game, x, y, destX, destY, friendly) {
     var scale = 0.25;
     var fireRate = 20;
     var damage = 5;
-    var velocity = 10;
-    var gravity = 0.1;
+    var velocity = 15;
+    var gravity = 0;
     var accel = 0;
     var timeAlive = 600;
     var physics = new Physics(x, y, timeAlive, destX, destY, gravity, velocity, accel);
