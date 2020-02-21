@@ -149,13 +149,26 @@ GameEngine.prototype.draw = function () {
         this.entities[i].draw(this.ctx, this.camera.xView, this.camera.yView);
 
         // visualize hitboxes
-        var ent = this.entities[i];
-        if (ent.width && ent.height) {
-            this.ctx.save();
-            this.ctx.strokeStyle = "white";
-            this.ctx.strokeRect(ent.x - this.camera.xView, ent.y - this.camera.yView, ent.width, ent.height);
-            this.ctx.restore();
-        }
+        // var ent = this.entities[i];
+        // if (ent.width && ent.height) {
+        //     this.ctx.save();
+        //     this.ctx.strokeStyle = "white";
+        //     this.ctx.strokeRect(ent.x - this.camera.xView, ent.y - this.camera.yView, ent.width, ent.height);
+        //     this.ctx.restore();
+        // }
+
+        // if (ent.collisionManager) {
+        //     this.ctx.save();
+        //     this.ctx.fillStyle = "red";
+        //     this.ctx.fillRect(ent.collisionManager.topBounds.x - this.camera.xView, ent.collisionManager.topBounds.y - this.camera.yView, ent.collisionManager.topBounds.width, ent.collisionManager.topBounds.height);
+        //     this.ctx.fillStyle = "blue";
+        //     this.ctx.fillRect(ent.collisionManager.botBounds.x - this.camera.xView, ent.collisionManager.botBounds.y - this.camera.yView, ent.collisionManager.botBounds.width, ent.collisionManager.botBounds.height);
+        //     this.ctx.fillStyle = "green";
+        //     this.ctx.fillRect(ent.collisionManager.leftBounds.x - this.camera.xView, ent.collisionManager.leftBounds.y - this.camera.yView, ent.collisionManager.leftBounds.width, ent.collisionManager.leftBounds.height);
+        //     this.ctx.fillStyle = "yellow";
+        //     this.ctx.fillRect(ent.collisionManager.rightBounds.x - this.camera.xView, ent.collisionManager.rightBounds.y - this.camera.yView, ent.collisionManager.rightBounds.width, ent.collisionManager.rightBounds.height);
+        //     this.ctx.restore();
+        // }
     }
     this.ctx.restore();
 }

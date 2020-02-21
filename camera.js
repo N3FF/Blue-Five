@@ -2,14 +2,14 @@
 
 /**
  * @description Rectangle class used mostly to represent camera viewport and map dimensions
- * @param {number} left     starting X coordinate
- * @param {number} top      starting Y coordinate
+ * @param {number} x     starting X coordinate
+ * @param {number} y      starting Y coordinate
  * @param {number} width    width
  * @param {number} height   height
  */
-function Rectangle(left, top, width, height) {
-    this.left = left || 0;
-    this.top = top || 0;
+function Rectangle(x, y, width, height) {
+    this.x = x || 0;
+    this.y = y || 0;
     this.width = width || 0;
     this.height = height || 0;
     this.right = this.left + this.width;
@@ -24,12 +24,12 @@ function Rectangle(left, top, width, height) {
  * @param {number} height   height
  */
 Rectangle.prototype.set = function(left, top, width, height) {
-    this.left = left;
-    this.top = top;
+    this.x = left;
+    this.y = top;
     this.width = width || this.width;
     this.height = height || this.height
-    this.right = (this.left + this.width);
-    this.bottom = (this.top + this.height);
+    this.right = (this.x + this.width);
+    this.bottom = (this.y + this.height);
 }
 
 /**
@@ -38,9 +38,9 @@ Rectangle.prototype.set = function(left, top, width, height) {
  * @returns true if this rectangle is fully within rectangle, false otherwise
  */
 Rectangle.prototype.within = function(rectangle) {
-    return (rectangle.left <= this.left &&
+    return (rectangle.x <= this.x &&
       rectangle.right >= this.right &&
-      rectangle.top <= this.top &&
+      rectangle.y <= this.y &&
       rectangle.bottom >= this.bottom);
 }
 
@@ -107,10 +107,10 @@ function Camera(xView, yView, viewportWidth, viewportHeight, worldWidth, worldHe
 
     // don't let camera leaves the world's boundary
     if (!this.viewportRect.within(this.worldRect)) {
-      if (this.viewportRect.left < this.worldRect.left)
-        this.xView = this.worldRect.left;
-      if (this.viewportRect.top < this.worldRect.top)
-        this.yView = this.worldRect.top;
+      if (this.viewportRect.x < this.worldRect.x)
+        this.xView = this.worldRect.x;
+      if (this.viewportRect.y < this.worldRect.y)
+        this.yView = this.worldRect.y;
       if (this.viewportRect.right > this.worldRect.right)
         this.xView = this.worldRect.right - this.wView;
       if (this.viewportRect.bottom > this.worldRect.bottom)

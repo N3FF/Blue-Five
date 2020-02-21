@@ -16,7 +16,11 @@ function Cannon(game, x, y) {
     this.width = 130 * this.scale;
     this.height = 85 * this.scale;
     this.type = TYPES.CANNON;
+
+    this.maxHP = 100;
+    this.currentHP = 100;
     
+    this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
     
     // Needs location parameters set
     Entity.call(this, game, x, y);
@@ -26,27 +30,30 @@ Cannon.prototype = new Entity();
 Cannon.prototype.constructor = Cannon;
 
 Cannon.prototype.handleCollision = function (entity) {
-	   
-    if (this.y + this.height >= entity.y
-        && this.y + this.height < entity.y + entity.height / 2) {
-        this.y = entity.y - this.height;
-        this.jumping = false;
-        this.jumpStart = true;
-        if (this.yAccel > 0) this.yAccel = 0;
-    } else if (entity.y + entity.height >= this.y
-                && entity.y + entity.height < this.y + this.height / 2) {
-        this.y = entity.y + entity.height;
-        this.yAccel = 1;
-    } else {
-        if (this.x + this.width >= entity.x
-            && this.x + this.width < entity.x + entity.width / 2) {
-            this.x = entity.x - this.width;
-        } else if (entity.x + entity.width >= this.x
-                    && entity.x + entity.width < this.x + this.width / 2) {
-            this.x = entity.x + entity.width;
-        
-        }
-    }  
+    switch (entity.type) {
+        case TYPES.PROJECTILE:
+            if (entity.friendly) {
+                this.takeDamage(entity.damage);
+            }
+            break;
+        default:
+            if (this.collisionManager.topCollisionDetected(entity)) {
+                this.y = entity.y + this.height;
+                this.yAccel = 0;
+            } else if (this.collisionManager.botCollisionDetected(entity)) {
+                this.jumping = false;
+                this.y = entity.y - this.height;
+                this.jumpStart = true;
+                if (this.yAccel > 0) {
+                    this.yAccel = 0;
+                }
+            } else if (this.collisionManager.rightCollisionDetected(entity)) {
+                this.x = entity.x - this.width;
+            } else if (this.collisionManager.leftCollisionDetected(entity)) {
+                this.x = entity.x + entity.width;
+            }
+    }
+    
 }
 
 // The update function
@@ -111,6 +118,9 @@ Cannon.prototype.update = function () {
     
     this.y = this.y + this.yAccel;
     this.yAccel = this.yAccel + this.gravity;
+
+    this.collisionManager.updateDimensions(this.x, this.y, this.width, this.height);
+    this.shoot();
     Entity.prototype.update.call(this);
 }
 
@@ -136,4 +146,19 @@ Cannon.prototype.draw = function (ctx, xView, yView) {
 
     }
     Entity.prototype.draw.call(this);
+}
+
+Cannon.prototype.shoot = function () {
+    if (this.direction) {   //right
+        var projectile = new Fire(this.game, this.x + this.width - 30, this.y + 50, this.x + this.width + 50, this.y + 70, false);
+        this.game.addEntity(projectile);
+    } else {
+        var projectile = new Fire(this.game, this.x + 30, this.y + 50, this.x - 50, this.y + 70, false);
+        this.game.addEntity(projectile);
+    }
+}
+
+Cannon.prototype.takeDamage = function (damage) {
+    this.currentHP -= damage;
+    if (this.currentHP <= 0) this.removeFromWorld = true;
 }

@@ -10,7 +10,7 @@
  * @param {Physics} physics     Physics object with projectile's physics properties
  * @param {Animation} img       Animation object for when projectile is in flight
  */
-function Projectile(game, x, y, scale, fireRate, damage, friendly, physics, img) {
+function Projectile(game, x, y, destX, destY, scale, fireRate, damage, friendly, physics, img) {
     this.scale = scale;
     this.fireRate = fireRate;
     this.damage = damage;
@@ -28,6 +28,11 @@ Projectile.prototype.handleCollision = function (entity) {
     switch (entity.type) {
         case TYPES.HERO:
             if (!this.friendly) this.removeFromWorld = true;
+            break;
+        case TYPES.CANNON:
+            if (this.friendly) this.removeFromWorld = true;
+            break;
+        case TYPES.PROJECTILE:
             break;
         default:
             this.removeFromWorld = true;
@@ -59,8 +64,7 @@ Projectile.prototype.draw = function (ctx, xView, yView) {
     ctx.save();
     ctx.translate(this.x - xView, this.y - yView);
     ctx.rotate(this.physics.currentAngle);
-    this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width * this.scale / 2, -1 * this.img.spriteSheet.height * this.scale / 2, this.scale);
-    // this.img.drawFrame(this.game.clockTick, ctx, 0, 0, this.scale);
+    this.img.drawFrame(this.game.clockTick, ctx, 0, -this.img.spriteSheet.height * this.scale / 2, this.scale);
     ctx.restore();
     Entity.prototype.draw.call(this);
 }
@@ -71,7 +75,7 @@ Projectile.prototype.draw = function (ctx, xView, yView) {
  * @param {number} x            starting X coordinate 
  * @param {number} y            starting Y coordinate 
  */
-function Bullet (game, x, y, friendly) {
+function Bullet (game, x, y, destX, destY, friendly) {
     var scale = 0.25;
     var fireRate = 20;
     var damage = 5;
@@ -79,11 +83,11 @@ function Bullet (game, x, y, friendly) {
     var gravity = 0.1;
     var accel = 0;
     var timeAlive = 600;
-    var physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
+    var physics = new Physics(x, y, timeAlive, destX, destY, gravity, velocity, accel);
     var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
     this.width = 51 * scale;
     this.height = 60 * scale;
-    Projectile.call(this, game, x, y, scale, fireRate, damage, friendly, physics, img);
+    Projectile.call(this, game, x, y, destX, destY, scale, fireRate, damage, friendly, physics, img);
 }
 
 Bullet.prototype = new Projectile();
@@ -95,19 +99,19 @@ Bullet.prototype.constructor = Bullet;
  * @param {number} x            starting X coordinate
  * @param {number} y            starting Y coordinate
  */
-function Fire (game, x, y, friendly) {
-    var scale = 1;
+function Fire (game, x, y, destX, destY, friendly) {
+    var scale = 2;
     var fireRate = 1;
-    var damage = 0.5;
-    var velocity = 3;
+    var damage = 0.25;
+    var velocity = 10;
     var gravity = Math.random() * 0.075 - 0.03;;
     var accel = 0;
-    var timeAlive = 60;
-    var physics = new Physics(x, y, timeAlive, game.mouseX, game.mouseY, gravity, velocity, accel);
+    var timeAlive = 40;
+    var physics = new Physics(x, y, timeAlive, destX, destY, gravity, velocity, accel);
     var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
     this.width = 25 * scale;
     this.height = 12 * scale;
-    Projectile.call(this, game, x, y, scale, fireRate, damage, friendly, physics, img);
+    Projectile.call(this, game, x, y, destX, destY, scale, fireRate, damage, friendly, physics, img);
 }
 
 Fire.prototype = new Projectile();
@@ -117,7 +121,7 @@ Fire.prototype.draw = function (ctx, xView, yView) {
     ctx.save();
     ctx.translate(this.x - xView, this.y - yView);
     ctx.rotate(this.physics.currentAngle);
-    this.img.drawFrame(this.game.clockTick, ctx, -1 * this.img.spriteSheet.width / 2 + 25, -1 * this.img.spriteSheet.height / 2 + 50, this.scale);
+    this.img.drawFrame(this.game.clockTick, ctx, 0, -1 * this.img.spriteSheet.height * this.scale / 20, this.scale);
     ctx.restore();
     Entity.prototype.draw.call(this);
 }
