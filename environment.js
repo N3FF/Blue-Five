@@ -1,5 +1,5 @@
 function Background(game) {
-    this.back1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/Background.png"), 0, 0, 11520, 864, 1, 1, true, true);
+    this.back1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/Background.png"), 0, 0, 13824, 1037, 1, 1, true, true);
     this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/52Tilea.png"), 0, 0, 52, 52, 1, 1, true, true);
 
     this.instructions = new Animation(ASSET_MANAGER.getAsset("./img/hud/Instructions.png"), 0, 0, 370, 202, 1, 1, true, true);

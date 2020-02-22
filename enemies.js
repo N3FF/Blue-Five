@@ -1,7 +1,9 @@
 function Cannon(game, x, y) {
+    //Changes size and relative location of entities
+    this.scale = 1.5;
+
     var frameWidth = 113;
     var frameHeight = 82
-    this.scale = 1.5;
     this.width = frameWidth * this.scale;
     this.height = (frameHeight - 3) * this.scale;
     var animationSpeed = 0.05 * this.scale;
@@ -176,7 +178,6 @@ Cannon.prototype.shoot = function () {
     var yProjectileEnd = 35 * this.scale
     
     if (this.facingRight) {   //right
-
         var projectile = new Fire(this.game, this.x + this.width - xProjectileStart, this.y + yProjectileStart, this.x + this.width + 50, this.y + yProjectileEnd, false);
         this.game.addEntity(projectile);
     } else {
