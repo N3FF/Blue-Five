@@ -1,6 +1,13 @@
 function Cannon(game, x, y) {
-    this.C1 = new Animation(ASSET_MANAGER.getAsset("./img/enemies/Cannon.png"), 0, 0, 130, 85, .20, 3, true, true);
-    this.CR = new Animation(ASSET_MANAGER.getAsset("./img/enemies/CannonR.png"), 0, 0, 130, 85, .20, 3, true, true);
+    var frameWidth = 113;
+    var frameHeight = 82
+    this.scale = 1.5;
+    this.width = frameWidth * this.scale;
+    this.height = (frameHeight - 3) * this.scale;
+    var animationSpeed = 0.05 * this.scale;
+
+    this.CannonLeft = new Animation(ASSET_MANAGER.getAsset("./img/enemies/Cannon2_R.png"), 0, 0, frameWidth, frameHeight, animationSpeed, 10, true, false);
+    this.CannonRight = new Animation(ASSET_MANAGER.getAsset("./img/enemies/Cannon2_L.png"), 0, 0, frameWidth, frameHeight, animationSpeed, 10, true, true);
     this.jumping = false;
     this.attack = false;
     this.moveR = true;
@@ -9,28 +16,25 @@ function Cannon(game, x, y) {
     this.ground = 500;
     this.accel = 0;
     this.yAccel = 0;
-    this.direction = true;
+    this.facingRight = true;
     this.gravity = 1;
     this.canJump = true;
-    this.scale = 2;
-    this.width = 130 * this.scale;
-    this.height = 85 * this.scale;
     this.type = TYPES.CANNON;
-    
+
     this.startX = x;
     this.startY = y;
 
-    this.maxHP = 100;
-    this.currentHP = 100;
-    
+    this.maxHP = 10;
+    this.currentHP = 10;
+
     this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
-    
-    this.getBounds = new Rectangle(this.x+(this.width/2) - (this.width/4),this.y+(this.height/2),this.width/2,this.height/2);
-    this.getBoundsTop = new Rectangle(this.x+(this.width/2) - (this.width/4),this.y,this.width/2,this.height/2);
-    this.getBoundsRight = new Rectangle(this.x+this.width -5,this.y+5,5,this.height-10);
-    this.getBoundsLeft = new Rectangle(this.x,this.y+5,5,this.height-10);
-    this.testBounds = new Rectangle(this.x,this.y,this.width,this.height);
-    
+
+    this.getBounds = new Rectangle(this.x + (this.width / 2) - (this.width / 4), this.y + (this.height / 2), this.width / 2, this.height / 2);
+    this.getBoundsTop = new Rectangle(this.x + (this.width / 2) - (this.width / 4), this.y, this.width / 2, this.height / 2);
+    this.getBoundsRight = new Rectangle(this.x + this.width - 5, this.y + 5, 5, this.height - 10);
+    this.getBoundsLeft = new Rectangle(this.x, this.y + 5, 5, this.height - 10);
+    this.testBounds = new Rectangle(this.x, this.y, this.width, this.height);
+
     // Needs location parameters set
     Entity.call(this, game, x, y);
 }
@@ -62,24 +66,24 @@ Cannon.prototype.handleCollision = function (entity) {
                 this.x = entity.x + entity.width;
             }
     }
-    
+
 }
 
 // The update function
 Cannon.prototype.update = function () {
 
-	for (var i = 0; i < this.game.entities.length; i++) {
-		var ent = this.game.entities[i];
-		if (ent !== this && collisionDetected(this, ent)) {
-			this.handleCollision(ent);
-		}
-	}
-//    if (this.y > this.ground) {
-//        this.jumping = false;
-//        this.y = this.ground;
-//        this.canJump = true;
-//        this.yAccel = 0;
-//    }
+    for (var i = 0; i < this.game.entities.length; i++) {
+        var ent = this.game.entities[i];
+        if (ent !== this && collisionDetected(this, ent)) {
+            this.handleCollision(ent);
+        }
+    }
+    //    if (this.y > this.ground) {
+    //        this.jumping = false;
+    //        this.y = this.ground;
+    //        this.canJump = true;
+    //        this.yAccel = 0;
+    //    }
 
 
     if (this.jumping === false) {
@@ -105,8 +109,8 @@ Cannon.prototype.update = function () {
 
 
     if (this.moveR) {
-        this.direction = true;
-       
+        this.facingRight = true;
+
         if (this.accel > 0) {
             this.accel = 5;
 
@@ -116,7 +120,7 @@ Cannon.prototype.update = function () {
     }
 
     if (this.moveL) {
-        this.direction = false;
+        this.facingRight = false;
         if (this.accel < 0) {
             this.accel = -5;
         } else {
@@ -124,7 +128,7 @@ Cannon.prototype.update = function () {
         }
 
     }
-    
+
     this.y = this.y + this.yAccel;
     this.yAccel = this.yAccel + this.gravity;
 
@@ -139,18 +143,18 @@ Cannon.prototype.draw = function (ctx, xView, yView) {
     var drawY = this.y - yView;
 
     if (this.accel != 0) {
-        if (this.direction) {
-            this.C1.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
+        if (this.facingRight) {
+            this.CannonLeft.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
         } else {
-            this.CR.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
+            this.CannonRight.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
         }
 
     } else {
 
-        if (this.direction) {
-            this.C1.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
+        if (this.facingRight) {
+            this.CannonLeft.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
         } else {
-            this.CR.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
+            this.CannonRight.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
         }
 
     }
@@ -158,11 +162,25 @@ Cannon.prototype.draw = function (ctx, xView, yView) {
 }
 
 Cannon.prototype.shoot = function () {
-    if (this.direction) {   //right
-        var projectile = new Fire(this.game, this.x + this.width - 30, this.y + 50, this.x + this.width + 50, this.y + 70, false);
+    /*2x
+    if (this.facingRight) {   //right
+        var projectile = new Fire(this.game, this.x + this.width - 55, this.y + 60, this.x + this.width + 50, this.y + 70, false);
         this.game.addEntity(projectile);
     } else {
-        var projectile = new Fire(this.game, this.x + 30, this.y + 50, this.x - 50, this.y + 70, false);
+        var projectile = new Fire(this.game, this.x + 20, this.y + 60, this.x - 50, this.y + 70, false);
+        this.game.addEntity(projectile);
+    }
+    */
+    var xProjectileStart = 12 * this.scale;
+    var yProjectileStart = 28 * this.scale;
+    var yProjectileEnd = 35 * this.scale
+    
+    if (this.facingRight) {   //right
+
+        var projectile = new Fire(this.game, this.x + this.width - xProjectileStart, this.y + yProjectileStart, this.x + this.width + 50, this.y + yProjectileEnd, false);
+        this.game.addEntity(projectile);
+    } else {
+        var projectile = new Fire(this.game, this.x + xProjectileStart, this.y + yProjectileStart, this.x - 50, this.y + yProjectileEnd, false);
         this.game.addEntity(projectile);
     }
 }
