@@ -76,7 +76,7 @@ Projectile.prototype.draw = function (ctx, xView, yView) {
  * @param {number} y            starting Y coordinate 
  */
 function Bullet (game, x, y, destX, destY, friendly) {
-    var scale = 0.25;
+    var scale = 0.5;
     var fireRate = 20;
     var damage = 5;
     var velocity = 15;
@@ -87,6 +87,7 @@ function Bullet (game, x, y, destX, destY, friendly) {
     var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
     this.width = 51 * scale;
     this.height = 60 * scale;
+    this.manaCost = 5;
     Projectile.call(this, game, x, y, destX, destY, scale, fireRate, damage, friendly, physics, img);
 }
 
@@ -111,6 +112,7 @@ function Fire (game, x, y, destX, destY, friendly) {
     var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
     this.width = 25 * scale;
     this.height = 12 * scale;
+    this.manaCost = 0;
     Projectile.call(this, game, x, y, destX, destY, scale, fireRate, damage, friendly, physics, img);
 }
 

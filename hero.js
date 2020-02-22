@@ -17,38 +17,35 @@ function Hero(game, x, y) {
     this.SwordL = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSwordR.png"), 0, 0, 60, 60, .15, 9, true, true);
 
 
-    // Hero variables
-    this.jumping = false; // if the hero is jumping
-    this.attacking = false; // if the hero is attacking
-    this.shooting = false; // if the hero is shooting
-    this.moveR = false; // if the hero is moving right
-    this.moveL = false; // if the hero is moving left
+    this.jumping = false;       // if the hero is jumping
+    this.attacking = false;     // if the hero is attacking
+    this.shooting = false;      // if the hero is shooting
+    this.moveR = false;         // if the hero is moving right
+    this.moveL = false;         // if the hero is moving left
+    this.type = TYPES.HERO;
 
-    this.accel = 0; // acceleration to make the hero look like they are running
-    // it does not really do anything else
-
-    this.yAccel = 0; // the heros vertical acceleration for gravity
+    this.accel = 0;             // acceleration to make the hero look like they are running
+                                // it does not really do anything else
+    this.yAccel = 0;            // the heros vertical acceleration for gravity
     this.movingRight = true;
-    this.gravity = 1; // The effect of gravity
-    this.jumpStart = true; // whether the hero gets y accel at the beginning of a jump
+    this.gravity = 1;           // The effect of gravity
+    this.jumpStart = true;      // whether the hero gets y accel at the beginning of a jump
     this.ticksSinceShot = 0;
     this.heroScale = .25;
 
-    this.maxHP = 100; // hitpoints
+    this.maxHP = 100;           // hitpoints
     this.currentHP = 100;
-    this.maxMP = 100; // magic
+    this.maxMP = 100;           // magic
     this.currentMP = 100;
-    this.type = TYPES.HERO;
 
-    //  Collison code work
-    //   NOTE: Standard sprites are 55x60 this will need to be updated on different
-    //   sprites
-
+    this.healthRegen = .05;     // amount hp increases every update
+    this.manaRegen = .05;       // amount mana increases every update
+    
 
     this.width = 191 * this.heroScale;
     this.height = 351 * this.heroScale;
-    this.collisionCounter = 0;
-
+    this.collisionDelay = 60;
+    this.ticksSinceCollison = 0;  // amount of ticks between instances of damage when colliding w/enemy
     this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
 
     Entity.call(this, game, x, y);
@@ -56,50 +53,6 @@ function Hero(game, x, y) {
 
 Hero.prototype = new Entity();
 Hero.prototype.constructor = Hero;
-
-Hero.prototype.handleCollision = function (entity) {
-    switch (entity.type) {
-        case TYPES.PROJECTILE:
-            if (!entity.friendly) this.takeDamage(entity.damage);
-            break;
-        case TYPES.CANNON:
-            if (this.collisionCounter <= 0) {
-                this.takeDamage(20);
-                this.collisionCounter = 60;
-            }
-        default:
-            if (this.collisionManager.topCollisionDetected(entity)) {
-                this.y = entity.y + this.height;
-                this.yAccel = 0;
-            } else if (this.collisionManager.botCollisionDetected(entity)) {
-                this.jumping = false;
-                this.y = entity.y - this.height;
-                this.jumpStart = true;
-                if (this.yAccel > 0) {
-                    this.yAccel = 0;
-                }
-            } else if (this.collisionManager.rightCollisionDetected(entity)) {
-                this.x = entity.x - this.width;
-            } else if (this.collisionManager.leftCollisionDetected(entity)) {
-                this.x = entity.x + entity.width;
-            }
-    }
-}
-
-Hero.prototype.updateDimensions = function () {
-    if (this.jumping) {
-        this.width = 402 * this.heroScale;
-        this.height = 365 * this.heroScale;
-    } else if (this.accel != 0) {
-        this.width = 295 * this.heroScale;
-        this.height = 343 * this.heroScale;
-    } else {
-        this.width = 191 * this.heroScale;
-        this.height = 351 * this.heroScale;
-    }
-
-    this.collisionManager.updateDimensions(this.x, this.y, this.width, this.height);
-}
 
 // The update function
 Hero.prototype.update = function () {
@@ -185,37 +138,19 @@ Hero.prototype.update = function () {
 
     // Shooting function for the hero
     this.shooting = this.game.rightMouseDown;
-    if (this.shooting) this.shoot();
+    this.attacking = this.game.leftMouseDown;
+    if (this.attacking) this.shootBullet();
+    else if (this.shooting) this.shootFire();
     this.ticksSinceShot++;
 
     // this.updateDimensions();
     this.collisionManager.updateDimensions(this.x, this.y, this.width, this.height);
-    this.collisionCounter--;
+    this.ticksSinceCollison++;
+
+    this.changeHP(this.healthRegen);
+    this.changeMP(this.manaRegen);
 
     Entity.prototype.update.call(this);
-}
-
-Hero.prototype.takeDamage = function (damage) {
-    this.currentHP -= damage;
-    if (this.currentHP < 0) {
-        this.currentHP = 0;
-    }
-}
-
-Hero.prototype.shoot = function () {
-    if (this.game.mouseX > this.x + this.width / 2) {
-        var bullet = new Bullet(this.game, this.x + 50, this.y + 45, this.game.mouseX, this.game.mouseY, true);
-        // var bullet = new Fire(this.game, this.x + 50, this.y + 45, this.game.mouseX, this.game.mouseY, true);
-    } else {
-        var bullet = new Bullet(this.game, this.x + 5, this.y + 45, this.game.mouseX, this.game.mouseY, true);
-        // var bullet = new Fire(this.game, this.x + 5, this.y + 45, this.game.mouseX, this.game.mouseY, true);
-    }
-    
-
-    if (this.ticksSinceShot >= bullet.fireRate) {
-        this.game.addEntity(bullet);
-        this.ticksSinceShot = 0;
-    }
 }
 
 Hero.prototype.draw = function (ctx, xView, yView) {
@@ -224,7 +159,7 @@ Hero.prototype.draw = function (ctx, xView, yView) {
     var drawY = this.y - yView;
 
     // was this.game.attack
-    // if (this.game.keysActive['F'.charCodeAt(0)] || this.game.attack) {
+    // if (this.game.keysActive['F'.charCodeAt(0)] || this.game.attacking) {
     //     //If this.moving right use SwordR else use SwordL
     //     (this.movingRight ? this.SwordR : this.SwordL)
     //         //Draw image returned in statement above.
@@ -232,7 +167,7 @@ Hero.prototype.draw = function (ctx, xView, yView) {
     // }
 
     // else
-     if (this.shooting) {
+     if (this.shooting || this.game.keysActive['F'.charCodeAt(0)] || this.attacking) {
         (this.game.mouseX > this.x + this.width / 2 ? this.shootAnimationR : this.shootAnimationL)
             .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.heroScale);
     }
@@ -252,4 +187,93 @@ Hero.prototype.draw = function (ctx, xView, yView) {
     }
 
     Entity.prototype.draw.call(this);
+}
+
+Hero.prototype.handleCollision = function (entity) {
+    switch (entity.type) {
+        case TYPES.PROJECTILE:
+            if (!entity.friendly) this.changeHP(-entity.damage);
+            break;
+        case TYPES.CANNON:
+            if (this.ticksSinceCollison >= this.collisionDelay) {
+                this.changeHP(-20);
+                this.ticksSinceCollison = 0;
+            }
+        default:
+            if (this.collisionManager.topCollisionDetected(entity)) {
+                this.y = entity.y + this.height;
+                this.yAccel = 0;
+            } else if (this.collisionManager.botCollisionDetected(entity)) {
+                this.jumping = false;
+                this.y = entity.y - this.height;
+                this.jumpStart = true;
+                if (this.yAccel > 0) {
+                    this.yAccel = 0;
+                }
+            } else if (this.collisionManager.rightCollisionDetected(entity)) {
+                this.x = entity.x - this.width;
+            } else if (this.collisionManager.leftCollisionDetected(entity)) {
+                this.x = entity.x + entity.width;
+            }
+    }
+}
+
+// Let's revisit this idea after the deadline, but right now it causes some issues
+Hero.prototype.updateDimensions = function () {
+    if (this.jumping) {
+        this.width = 402 * this.heroScale;
+        this.height = 365 * this.heroScale;
+    } else if (this.accel != 0) {
+        this.width = 295 * this.heroScale;
+        this.height = 343 * this.heroScale;
+    } else {
+        this.width = 191 * this.heroScale;
+        this.height = 351 * this.heroScale;
+    }
+
+    this.collisionManager.updateDimensions(this.x, this.y, this.width, this.height);
+}
+
+Hero.prototype.changeHP = function (amount) {
+    this.currentHP += amount;
+    if (this.currentHP < 0) 
+        this.currentHP = 0;
+    else if (this.currentHP > this.maxHP)
+        this.currentHP = this.maxHP;
+}
+
+Hero.prototype.changeMP = function (amount) {
+    this.currentMP += amount;
+    if (this.currentMP < 0) 
+        this.currentMP = 0;
+    else if (this.currentMP > this.maxMP)
+        this.currentMP = this.maxMP;
+}
+
+Hero.prototype.shootBullet = function () {
+    if (this.game.mouseX > this.x + this.width / 2) {
+        var bullet = new Bullet(this.game, this.x + 50, this.y + 45, this.game.mouseX, this.game.mouseY, true);
+    } else {
+        var bullet = new Bullet(this.game, this.x + 5, this.y + 45, this.game.mouseX, this.game.mouseY, true);
+    }
+
+    if (this.ticksSinceShot >= bullet.fireRate && this.currentMP >= bullet.manaCost) {
+        this.game.addEntity(bullet);
+        this.ticksSinceShot = 0;
+        this.changeMP(-bullet.manaCost);
+    }
+}
+
+Hero.prototype.shootFire = function () {
+    if (this.game.mouseX > this.x + this.width / 2) {
+        var fire = new Fire(this.game, this.x + 50, this.y + 45, this.game.mouseX, this.game.mouseY, true);
+    } else {
+        var fire = new Fire(this.game, this.x + 5, this.y + 45, this.game.mouseX, this.game.mouseY, true);
+    }
+
+    if (this.ticksSinceShot >= fire.fireRate && this.currentMP >= fire.manaCost) {
+        this.game.addEntity(fire);
+        this.ticksSinceShot = 0;
+        this.changeMP(-fire.manaCost);
+    }
 }

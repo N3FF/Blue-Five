@@ -41,6 +41,12 @@ function GameEngine() {
     this.mouse = null;
     this.leftMouseDown = null;
     this.rightMouseDown = null;
+    this.mouseX = null;
+    this.mouseY = null;
+    this.lastMouseX = null;         // used to update mouseX and mouseY even if the mouse doesn't move
+    this.lastMouseY = null;         // ^
+    this.lastXView = null;          // ^
+    this.lastYView = null;          // ^
     this.wheel = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
@@ -112,7 +118,7 @@ GameEngine.prototype.startInput = function () {
         // Action
     	//that.keysActive.fill(true);
     	if (e.which == 1) {
-            that.attack = true;
+            that.leftMouseDown = true;
         } else if (e.which == 3) {
             that.rightMouseDown = true;
         }
@@ -122,15 +128,17 @@ GameEngine.prototype.startInput = function () {
         // Action
     	//that.keysActive.fill(true);
     	if (e.which == 1) {
-            that.attack = false;
+            that.leftMouseDown = false;
         } else if (e.which == 3) {
             that.rightMouseDown = false;
         }
     });
 
     this.ctx.canvas.addEventListener("mousemove", function (e) {
-        that.mouseX = e.clientX + that.camera.xView;
-        that.mouseY = e.clientY + that.camera.yView;
+        that.lastMouseX = e.clientX + that.camera.xView;
+        that.lastMouseY = e.clientY + that.camera.yView;
+        that.lastXView = that.camera.xView;
+        that.lastYView = that.camera.yView;
     });
       
 
@@ -138,7 +146,7 @@ GameEngine.prototype.startInput = function () {
 }
 
 GameEngine.prototype.addEntity = function (entity) {
-    console.log('added entity');
+    // console.log('added entity');
     this.entities.push(entity);
 }
 
@@ -184,10 +192,12 @@ GameEngine.prototype.update = function () {
     }
 
     this.camera.update();
+    this.mouseX = this.lastMouseX + this.camera.xView - this.lastXView;
+    this.mouseY = this.lastMouseY + this.camera.yView - this.lastYView;
 
     for (var i = this.entities.length - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
-            console.log("removed entity"); 
+            // console.log("removed entity"); 
             this.entities.splice(i, 1);
         }
     }
