@@ -23,6 +23,8 @@ function Hero(game, x, y) {
     this.moveR = false;         // if the hero is moving right
     this.moveL = false;         // if the hero is moving left
     this.type = TYPES.HERO;
+    
+    this.controllable = true;
 
     this.accel = 0;             // acceleration to make the hero look like they are running
                                 // it does not really do anything else
@@ -47,6 +49,9 @@ function Hero(game, x, y) {
     this.collisionDelay = 60;
     this.ticksSinceCollison = 0;  // amount of ticks between instances of damage when colliding w/enemy
     this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
+    
+    this.startX = x;
+    this.startY = y;
 
     Entity.call(this, game, x, y);
 }
@@ -56,6 +61,9 @@ Hero.prototype.constructor = Hero;
 
 // The update function
 Hero.prototype.update = function () {
+	
+	if (this.controllable) {
+
 
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
@@ -72,6 +80,17 @@ Hero.prototype.update = function () {
         this.jumping = false;
         }
     */
+    
+    if (this.y > 2000 || this.currentHP <= 1) {
+    	this.yAccel = 0;
+    	this.y = this.startX;
+    	this.x = this.startY;
+    	this.currentHP = 100;
+    	this.currentMP = 100;
+    	
+    	//this.game.init(ctx, camera);
+       // this.game.start();
+    }
 
     // Handles running animations on the ground
     // all this code does is make the hero look like he is running
@@ -140,8 +159,15 @@ Hero.prototype.update = function () {
     this.shooting = this.game.rightMouseDown;
     this.attacking = this.game.leftMouseDown;
     if (this.attacking) this.shootBullet();
-    else if (this.shooting) this.shootFire();
+    else if (this.shooting) {
+    	this.shootFire();
+    }
     this.ticksSinceShot++;
+    
+	} else {
+		this.attacking =  true;
+		this.shootFire();
+	}
     
     
     // Collison boundaries
@@ -151,6 +177,8 @@ Hero.prototype.update = function () {
 
     this.changeHP(this.healthRegen);
     this.changeMP(this.manaRegen);
+    
+	
 
     Entity.prototype.update.call(this);
 }

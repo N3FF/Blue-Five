@@ -40,10 +40,71 @@ ASSET_MANAGER.downloadAll(function () {
     gameEngine.addEntity(bg);
     gameEngine.addEntity(hero);
     
-    loadLevel(gameEngine, "./levels/level1.txt", function () {
+//  // The string here can be used until we figure out file loading
+  var str = "xxn"+
+"xxn"+
+"xxn"+
+"xxn"+
+"xxn"+
+"xxn"+
+"xx                                                                                        xn"+
+"xx                     v                                                                                 xn"+
+"xx                     v                                                                  n"+
+"xxvvvvv              vvvv          vvvvvvvvvvvv          vvvvvvvvvvvvv       vvvvvvvvvn"+
+"xx           c                c                                                       n"+
+"xx                                                                   c                                  xx              xx            x  n"+                                                   
+"xx                                                                                                                                    xn"+
+"xx                                                                                                                                    xn"+
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx         vvv             vvv             vvv   xxxxxxxxxxxx n"+                              
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx                                               xxxxxxxxxxxx                                                                                            www     n"+
+"                                                                                                                                      xxxxxxxxxxxxx                                                                                         xxxxxxx   n"+          
+"                                                                                                                                      xxxxxxxxxxxx                                                   xxxxxx         vvvvv           v     vvvvvvvvvvv n"+
+"                                                                                                                                      xxxxxxxxxxxx      c         c       c         v   xxxx   xxxxxxxxxxxxxxxx               v           xvxvxvxvxvx n"+
+"                                                                                                                                      xxxxxxxxxxxx                                  vn"+
+"                                                                                                                                      xxxxxxxxxxxx                                  vn"+
+"                                                                                                                                      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxn";
+  
+  // === Code for the level editor ====
+	var tilesize = 52;
+  y = 0; // 
+  x = 0;
+
+	    for (var i = 0; i < str.length; i++)
+	   { 
+	        var c = str.charAt(i);
+	        
+	        if (c === 'v'){
+	        	// add tile entity at x * tilesize and y for y coordinates
+	        	 var platform = new Platform(gameEngine, x * tilesize , y , 0);
+	        	 gameEngine.addEntity(platform);
+	        } else if (c === 'x'){
+	        	var platform = new Platform(gameEngine, x * tilesize, y, 1);
+	        	 gameEngine.addEntity(platform);
+	        } else if (c === 'h'){
+	        	var hero = new Hero(gameEngine, x * tilesize, y);
+	        	gameEngine.addEntity(hero);
+	        } else if (c === 'c'){
+	        	 var e1 = new Cannon(gameEngine, x * tilesize, y);
+	        	 gameEngine.addEntity(e1);
+	        } else if (c === 'n'){
+	        	y += 52;
+	        	x = -1;
+	        }  else if (c === 'w'){
+	        	var platform = new Platform(gameEngine, x * tilesize, y, 1, true);
+	        	 gameEngine.addEntity(platform);
+	        }
+	        x++;
+	       
+	        
+	        
+	    }
+    
+    
+    
+   // loadLevel(gameEngine, "./levels/level1.txt", function () {
         gameEngine.addEntity(healthManaBars);
         gameEngine.init(ctx, camera);
         gameEngine.start();
-    });
+  //  });
     	    
 });

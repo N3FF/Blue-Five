@@ -20,7 +20,7 @@ Background.prototype.draw = function (ctx, xView, yView) {
     Entity.prototype.draw.call(this);
 }
 
-function Platform(game, x, y, type) {
+function Platform(game, x, y, type, win) {
 	
 	if( type === 1) {
     this.Tile1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/52Tilea.png"), 0, 0, 52, 52, .20, 1, true, true);
@@ -32,6 +32,7 @@ function Platform(game, x, y, type) {
     this.width = 52;
     this.height = 52;  
     this.type = TYPES.PLATFORM;
+    this.win = true;
     
     // For future
     this.walkableTerrain = false;
@@ -50,7 +51,7 @@ Platform.prototype.update = function () {
 
 Platform.prototype.draw = function (ctx, xView, yView) {
 	
-	this.Tile1.drawFrame(this.game.clockTick, ctx, this.x - xView, this.y - yView, 1);
+	this.Tile1.drawFrame(this.game.clockTick, ctx, this.x - xView + 13, this.y - yView, 1);
 
     Entity.prototype.draw.call(this);
 }

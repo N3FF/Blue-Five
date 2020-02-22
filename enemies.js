@@ -16,6 +16,9 @@ function Cannon(game, x, y) {
     this.width = 130 * this.scale;
     this.height = 85 * this.scale;
     this.type = TYPES.CANNON;
+    
+    this.startX = x;
+    this.startY = y;
 
     this.maxHP = 100;
     this.currentHP = 100;
@@ -91,11 +94,11 @@ Cannon.prototype.update = function () {
 
     this.x = this.x + this.accel;
 
-    if (this.x < 300) {
+    if (this.x < this.startX - 200) {
         this.moveR = true;
         this.moveL = false;
     }
-    if (this.x > 1400) {
+    if (this.x > this.startX + 200) {
         this.moveL = true;
         this.moveR = false
     }
