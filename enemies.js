@@ -26,8 +26,8 @@ function Cannon(game, x, y) {
     this.startX = x;
     this.startY = y;
 
-    this.maxHP = 10;
-    this.currentHP = 10;
+    this.maxHP = 25;
+    this.currentHP = 25;
 
     this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
 
