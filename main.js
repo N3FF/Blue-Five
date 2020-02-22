@@ -34,7 +34,7 @@ ASSET_MANAGER.downloadAll(function () {
     var hero = new Hero(gameEngine, 300, 400);
     var healthManaBars = new HealthManaBars(gameEngine, 0, 0);
     var bg = new Background(gameEngine);
-    var camera = new Camera(0, 0, ctx.canvas.width, ctx.canvas.height, 5000, 1050);
+    var camera = new Camera(0, 0, ctx.canvas.width, ctx.canvas.height, 11520, 864);
     camera.follow(hero, ctx.canvas.width / 2, ctx.canvas.height / 4);           // hero will remain in the center of the screen horizontally      
                                                                                 // and the bottom 1/4th vertically unless at map's edge
     gameEngine.addEntity(bg);
