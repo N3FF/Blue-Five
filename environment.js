@@ -31,6 +31,7 @@ function Platform(game, x, y, type) {
     this.radius = 52;
     this.width = 52;
     this.height = 52;  
+    this.type = TYPES.PLATFORM;
     
     // For future
     this.walkableTerrain = false;
@@ -49,7 +50,7 @@ Platform.prototype.update = function () {
 
 Platform.prototype.draw = function (ctx, xView, yView) {
 	
-	this.Tile1.drawFrame(this.game.clockTick, ctx, this.x+26 - xView, this.y+52 - yView, 1);
+	this.Tile1.drawFrame(this.game.clockTick, ctx, this.x - xView, this.y - yView, 1);
 
     Entity.prototype.draw.call(this);
 }

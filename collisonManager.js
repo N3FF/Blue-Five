@@ -1,66 +1,38 @@
-/**
- * General collison function
- */
+function collisionDetected(entity1, entity2) {
 
-// Used for boundary boxing
-Rectangle = function(x,y,width,height) {
-	 var x = x;
-	 var y = y;
-	 var width = width;
-	 var height = height;
- 
-	}
+    return entity1.x + entity1.width >= entity2.x
+        && entity1.x <= entity2.x + entity2.width
+        && entity1.y + entity1.height >= entity2.y
+        && entity1.y < entity2.y + entity2.height;
 
+}
 
-// The general function for collison detection
-collisonDetection = function (rect1, rect2) {
+function CollisionManager(x, y, width, height) {
+    this.botBounds = new Rectangle(x + 0.25 * width, y + 0.5 * height, 0.5 * width, 0.5 * height);
+    this.topBounds = new Rectangle(x + 0.25 * width, y, 0.5 * width, 0.5 * height);
+    this.rightBounds = new Rectangle(x + 0.75 * width, y + 0.1 * height, 0.15 * width, 0.8 * height);
+    this.leftBounds = new Rectangle(x, y + 0.1 * height, 0.15 * width, 0.8 * height);
+}
 
-	if (rect1.x < rect2.x + rect2.width &&
-			   rect1.x + rect1.width > rect2.x &&
-			   rect1.y < rect2.y + rect2.height &&
-			   rect1.y  + rect1.height  > rect2.y) {
-			    // collision detected!
-			return true;
-			}
-		return false;
-	}
+CollisionManager.prototype.updateDimensions = function (x, y, width = this.width, height = this.height) {
+    this.botBounds.set(x + 0.25 * width, y + height / 2, 0.5 * width, 0.5 * height);
+    this.topBounds.set(x + 0.25 * width, y, 0.5 * width, 0.5 * height);
+    this.rightBounds.set(x + 0.75 * width, y + 0.1 * height, 0.25 * width, 0.8 * height);
+    this.leftBounds.set(x, y + 0.1 * height, 0.25 * width, 0.8 * height);
+}
 
-/*
- * 
- *  for (var i = 0; i < this.game.entities.length; i++) {
-        var ent = this.game.entities[i];
-        
-        if (ent !== this && this.collide(ent, this.getBoundsTop)) {
-            this.y = ent.y + this.height;
-            this.yAccel = 1;
-        }
-    
-        if (ent !== this && this.collide(ent, this.getBounds)) {
-            //this.handler(ent);
-        	this.jumping = false;
-            this.y = ent.y - this.height;
-            this.jumpStart = true;
-            if (this.yAccel > 0) {
-                this.yAccel = 0;
-            }
-        	
-        }
-        
-        if (ent !== this && this.collide(ent, this.getBoundsRight)) {
-            this.x = ent.x - this.width;
-        }
-        
-        if (ent !== this && this.collide(ent, this.getBoundsLeft)) {
-        	this.x = ent.x + this.width;
-        }
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- */
-	
+CollisionManager.prototype.topCollisionDetected = function (entity) {
+    return collisionDetected(this.topBounds, entity);
+}
+
+CollisionManager.prototype.botCollisionDetected = function (entity) {
+    return collisionDetected(this.botBounds, entity);
+}
+
+CollisionManager.prototype.leftCollisionDetected = function (entity) {
+    return collisionDetected(this.leftBounds, entity);
+}
+
+CollisionManager.prototype.rightCollisionDetected = function (entity) {
+    return collisionDetected(this.rightBounds, entity);
+}

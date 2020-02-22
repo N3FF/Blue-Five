@@ -15,6 +15,8 @@ HealthManaBars.prototype.update = function () {
 
     this.healthPercent = hero.currentHP / hero.maxHP;
     this.manaPercent = hero.currentMP / hero.maxMP;
+    if (this.healthPercent < 0) this.healthPercent = 0;
+    if (this.manaPercent < 0) this.manaPercent = 0;
     Entity.prototype.update.call(this);
 }
 
@@ -33,6 +35,7 @@ HealthManaBars.prototype.draw = function (ctx, xView, yView) {
     } else {
         ctx.fillStyle = "green";
     }
+    ctx.save();
     ctx.beginPath();
     ctx.moveTo(this.x + 210 * this.scale, this.y + 40 * this.scale);
     ctx.lineTo(this.x + (210 + hpWidth) * this.scale, this.y + 40 * this.scale);
@@ -50,6 +53,7 @@ HealthManaBars.prototype.draw = function (ctx, xView, yView) {
     ctx.lineTo(this.x + 166 * this.scale, this.y + 130 * this.scale);
     ctx.closePath();
     ctx.fill();
+    ctx.restore();
 
     // draw overlay
     this.overlay.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
