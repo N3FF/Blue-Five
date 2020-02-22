@@ -24,6 +24,8 @@ function Hero(game, x, y) {
     this.moveL = false;         // if the hero is moving left
     this.type = TYPES.HERO;
     
+    this.win = false;
+    
     this.controllable = true;
 
     this.accel = 0;             // acceleration to make the hero look like they are running
@@ -61,6 +63,11 @@ Hero.prototype.constructor = Hero;
 
 // The update function
 Hero.prototype.update = function () {
+	
+	if (this.x > 12450) {
+		this.win = true;
+		this.controllable = false;
+	}
 	
 	if (this.controllable) {
 

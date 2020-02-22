@@ -3,6 +3,7 @@ function Background(game) {
     this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/52Tilea.png"), 0, 0, 52, 52, 1, 1, true, true);
 
     this.instructions = new Animation(ASSET_MANAGER.getAsset("./img/hud/Instructions.png"), 0, 0, 370, 202, 1, 1, true, true);
+    this.win = new Animation(ASSET_MANAGER.getAsset("./img/hud/Win.png"), 0, 0, 370, 202, 1, 1, true, true);
 
     Entity.call(this, game, 0, 400);
     this.radius = 200;
@@ -15,8 +16,16 @@ Background.prototype.update = function () {
 }
 
 Background.prototype.draw = function (ctx, xView, yView) {
+	var hero = this.game.entities[1];
+	
     this.back1.drawFrame(this.game.clockTick, ctx, -xView, -yView, 1);
-    this.instructions.drawFrame(this.game.clockTick, ctx, ctx.canvas.width - 370 * .75, 0, .75);
+    
+    if (hero.win) {
+    	this.win.drawFrame(this.game.clockTick, ctx, ctx.canvas.width - 370 * .75, 0, .75);
+    } else {
+    	this.instructions.drawFrame(this.game.clockTick, ctx, ctx.canvas.width - 370 * .75, 0, .75);
+    }
+    
     Entity.prototype.draw.call(this);
 }
 
