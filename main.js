@@ -49,12 +49,12 @@ ASSET_MANAGER.downloadAll(function () {
 "xxn"+
 "xxn"+
 "xxn"+
-"xx                                                                                        xn"+
-"xx                     v                                                                                 xn"+
+"xx                                                                                         n"+
+"xx                     v                                                                  v              vn"+
 "xx                     v                                                                  n"+
 "xxvvvvv              vvvv          vvvvvvvvvvvv          vvvvvvvvvvvvv       vvvvvvvvvn"+
 "xx           c                c                                                       n"+
-"xx                                                                   c                                  xx              xx            x  n"+                                                   
+"xx                                                                   c                                  vv              vv            x  n"+                                                   
 "xx                                                                                                                                    xn"+
 "xx                                                                                                                                    xn"+
 "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx         vvv             vvv             vvv   xxxxxxxxxxxx n"+                              
