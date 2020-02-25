@@ -12,8 +12,8 @@ function Rectangle(x, y, width, height) {
   this.y = y || 0;
   this.width = width || 0;
   this.height = height || 0;
-  this.right = this.left + this.width;
-  this.bottom = this.top + this.height;
+  this.right = this.x + this.width;
+  this.bottom = this.y + this.height;
 }
 
 /**
@@ -23,9 +23,9 @@ function Rectangle(x, y, width, height) {
  * @param {number} width    width
  * @param {number} height   height
  */
-Rectangle.prototype.set = function (left, top, width, height) {
-  this.x = left;
-  this.y = top;
+Rectangle.prototype.set = function (x, y, width, height) {
+  this.x = x;
+  this.y = y;
   this.width = width || this.width;
   this.height = height || this.height
   this.right = (this.x + this.width);
@@ -46,6 +46,7 @@ Rectangle.prototype.within = function (rectangle) {
 
 /**
  * @description Camera class
+ * @param {Entity} followed         entity that camera will follow
  * @param {number} xView            x coordinate of top left of camera's view
  * @param {number} yView            y coordinate of top left of camera's view
  * @param {number} viewportWidth    width of camera's view
@@ -53,17 +54,17 @@ Rectangle.prototype.within = function (rectangle) {
  * @param {number} worldWidth       width of entire map 
  * @param {number} worldHeight      height of entire map
  */
-function Camera(xView, yView, viewportWidth, viewportHeight, worldWidth, worldHeight) {
+function Camera(followed, xView, yView, viewportWidth, viewportHeight, worldWidth, worldHeight) {
   this.xView = xView || 0;
   this.yView = yView || 0;
 
-  this.xDeadZone = 0;
-  this.yDeadZone = 0;
+  this.xDeadZone = viewportWidth / 2;
+  this.yDeadZone = viewportHeight / 2;
 
   this.wView = viewportWidth;
   this.hView = viewportHeight;
 
-  this.followed = null;
+  this.followed = followed;
 
   // rectangle that represents the viewport
   this.viewportRect = new Rectangle(this.xView, this.yView, this.wView, this.hView);
@@ -109,15 +110,12 @@ Camera.prototype.update = function () {
   if (!this.viewportRect.within(this.worldRect)) {
     if (this.viewportRect.x < this.worldRect.x)
       this.xView = this.worldRect.x;
-    if (this.viewportRect.y < this.worldRect.y)
+    if (this.viewportRect.y < this.worldRect.y) 
       this.yView = this.worldRect.y;
     if (this.viewportRect.right > this.worldRect.right)
       {this.xView = this.worldRect.right - this.wView;}
-    if (this.viewportRect.bottom > this.worldRect.bottom) {
+    if (this.viewportRect.bottom > this.worldRect.bottom) 
       this.yView = this.worldRect.bottom - this.hView;
-    }
-      
-
   }
 
 }
