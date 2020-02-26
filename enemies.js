@@ -8,19 +8,15 @@ function Cannon(game, x, y) {
     this.height = (frameHeight - 3) * this.scale;
     var animationSpeed = 0.05 * this.scale;
 
-    this.CannonLeft = new Animation(ASSET_MANAGER.getAsset("./img/enemies/Cannon2_R.png"), 0, 0, frameWidth, frameHeight, animationSpeed, 10, true, false);
-    this.CannonRight = new Animation(ASSET_MANAGER.getAsset("./img/enemies/Cannon2_L.png"), 0, 0, frameWidth, frameHeight, animationSpeed, 10, true, true);
+    this.walkingRight = new Animation(ASSET_MANAGER.getAsset("./img/enemies/Cannon2_R.png"), 0, 0, frameWidth, frameHeight, animationSpeed, 10, true, false);
+    this.WalkingLeft = new Animation(ASSET_MANAGER.getAsset("./img/enemies/Cannon2_L.png"), 0, 0, frameWidth, frameHeight, animationSpeed, 10, true, true);
     this.jumping = false;
     this.attack = false;
-    this.moveR = true;
-    this.moveL = false;
-    this.radius = 50;
-    this.ground = 500;
-    this.accel = 0;
+    this.walking = true;
+    this.direction = DIRECTIONS.RIGHT;
+    this.velocity = 5;
     this.yAccel = 0;
-    this.facingRight = true;
     this.gravity = 1;
-    this.canJump = true;
     this.type = TYPES.CANNON;
 
     this.startX = x;
@@ -30,12 +26,6 @@ function Cannon(game, x, y) {
     this.currentHP = 25;
 
     this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
-
-    this.getBounds = new Rectangle(this.x + (this.width / 2) - (this.width / 4), this.y + (this.height / 2), this.width / 2, this.height / 2);
-    this.getBoundsTop = new Rectangle(this.x + (this.width / 2) - (this.width / 4), this.y, this.width / 2, this.height / 2);
-    this.getBoundsRight = new Rectangle(this.x + this.width - 5, this.y + 5, 5, this.height - 10);
-    this.getBoundsLeft = new Rectangle(this.x, this.y + 5, 5, this.height - 10);
-    this.testBounds = new Rectangle(this.x, this.y, this.width, this.height);
 
     // Needs location parameters set
     Entity.call(this, game, x, y);
@@ -98,37 +88,13 @@ Cannon.prototype.update = function () {
         }
     }
 
-    this.x = this.x + this.accel;
+    if (this.walking) this.x = this.x + (this.direction == DIRECTIONS.RIGHT ? 1 : -1) * this.velocity;
 
     if (this.x < this.startX - 200) {
-        this.moveR = true;
-        this.moveL = false;
+        this.direction = DIRECTIONS.RIGHT;
     }
     if (this.x > this.startX + 200) {
-        this.moveL = true;
-        this.moveR = false
-    }
-
-
-    if (this.moveR) {
-        this.facingRight = true;
-
-        if (this.accel > 0) {
-            this.accel = 5;
-
-        } else {
-            this.accel = 3;
-        }
-    }
-
-    if (this.moveL) {
-        this.facingRight = false;
-        if (this.accel < 0) {
-            this.accel = -5;
-        } else {
-            this.accel = -3;
-        }
-
+        this.direction = DIRECTIONS.LEFT;
     }
 
     this.y = this.y + this.yAccel;
@@ -144,22 +110,12 @@ Cannon.prototype.draw = function (ctx, xView, yView) {
     var drawX = this.x - xView;
     var drawY = this.y - yView;
 
-    if (this.accel != 0) {
-        if (this.facingRight) {
-            this.CannonLeft.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
-        } else {
-            this.CannonRight.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
-        }
+    if (this.walking) {
 
-    } else {
+        (this.direction == DIRECTIONS.RIGHT ? this.walkingRight : this.WalkingLeft)
+        .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
 
-        if (this.facingRight) {
-            this.CannonLeft.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
-        } else {
-            this.CannonRight.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
-        }
-
-    }
+    } 
     Entity.prototype.draw.call(this);
 }
 
@@ -177,7 +133,7 @@ Cannon.prototype.shoot = function () {
     var yProjectileStart = 28 * this.scale;
     var yProjectileEnd = 35 * this.scale
     
-    if (this.facingRight) {   //right
+    if (this.direction == DIRECTIONS.RIGHT) {   //right
         var projectile = new Fire(this.game, this.x + this.width - xProjectileStart, this.y + yProjectileStart, this.x + this.width + 50, this.y + yProjectileEnd, false);
         this.game.addEntity(projectile);
     } else {

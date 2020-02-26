@@ -157,7 +157,7 @@ GameEngine.prototype.draw = function () {
         this.entities[i].draw(this.ctx, this.camera.xView, this.camera.yView);
 
         // visualize hitboxes
-        // var ent = this.entities[i];
+        var ent = this.entities[i];
         // if (ent.width && ent.height) {
         //     this.ctx.save();
         //     this.ctx.strokeStyle = "white";
@@ -220,6 +220,13 @@ const TYPES = {
     PLATFORM: 2,
     PROJECTILE: 3
 };
+Object.freeze(TYPES);
+
+const DIRECTIONS = {
+    LEFT: 0,
+    RIGHT: 1
+};
+Object.freeze(DIRECTIONS);
 
 function Entity(game, x, y) {
     this.game = game;

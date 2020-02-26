@@ -75,7 +75,7 @@ Projectile.prototype.draw = function (ctx, xView, yView) {
  * @param {number} x            starting X coordinate 
  * @param {number} y            starting Y coordinate 
  */
-function Bullet (game, x, y, destX, destY, friendly) {
+function Bullet (game, x, y, destX, destY, initialVelocity, friendly) {
     var scale = 0.5;
     var fireRate = 20;
     var damage = 5;
@@ -83,7 +83,7 @@ function Bullet (game, x, y, destX, destY, friendly) {
     var gravity = 0;
     var accel = 0;
     var timeAlive = 600;
-    var physics = new Physics(x, y, timeAlive, destX, destY, gravity, velocity, accel);
+    var physics = new Physics(x, y, timeAlive, destX, destY, gravity, initialVelocity, velocity, accel);
     var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
     this.width = 51 * scale;
     this.height = 60 * scale;
@@ -100,15 +100,15 @@ Bullet.prototype.constructor = Bullet;
  * @param {number} x            starting X coordinate
  * @param {number} y            starting Y coordinate
  */
-function Fire (game, x, y, destX, destY, friendly) {
+function Fire (game, x, y, destX, destY, initialVelocity, friendly) {
     var scale = 2;
     var fireRate = 1;
     var damage = 0.25;
     var velocity = 10;
-    var gravity = Math.random() * 0.075 - 0.03;;
+    var gravity = Math.random() * 0.075 - 0.03;
     var accel = 0;
     var timeAlive = 40;
-    var physics = new Physics(x, y, timeAlive, destX, destY, gravity, velocity, accel);
+    var physics = new Physics(x, y, timeAlive, destX, destY, gravity, initialVelocity, velocity, accel);
     var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
     this.width = 25 * scale;
     this.height = 12 * scale;

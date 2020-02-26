@@ -11,12 +11,10 @@
  * 
  * @description Attach physics properties to an object
  */
-function Physics(startX, startY, duration, cursorX, cursorY, gravity, velocity, acceleration) {
+function Physics(startX, startY, duration, cursorX, cursorY, gravity, initalVelocity, velocity, acceleration) {
     // console.log(startX, startY);
-    this.initialVelocity = Math.ceil(velocity);
-    this.currentVelocity = this.initialVelocity;
     this.cursorX = cursorX;
-    this.cursorY = cursorY
+    this.cursorY = cursorY;
     this.gravity = gravity;
     this.acceleration = acceleration;
     this.bounces = false;
@@ -33,6 +31,8 @@ function Physics(startX, startY, duration, cursorX, cursorY, gravity, velocity, 
     this.dead = false;
     this.initialAngle = this.getAngle();
     this.currentAngle = this.initialAngle;
+    this.initialVelocity = Math.ceil(velocity + initalVelocity * Math.cos(this.initialAngle));
+    this.currentVelocity = this.initialVelocity;
 }
 
 /**

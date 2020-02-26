@@ -65,7 +65,7 @@ ASSET_MANAGER.downloadAll(async function () {
 	// "                                                                                                                                      xxxxxxxxxxxx                                  v\n" +
 	// "                                                                                                                                      xxxxxxxxxxxx      c         c       c         v\n" +
 	// "                                                                                                                                      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
-	var levelText = await loadString("./levels/level2.txt");
+	var levelText = await loadString("./levels/level2copy.txt");
 	
     gameEngine.addEntity(bg);
 
