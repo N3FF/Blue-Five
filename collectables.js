@@ -1,5 +1,4 @@
 
-// Not working at this moment 
 function Collectable(game, x, y, name, win) {
 	
 	if( name === "healthPack") {
