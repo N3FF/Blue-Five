@@ -62,7 +62,7 @@ Projectile.prototype.update = function () {
 // Reference: https://www.w3schools.com/graphics/game_rotation.asp 
 Projectile.prototype.draw = function (ctx, xView, yView) {
     ctx.save();
-    ctx.translate(this.x - xView, this.y - yView);
+    ctx.translate(this.x + this.width / 2 - xView, this.y + this.height / 2 - yView);
     ctx.rotate(this.physics.currentAngle);
     this.img.drawFrame(this.game.clockTick, ctx, 0, -this.img.spriteSheet.height * this.scale / 2, this.scale);
     ctx.restore();
@@ -85,8 +85,8 @@ function Bullet (game, x, y, destX, destY, initialVelocity, friendly) {
     var timeAlive = 600;
     var physics = new Physics(x, y, timeAlive, destX, destY, gravity, initialVelocity, velocity, accel);
     var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
-    this.width = 51 * scale;
-    this.height = 60 * scale;
+    this.width = 25 * scale;
+    this.height = 25 * scale;
     this.manaCost = 5;
     Projectile.call(this, game, x, y, scale, fireRate, damage, friendly, physics, img);
 }
@@ -110,8 +110,8 @@ function Fire (game, x, y, destX, destY, initialVelocity, friendly) {
     var timeAlive = 40;
     var physics = new Physics(x, y, timeAlive, destX, destY, gravity, initialVelocity, velocity, accel);
     var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/fire.png"), 0, 0, 25, 12, Math.random()*.03+0.1, 10, false, false);
-    this.width = 25 * scale;
-    this.height = 12 * scale;
+    this.width = 9 * scale;
+    this.height = 9 * scale;
     this.manaCost = 0;
     Projectile.call(this, game, x, y, scale, fireRate, damage, friendly, physics, img);
 }
@@ -121,7 +121,7 @@ Fire.prototype.constructor = Fire;
 
 Fire.prototype.draw = function (ctx, xView, yView) {
     ctx.save();
-    ctx.translate(this.x - xView, this.y - yView);
+    ctx.translate(this.x + this.width / 2 - xView, this.y + this.height / 2 - yView);
     ctx.rotate(this.physics.currentAngle);
     this.img.drawFrame(this.game.clockTick, ctx, 0, -1 * this.img.spriteSheet.height * this.scale / 20, this.scale);
     ctx.restore();
