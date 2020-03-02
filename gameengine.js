@@ -157,7 +157,7 @@ GameEngine.prototype.draw = function () {
         this.entities[i].draw(this.ctx, this.camera.xView, this.camera.yView);
 
         // visualize hitboxes
-        var ent = this.entities[i];
+        // var ent = this.entities[i];
         // if (ent.width && ent.height) {
         //     this.ctx.save();
         //     this.ctx.strokeStyle = "white";
