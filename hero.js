@@ -13,31 +13,23 @@ function Hero(game, x, y) {
     this.jumpAnimationL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Jump_L.png"), 0, 0, 402, 365, 0.06, 10, true, false);
     this.shootAnimationR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Shoot2_R.png"), 0, 0, 223, 344, 0.03, 5, true, false);
     this.shootAnimationL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Shoot2_L.png"), 0, 0, 223, 344, 0.03, 5, true, false);
-    this.SwordR = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSword.png"), 0, 0, 60, 60, .15, 9, true, false);
-    this.SwordL = new Animation(ASSET_MANAGER.getAsset("./img/hero/HeroSwordR.png"), 0, 0, 60, 60, .15, 9, true, true);
 
 
-    this.jumping = false;       // if the hero is jumping
-    this.attacking = false;     // if the hero is attacking
-    this.shooting = false;      // if the hero is shooting
-    this.walking = false;       // if the hero is walking
-    this.moveR = false;         // if the hero is moving right
-    this.moveL = false;         // if the hero is moving left
+    this.jumping = false;               // if the hero is jumping
+    this.shootingBullets = false;       // if the hero is attacking
+    this.shootingFire = false;          // if the hero is shooting
+    this.walking = false;               // if the hero is walking
+    this.direction = DIRECTIONS.RIGHT;
+
     this.type = TYPES.HERO;
     
     this.win = false;
-    
     this.controllable = true;
 
     this.velocity = 7;
-    this.accel = 0;             // acceleration to make the hero look like they are running
-                                // it does not really do anything else
     this.yAccel = 0;            // the heros vertical acceleration for gravity
-    this.movingRight = true;
     this.gravity = 1;           // The effect of gravity
     this.jumpStart = true;      // whether the hero gets y accel at the beginning of a jump
-    this.ticksSinceShot = 0;
-    this.heroScale = .25;
 
     this.maxHP = 100;           // hitpoints
     this.currentHP = 100;
@@ -47,12 +39,14 @@ function Hero(game, x, y) {
     this.healthRegen = .05;     // amount hp increases every update
     this.manaRegen = .05;       // amount mana increases every update
     
-
-    this.width = 191 * this.heroScale;
-    this.height = 351 * this.heroScale;
+    this.scale = .25;
+    this.width = 191 * this.scale;
+    this.height = 351 * this.scale;
     this.collisionDelay = 60;
     this.ticksSinceCollison = 0;  // amount of ticks between instances of damage when colliding w/enemy
     this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
+
+    this.ticksSinceShot = 0;
     
     this.startX = x;
     this.startY = y;
@@ -103,15 +97,6 @@ Hero.prototype.update = function () {
 
         // Handles running animations on the ground
         // all this code does is make the hero look like he is running
-        if (this.jumping === false) {
-            if (this.accel < -1) {
-                this.accel += .4;
-            } else if (this.accel > 1) {
-                this.accel -= .4;
-            } else {
-                this.accel = 0;
-            }
-        }
 
         // If the yaccel is not 0 it means the hero is jumping or falling
         if (this.yAccel != 0) {
@@ -147,34 +132,21 @@ Hero.prototype.update = function () {
         }
 
         if (this.walking) {
-            if (this.direction == DIRECTIONS.RIGHT) {
-                this.x = this.x + this.velocity;
-                if (this.accel > 0) {
-                    this.accel = 10;
-                } else {
-                    this.accel = 5;
-                }
-            } else {
-                this.x = this.x - this.velocity;
-                if (this.accel < 0) {
-                    this.accel = -10;
-                } else {
-                    this.accel = -5;
-                }
-            }
+            this.x += (this.direction == DIRECTIONS.RIGHT) ? this.velocity : -this.velocity;
         }
 
         // Shooting function for the hero
-        this.shooting = this.game.rightMouseDown;
-        this.attacking = this.game.leftMouseDown;
-        if (this.attacking) this.shootBullet();
-        else if (this.shooting) {
+        this.shootingFire = this.game.rightMouseDown;
+        this.shootingBullets = this.game.leftMouseDown;
+        if (this.shootingBullets) {
+            this.shootBullet();
+        } else if (this.shootingFire) {
             this.shootFire();
         }
         this.ticksSinceShot++;
 
     } else {
-        this.attacking = true;
+        this.shootingBullets = true;
         this.shootFire();
     }
 
@@ -197,32 +169,23 @@ Hero.prototype.draw = function (ctx, xView, yView) {
     var drawX = this.x - xView;
     var drawY = this.y - yView;
 
-    // was this.game.attack
-    // if (this.game.keysActive['F'.charCodeAt(0)] || this.game.attacking) {
-    //     //If this.moving right use SwordR else use SwordL
-    //     (this.direction == DIRECTIONS.RIGHT ? this.SwordR : this.SwordL)
-    //         //Draw image returned in statement above.
-    //         .drawFrame(this.game.clockTick, ctx, drawX, drawY, 2);
-    // }
-
-    // else
-     if (this.shooting || this.game.keysActive['F'.charCodeAt(0)] || this.attacking) {
+    if (this.shootingFire || this.game.keysActive['F'.charCodeAt(0)] || this.shootingBullets) {
         (this.game.mouseX > this.x + this.width / 2 ? this.shootAnimationR : this.shootAnimationL)
-            .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.heroScale);
+            .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
     }
 
     else if (this.jumping) {
         (this.direction == DIRECTIONS.RIGHT ? this.jumpAnimationR : this.jumpAnimationL)
-            .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.heroScale);
+            .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
     }
 
     else if (this.walking) {
         (this.direction == DIRECTIONS.RIGHT ? this.RunningR : this.RunningL)
-            .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.heroScale);
+            .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
 
     } else {
         (this.direction == DIRECTIONS.RIGHT ? this.idleR : this.idleL)
-            .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.heroScale);
+            .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
     }
 
     Entity.prototype.draw.call(this);
@@ -260,14 +223,14 @@ Hero.prototype.handleCollision = function (entity) {
 // Let's revisit this idea after the deadline, but right now it causes some issues
 Hero.prototype.updateDimensions = function () {
     if (this.jumping) {
-        this.width = 402 * this.heroScale;
-        this.height = 365 * this.heroScale;
+        this.width = 402 * this.scale;
+        this.height = 365 * this.scale;
     } else if (this.accel != 0) {
-        this.width = 295 * this.heroScale;
-        this.height = 343 * this.heroScale;
+        this.width = 295 * this.scale;
+        this.height = 343 * this.scale;
     } else {
-        this.width = 191 * this.heroScale;
-        this.height = 351 * this.heroScale;
+        this.width = 191 * this.scale;
+        this.height = 351 * this.scale;
     }
 
     this.collisionManager.updateDimensions(this.x, this.y, this.width, this.height);
@@ -290,9 +253,9 @@ Hero.prototype.changeMP = function (amount) {
 }
 
 Hero.prototype.shootBullet = function () {
-    var facingRight = this.game.mouseX > this.x + this.width / 2;
-    var startX = this.game.mouseX > this.x + this.width / 2 ? this.x + 50 : this.x + 5;
-    var startY = this.y + 45;
+    // Need to figure out way to have offset scale with bullet's width/height
+    var startX = this.game.mouseX > this.x + this.width / 2 ? this.x + 180 * this.scale : this.x;
+    var startY = this.y + 145 * this.scale;
 
     if (this.walking) {
         var bullet = new Bullet(this.game, startX, startY, this.game.mouseX, this.game.mouseY, 
@@ -310,9 +273,9 @@ Hero.prototype.shootBullet = function () {
 }
 
 Hero.prototype.shootFire = function () {
-    var facingRight = this.game.mouseX > this.x + this.width / 2;
-    var startX = this.game.mouseX > this.x + this.width / 2 ? this.x + 50 : this.x + 5;
-    var startY = this.y + 45;
+    // Need to figure out way to have offset scale with fire's width/height
+    var startX = this.game.mouseX > this.x + this.width / 2 ? this.x + 160 * this.scale : this.x;
+    var startY = this.y + 140 * this.scale;
 
     if (this.walking) {
         var fire = new Fire(this.game, startX, startY, this.game.mouseX, this.game.mouseY, 

@@ -11,7 +11,6 @@ function Cannon(game, x, y) {
     this.walkingRight = new Animation(ASSET_MANAGER.getAsset("./img/enemies/Cannon2_R.png"), 0, 0, frameWidth, frameHeight, animationSpeed, 10, true, false);
     this.WalkingLeft = new Animation(ASSET_MANAGER.getAsset("./img/enemies/Cannon2_L.png"), 0, 0, frameWidth, frameHeight, animationSpeed, 10, true, true);
     this.jumping = false;
-    this.attack = false;
     this.walking = true;
     this.direction = DIRECTIONS.RIGHT;
     this.velocity = 5;

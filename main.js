@@ -55,17 +55,17 @@ ASSET_MANAGER.downloadAll(async function () {
 	// "xxvvvvv              vvvv          vvvvvvvvvvvv          vvvvvvvvvvvvv       vvvvvvvvv\n" +
 	// "xx           c\n" +
 	// "xx                                                                                                      xx              xx            x\n" +                                                 
-	// "xx h                                                                                                                                  x\n" +
-	// "xx                                                            c                                                                       x\n" +
+	// "xx h                                                          c                                                                       x\n" +
+	// "xx                                                                                                                                    x\n" +
 	// "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx         vvv             vvv             vvv   xxxxxxxxxxxx\n" +                        
 	// "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx                                               xxxxxxxxxxxx                                                                                            vv\n" +
 	// "                                                                                                                                      xxxxxxxxxxxx                                                                                          xxxxxx\n" +    
 	// "                                                                                                                                      xxxxxxxxxxxx                                                   xxxxxx         vvvvv           v     vvvvvvvvvv\n" +
 	// "                                                                                                                                      xxxxxxxxxxxx                                  v   xxxx   xxxxxxxxxxxxxxxx               v           xvxvxvxvxv\n" +
-	// "                                                                                                                                      xxxxxxxxxxxx                                  v\n" +
 	// "                                                                                                                                      xxxxxxxxxxxx      c         c       c         v\n" +
+	// "                                                                                                                                      xxxxxxxxxxxx                                  v\n" +
 	// "                                                                                                                                      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
-	var levelText = await loadString("./levels/level2copy.txt");
+	var levelText = await loadString("./levels/level2.txt");
 	
     gameEngine.addEntity(bg);
 
