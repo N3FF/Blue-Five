@@ -157,13 +157,13 @@ GameEngine.prototype.draw = function () {
         this.entities[i].draw(this.ctx, this.camera.xView, this.camera.yView);
 
         // visualize hitboxes
-        // var ent = this.entities[i];
-        // if (ent.width && ent.height) {
-        //     this.ctx.save();
-        //     this.ctx.strokeStyle = "white";
-        //     this.ctx.strokeRect(ent.x - this.camera.xView, ent.y - this.camera.yView, ent.width, ent.height);
-        //     this.ctx.restore();
-        // }
+        var ent = this.entities[i];
+        if (ent.width && ent.height) {
+            this.ctx.save();
+            this.ctx.strokeStyle = "white";
+            this.ctx.strokeRect(ent.x - this.camera.xView, ent.y - this.camera.yView, ent.width, ent.height);
+            this.ctx.restore();
+        }
 
         // if (ent.collisionManager) {
         //     this.ctx.save();

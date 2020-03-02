@@ -59,7 +59,7 @@ function Camera(followed, xView, yView, viewportWidth, viewportHeight, worldWidt
   this.yView = yView || 0;
 
   this.xDeadZone = viewportWidth / 2;
-  this.yDeadZone = viewportHeight / 2;
+  this.yDeadZone = viewportHeight / 4;
 
   this.wView = viewportWidth;
   this.hView = viewportHeight;
