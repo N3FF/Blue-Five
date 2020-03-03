@@ -186,12 +186,6 @@ Hero.prototype.handleCollision = function (entity) {
         case TYPES.PROJECTILE:
             if (!entity.friendly) this.changeHP(-entity.damage);
             break;
-        case TYPES.CANNON:
-            if (this.ticksSinceCollison >= this.collisionDelay) {
-                this.changeHP(-20);
-                this.ticksSinceCollison = 0;
-            }
-            break;
         case TYPES.COLLECTABLES.HEALTHPACK:
             this.changeHP(entity.healthValue);
             entity.removeFromWorld = true;
@@ -203,6 +197,11 @@ Hero.prototype.handleCollision = function (entity) {
         case TYPES.WIN:
             this.win = true;
             break;
+        case TYPES.CANNON:
+            if (this.ticksSinceCollison >= this.collisionDelay) {
+                this.changeHP(-20);
+                this.ticksSinceCollison = 0;
+            }
         default:
             if (this.collisionManager.topCollisionDetected(entity)) {
                 this.y = entity.y + this.height;
