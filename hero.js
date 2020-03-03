@@ -50,8 +50,6 @@ function Hero(game, x, y) {
     this.startX = x;
     this.startY = y;
 
-    console.log("x:", x, "y:", y, "startX:", this.startX, "startY:", this.startY);
-
     Entity.call(this, game, x, y);
 }
 
