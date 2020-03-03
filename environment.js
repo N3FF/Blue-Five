@@ -1,8 +1,6 @@
 function Background(game) {
     this.back1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/Background.png"), 0, 0, 13824, 1037, 1, 1, true, true);
     this.tile1 = new Animation(ASSET_MANAGER.getAsset("./img/environment/52Tilea.png"), 0, 0, 52, 52, 1, 1, true, true);
-
-    this.instructions = new Animation(ASSET_MANAGER.getAsset("./img/hud/Instructions.png"), 0, 0, 370, 202, 1, 1, true, true);
     this.win = new Animation(ASSET_MANAGER.getAsset("./img/hud/Win.png"), 0, 0, 370, 202, 1, 1, true, true);
 
     Entity.call(this, game, 0, 400);
@@ -22,9 +20,7 @@ Background.prototype.draw = function (ctx, xView, yView) {
     
     if (hero.win) {
     	this.win.drawFrame(this.game.clockTick, ctx, ctx.canvas.width - 370 * .75, 0, .75);
-    } else {
-    	this.instructions.drawFrame(this.game.clockTick, ctx, ctx.canvas.width - 370 * .75, 0, .75);
-    }
+    } 
     
     Entity.prototype.draw.call(this);
 }
@@ -63,4 +59,16 @@ Platform.prototype.draw = function (ctx, xView, yView) {
 	this.Tile1.drawFrame(this.game.clockTick, ctx, this.x - xView, this.y - yView, 1);
 
     Entity.prototype.draw.call(this);
+}
+
+function Instructions(game, x, y) {
+    this.img = new Animation(ASSET_MANAGER.getAsset("./img/hud/Instructions.png"), 0, 0, 370, 202, 1, 1, true, true);
+    Entity.call(this, game, x, y);
+}
+
+Instructions.prototype = new Entity();
+Instructions.prototype.constructor = Instructions;
+
+Instructions.prototype.draw = function (ctx, xView, yView) {
+    if (!this.game.entities[1].win) this.img.drawFrame(this.game.clockTick, ctx, this.x, this.y, .75);
 }

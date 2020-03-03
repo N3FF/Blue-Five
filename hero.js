@@ -24,7 +24,6 @@ function Hero(game, x, y) {
     this.type = TYPES.HERO;
     
     this.win = false;
-    this.controllable = true;
 
     this.velocity = 7;
     this.yAccel = 0;            // the heros vertical acceleration for gravity
@@ -36,8 +35,8 @@ function Hero(game, x, y) {
     this.maxMP = 100;           // magic
     this.currentMP = 100;
 
-    this.healthRegen = .05;     // amount hp increases every update
-    this.manaRegen = .05;       // amount mana increases every update
+    this.healthRegen = 0;     // amount hp increases every update
+    this.manaRegen = 0;       // amount mana increases every update
     
     this.scale = .25;
     this.width = 191 * this.scale;
@@ -51,6 +50,8 @@ function Hero(game, x, y) {
     this.startX = x;
     this.startY = y;
 
+    console.log("x:", x, "y:", y, "startX:", this.startX, "startY:", this.startY);
+
     Entity.call(this, game, x, y);
 }
 
@@ -60,14 +61,7 @@ Hero.prototype.constructor = Hero;
 // The update function
 Hero.prototype.update = function () {
 	
-	if (this.x > 12450) {
-		this.win = true;
-		this.controllable = false;
-	}
-	
-    if (this.controllable) {
-
-
+    if (!this.win) {
         for (var i = 0; i < this.game.entities.length; i++) {
             var ent = this.game.entities[i];
             if (ent !== this && collisionDetected(this, ent)) {
@@ -84,12 +78,12 @@ Hero.prototype.update = function () {
             }
         */
 
-        if (this.y > 2000 || this.currentHP <= 1) {
+        if (this.y > 2000 || this.currentHP <= 0) {
             this.yAccel = 0;
-            this.y = this.startX;
-            this.x = this.startY;
-            this.currentHP = 100;
-            this.currentMP = 100;
+            this.x = this.startX;
+            this.y = this.startY;
+            this.currentHP = this.maxHP;
+            this.currentMP = this.maxMP;
 
             //this.game.init(ctx, camera);
             // this.game.start();
@@ -159,8 +153,6 @@ Hero.prototype.update = function () {
     this.changeHP(this.healthRegen);
     this.changeMP(this.manaRegen);
 
-
-
     Entity.prototype.update.call(this);
 }
 
@@ -201,6 +193,18 @@ Hero.prototype.handleCollision = function (entity) {
                 this.changeHP(-20);
                 this.ticksSinceCollison = 0;
             }
+            break;
+        case TYPES.COLLECTABLES.HEALTHPACK:
+            this.changeHP(entity.healthValue);
+            entity.removeFromWorld = true;
+            break;
+        case TYPES.COLLECTABLES.MANAPACK:
+            this.changeMP(entity.manaValue);
+            entity.removeFromWorld = true;
+            break;
+        case TYPES.WIN:
+            this.win = true;
+            break;
         default:
             if (this.collisionManager.topCollisionDetected(entity)) {
                 this.y = entity.y + this.height;

@@ -35,6 +35,7 @@ Timer.prototype.tick = function () {
 function GameEngine() {
     this.camera = null;
     this.entities = [];
+    this.hudEntities = [];
     this.showOutlines = false;
     this.ctx = null;
     this.click = null;
@@ -157,13 +158,13 @@ GameEngine.prototype.draw = function () {
         this.entities[i].draw(this.ctx, this.camera.xView, this.camera.yView);
 
         // visualize hitboxes
-        var ent = this.entities[i];
-        if (ent.width && ent.height) {
-            this.ctx.save();
-            this.ctx.strokeStyle = "white";
-            this.ctx.strokeRect(ent.x - this.camera.xView, ent.y - this.camera.yView, ent.width, ent.height);
-            this.ctx.restore();
-        }
+        // var ent = this.entities[i];
+        // if (ent.width && ent.height) {
+        //     this.ctx.save();
+        //     this.ctx.strokeStyle = "white";
+        //     this.ctx.strokeRect(ent.x - this.camera.xView, ent.y - this.camera.yView, ent.width, ent.height);
+        //     this.ctx.restore();
+        // }
 
         // if (ent.collisionManager) {
         //     this.ctx.save();
@@ -179,6 +180,10 @@ GameEngine.prototype.draw = function () {
         // }
     }
 
+    for (var i = 0; i < this.hudEntities.length; i++) {
+        this.hudEntities[i].draw(this.ctx, this.camera.xView, this.camera.yView);
+    }
+
     this.ctx.restore();
 }
 
@@ -186,6 +191,14 @@ GameEngine.prototype.update = function () {
     var entitiesCount = this.entities.length;
     for (var i = 0; i < entitiesCount; i++) {
         var entity = this.entities[i];
+
+        if (!entity.removeFromWorld) {
+            entity.update();
+        }
+    }
+
+    for (var i = 0; i < this.hudEntities.length; i++) {
+        var entity = this.hudEntities[i];
 
         if (!entity.removeFromWorld) {
             entity.update();
@@ -218,7 +231,12 @@ const TYPES = {
     HERO: 0,
     CANNON: 1,
     PLATFORM: 2,
-    PROJECTILE: 3
+    PROJECTILE: 3,
+    COLLECTABLES: {
+        HEALTHPACK: 4,
+        MANAPACK: 5
+    },
+    WIN: 6
 };
 Object.freeze(TYPES);
 
@@ -266,6 +284,18 @@ Entity.prototype.rotateAndCache = function (image, angle) {
     return offscreenCanvas;
 }
 
+/**
+ * 
+ * @param {Image} spriteSheet 
+ * @param {number} startX 
+ * @param {number} startY 
+ * @param {number} frameWidth 
+ * @param {number} frameHeight 
+ * @param {number} frameDuration 
+ * @param {number} frames 
+ * @param {Boolean} loop 
+ * @param {Boolean} reverse 
+ */
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
     this.spriteSheet = spriteSheet;
     this.startX = startX;

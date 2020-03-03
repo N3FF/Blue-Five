@@ -44,6 +44,18 @@ Level.prototype.build = function (levelText) {
                 var e1 = new Cannon(this.game, x * tileSize, y);
                 this.game.addEntity(e1);
                 break;
+            case 'f':
+                var healthPack = new HealthPack(this.game, x * tileSize, y);
+                this.game.addEntity(healthPack);
+                break;
+            case 's':
+                var manaPack = new ManaPack(this.game, x * tileSize, y);
+                this.game.addEntity(manaPack);
+                break;
+            case 'w':
+                var winTile = new WinTile(this.game, x * tileSize, y);
+                this.game.addEntity(winTile);
+                break;
             case '\n':
                 y += tileSize;
                 if (x > this.width / tileSize) this.width = tileSize * (x + 1);

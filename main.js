@@ -34,45 +34,28 @@ ASSET_MANAGER.queueDownload("./img/projectiles/fire.png");
 ASSET_MANAGER.queueDownload("./img/enemies/Cannon2_L.png");
 ASSET_MANAGER.queueDownload("./img/enemies/Cannon2_R.png");
 
+ASSET_MANAGER.queueDownload("./img/collectables/healthPack.png");
+ASSET_MANAGER.queueDownload("./img/collectables/manaPack.png");
+
 
 ASSET_MANAGER.downloadAll(async function () {
     var canvas = document.getElementById('gameWorld');
     var ctx = canvas.getContext('2d');
 
     var gameEngine = new GameEngine();
-    var healthManaBars = new HealthManaBars(gameEngine, 10, 10);
 	var bg = new Background(gameEngine);
-	// var levelText = 
-	// "xx\n" +
-	// "xx\n" +
-	// "xx\n" +
-	// "xx\n" +
-	// "xx\n" +
-	// "xx\n" +
-	// "xx                                                                                        x\n" +
-	// "xx                     v                                                                                 x\n" +
-	// "xx                     v     \n" +
-	// "xxvvvvv              vvvv          vvvvvvvvvvvv          vvvvvvvvvvvvv       vvvvvvvvv\n" +
-	// "xx           c\n" +
-	// "xx                                                                                                      xx              xx            x\n" +                                                 
-	// "xx h                                                                                                                                  x\n" +
-	// "xx                                                            c                                                                       x\n" +
-	// "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx         vvv             vvv             vvv   xxxxxxxxxxxx\n" +                        
-	// "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx                                               xxxxxxxxxxxx                                                                                            vv\n" +
-	// "                                                                                                                                      xxxxxxxxxxxx                                                                                          xxxxxx\n" +    
-	// "                                                                                                                                      xxxxxxxxxxxx                                                   xxxxxx         vvvvv           v     vvvvvvvvvv\n" +
-	// "                                                                                                                                      xxxxxxxxxxxx                                  v   xxxx   xxxxxxxxxxxxxxxx               v           xvxvxvxvxv\n" +
-	// "                                                                                                                                      xxxxxxxxxxxx                                  v\n" +
-	// "                                                                                                                                      xxxxxxxxxxxx      c         c       c         v\n" +
-	// "                                                                                                                                      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
+	var healthManaBars = new HealthManaBars(gameEngine, 10, 10);
+	var instructions = new Instructions(gameEngine, ctx.canvas.width - 370 * .75, 0);
+
 	var levelText = await loadString("./levels/level2.txt");
 	
-    gameEngine.addEntity(bg);
+	gameEngine.addEntity(bg);
+	gameEngine.hudEntities.push(healthManaBars);
+	gameEngine.hudEntities.push(instructions);
 
 	var level = new Level(gameEngine, levelText);	
 	var camera = new Camera(gameEngine.entities[1], 0, 0, ctx.canvas.width, ctx.canvas.height, level.width, level.height);
 
-	gameEngine.addEntity(healthManaBars);
 	gameEngine.init(ctx, camera);
 	gameEngine.start();
 
