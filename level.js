@@ -20,43 +20,65 @@ Level.prototype.constructor = Level;
  */
 Level.prototype.build = function (levelText) {
     var tileSize = 52;
-    var y = 0; 
+    var y = 0;
     var x = 0;
 
-    for (var i = 0; i < levelText.length; i++) { 
+    for (var i = 0; i < levelText.length; i++) {
         var char = levelText.charAt(i);
-        
-        switch (char) {
-            case 'v':
-                // add tile entity at x * tilesize and y for y coordinates
-                var platform = new Platform(this.game, x * tileSize , y , 0);
+
+        switch (char) { // add tile entity at x * tilesize and y for y coordinates
+            case '.': // standard floor tile
+                var platform = new Platform(this.game, x * tileSize, y, "floor");
                 this.game.addEntity(platform);
                 break;
-            case 'x':
-                var platform = new Platform(this.game, x * tileSize, y, 1);
+            case '>': // goes on the right side of floor tile ...>
+                var platform = new Platform(this.game, x * tileSize, y, "gap_right");
                 this.game.addEntity(platform);
                 break;
-            case 'h':
+            case '<': // goes on the left side of floor tile <...
+                var platform = new Platform(this.game, x * tileSize, y, "gap_left");
+                this.game.addEntity(platform);
+                break;
+            case '^': // floating spikes
+                var platform = new Platform(this.game, x * tileSize, y, "floating_spikes");
+                this.game.addEntity(platform);
+                break;
+            case '#': // floor spikes replace floor tiles
+                var platform = new Platform(this.game, x * tileSize, y, "floor_spikes");
+                this.game.addEntity(platform);
+                break;
+            case '-': // floating steel block
+                var platform = new Platform(this.game, x * tileSize, y, "steel_block");
+                this.game.addEntity(platform);
+                break;d 
+            case '?': // transparent block
+                var platform = new Platform(this.game, x * tileSize, y, "invisible");
+                this.game.addEntity(platform);
+                break;
+                
+            case '+': // win upon collision
+            var winTile = new WinTile(this.game, x * tileSize, y);
+            this.game.addEntity(winTile);
+            break;
+
+            case 'p': //player spawn
                 var hero = new Hero(this.game, x * tileSize, y);
                 this.game.entities.splice(1, 0, hero);              //entities[1] = hero
                 break;
-            case 'c':
+
+            case 'c': //cannon spawn
                 var e1 = new Cannon(this.game, x * tileSize, y);
                 this.game.addEntity(e1);
                 break;
-            case 'f':
+            case 'h': //health pack
                 var healthPack = new HealthPack(this.game, x * tileSize, y);
                 this.game.addEntity(healthPack);
                 break;
-            case 's':
+            case 'm': //mana pack
                 var manaPack = new ManaPack(this.game, x * tileSize, y);
                 this.game.addEntity(manaPack);
                 break;
-            case 'w':
-                var winTile = new WinTile(this.game, x * tileSize, y);
-                this.game.addEntity(winTile);
-                break;
-            case '\n':
+            case '\n': //break
                 y += tileSize;
                 if (x > this.width / tileSize) this.width = tileSize * (x + 1);
                 x = -1;
