@@ -1,8 +1,8 @@
 function HealthPack (game, x, y) {
-    this.img = new Animation(ASSET_MANAGER.getAsset("./img/collectables/healthPack.png"), 0, 0, 256, 256, 1, 1, true, false);
+    this.img = new Animation(ASSET_MANAGER.getAsset("./img/collectables/healthPack.png"), 0, 0, 52, 52, 1, 1, true, false);
     this.type = TYPES.COLLECTABLES.HEALTHPACK;
     this.healthValue = 25;
-    this.scale = 52 / 256;
+    this.scale = 1;
     this.width = 52;
     this.height = 52;
     Entity.call(this, game, x, y);
@@ -22,10 +22,10 @@ HealthPack.prototype.draw = function (ctx, xView, yView) {
 }
 
 function ManaPack (game, x, y) {
-    this.img = new Animation(ASSET_MANAGER.getAsset("./img/collectables/manaPack.png"), 0, 0, 256, 256, 1, 1, true, false);
+    this.img = new Animation(ASSET_MANAGER.getAsset("./img/collectables/manaPack.png"), 0, 0, 52, 52, 1, 1, true, false);
     this.type = TYPES.COLLECTABLES.MANAPACK;
     this.manaValue = 25;
-    this.scale = 52 / 256;
+    this.scale = 1;
     this.width = 52;
     this.height = 52;
     Entity.call(this, game, x, y);
