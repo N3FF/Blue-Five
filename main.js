@@ -23,6 +23,16 @@ ASSET_MANAGER.queueDownload("./img/environment/Background.png");
 ASSET_MANAGER.queueDownload("./img/environment/52Tile.png");
 ASSET_MANAGER.queueDownload("./img/environment/52Tilea.png");
 
+ASSET_MANAGER.queueDownload("./img/environment/background_100x100.png");
+ASSET_MANAGER.queueDownload("./img/environment/background_100x100_light.png");
+ASSET_MANAGER.queueDownload("./img/environment/floating_spikes.png");
+ASSET_MANAGER.queueDownload("./img/environment/floor.png");
+ASSET_MANAGER.queueDownload("./img/environment/floor_gap_left.png");
+ASSET_MANAGER.queueDownload("./img/environment/floor_gap_right.png");
+ASSET_MANAGER.queueDownload("./img/environment/floor_spikes.png");
+ASSET_MANAGER.queueDownload("./img/environment/invisible.png");
+ASSET_MANAGER.queueDownload("./img/environment/steel_block.png");
+
 ASSET_MANAGER.queueDownload("./img/hud/HP_bars.png");
 ASSET_MANAGER.queueDownload("./img/hud/HP_bars_background.png");
 ASSET_MANAGER.queueDownload("./img/hud/Instructions.png");
@@ -47,7 +57,7 @@ ASSET_MANAGER.downloadAll(async function () {
 	var healthManaBars = new HealthManaBars(gameEngine, 10, 10);
 	var instructions = new Instructions(gameEngine, ctx.canvas.width - 370 * .75, 0);
 
-	var levelText = await loadString("./levels/level2.txt");
+	var levelText = await loadString("./levels/level0.txt");
 	
 	gameEngine.addEntity(bg);
 	gameEngine.hudEntities.push(healthManaBars);
