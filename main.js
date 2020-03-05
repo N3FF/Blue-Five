@@ -20,8 +20,6 @@ ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Shoot2_R.png");
 
 
 ASSET_MANAGER.queueDownload("./img/environment/Background.png");
-ASSET_MANAGER.queueDownload("./img/environment/52Tile.png");
-ASSET_MANAGER.queueDownload("./img/environment/52Tilea.png");
 
 ASSET_MANAGER.queueDownload("./img/environment/background_100x100.png");
 ASSET_MANAGER.queueDownload("./img/environment/background_100x100_light.png");
