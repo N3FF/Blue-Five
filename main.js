@@ -23,6 +23,7 @@ ASSET_MANAGER.queueDownload("./img/environment/Background.png");
 
 ASSET_MANAGER.queueDownload("./img/environment/background_100x100.png");
 ASSET_MANAGER.queueDownload("./img/environment/background_100x100_light.png");
+ASSET_MANAGER.queueDownload("./img/environment/steel_block_spikes.png");
 ASSET_MANAGER.queueDownload("./img/environment/floating_spikes.png");
 ASSET_MANAGER.queueDownload("./img/environment/floor.png");
 ASSET_MANAGER.queueDownload("./img/environment/floor_gap_left.png");
@@ -36,7 +37,9 @@ ASSET_MANAGER.queueDownload("./img/hud/HP_bars_background.png");
 ASSET_MANAGER.queueDownload("./img/hud/Instructions.png");
 ASSET_MANAGER.queueDownload("./img/hud/Win.png");
 
-ASSET_MANAGER.queueDownload("./img/projectiles/bullet.png");
+//ASSET_MANAGER.queueDownload("./img/projectiles/bullet.png");
+ASSET_MANAGER.queueDownload("./img/projectiles/rocket.png");
+ASSET_MANAGER.queueDownload("./img/projectiles/explosion.png");
 ASSET_MANAGER.queueDownload("./img/projectiles/fire.png");
 
 ASSET_MANAGER.queueDownload("./img/enemies/Cannon2_L.png");

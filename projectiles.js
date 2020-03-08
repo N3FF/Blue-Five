@@ -82,9 +82,9 @@ function Bullet (game, x, y, destX, destY, initialVelocity, friendly) {
     var velocity = 15;
     var gravity = 0;
     var accel = 0;
-    var timeAlive = 600;
+    var timeAlive = 100;
     var physics = new Physics(x, y, timeAlive, destX, destY, gravity, initialVelocity, velocity, accel);
-    var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/bullet.png"), 0, 0, 51, 60, .20, 1, true, true);
+    var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/rocket.png"), 0, 0, 51, 60, .20, 1, true, true);
     this.width = 25 * scale;
     this.height = 25 * scale;
     this.manaCost = 5;

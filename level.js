@@ -39,7 +39,11 @@ Level.prototype.build = function (levelText) {
                 var platform = new Platform(this.game, x * tileSize, y, "gap_left");
                 this.game.addEntity(platform);
                 break;
-            case '^': // floating spikes
+            case '^': // spikes on a steel blockd 
+                var platform = new Platform(this.game, x * tileSize, y, "steel_block_spikes");
+                this.game.addEntity(platform);
+                break;
+            case '*': // floating spikes
                 var platform = new Platform(this.game, x * tileSize, y, "floating_spikes");
                 this.game.addEntity(platform);
                 break;
@@ -50,16 +54,16 @@ Level.prototype.build = function (levelText) {
             case '-': // floating steel block
                 var platform = new Platform(this.game, x * tileSize, y, "steel_block");
                 this.game.addEntity(platform);
-                break;d 
+                break; d
             case '?': // transparent block
                 var platform = new Platform(this.game, x * tileSize, y, "invisible");
                 this.game.addEntity(platform);
                 break;
-                
+
             case '+': // win upon collision
-            var winTile = new WinTile(this.game, x * tileSize, y);
-            this.game.addEntity(winTile);
-            break;
+                var winTile = new WinTile(this.game, x * tileSize, y);
+                this.game.addEntity(winTile);
+                break;
 
             case 'p': //player spawn
                 var hero = new Hero(this.game, x * tileSize, y);

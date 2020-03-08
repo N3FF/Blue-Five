@@ -44,6 +44,10 @@ function Platform(game, x, y, type, win) {
             this.fileName += "floating_spikes.png";
             break;
 
+        case "steel_block_spikes":
+            this.fileName += "steel_block_spikes.png";
+            break
+
         case "floor_spikes":
             this.fileName += "floor_spikes.png";
             break;
@@ -64,7 +68,7 @@ function Platform(game, x, y, type, win) {
             this.fileName += "steel_block.png";
             break;
     }
-    
+
     this.tile = new Animation(ASSET_MANAGER.getAsset(this.fileName), 0, 0, this.width, this.height, .20, 1, true, true);
 
     // For future
