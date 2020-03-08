@@ -1,0 +1,39 @@
+﻿<!-- 
+
+ HTML Main Page
+Run this instead of main		
+	
+-->
+
+<!DOCTYPE html>
+<!-- Disable right click on the entire page -->
+<html oncontextmenu="return false;">
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/x-icon" href="./img/icon.png">
+    <title> Cψbͥ𐍉rͣgͫ </title>
+    <script type="text/javascript" src="./camera.js"></script>
+    <script type="text/javascript" src="./gameengine.js"></script>
+    <script type="text/javascript" src="./physics.js"></script>
+    <script type="text/javascript" src="./environment.js"></script>
+    <script type="text/javascript" src="./collisonManager.js"></script>
+    <script type="text/javascript" src="./enemies.js"></script>
+    <script type="text/javascript" src="./projectiles.js"></script>
+    <script type="text/javascript" src="./hero.js"></script>
+    <script type="text/javascript" src="./assetmanager.js"></script>
+    <script type="text/javascript" src="./healthManaBars.js"></script>
+    <script type="text/javascript" src="./collectables.js"></script>
+    <script type="text/javascript" src="./winTile.js"></script>
+    <script type="text/javascript" src="./level.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+    <script type="text/javascript">
+        // Auto focus canvas when the page finishes loading
+        window.addEventListener('load', function () {
+            document.getElementById("gameWorld").focus();
+        });
+    </script>
+</head>
+<body>
+    <canvas id="gameWorld" tabindex="1" width="1000" height="750" style="border: 1px solid rgb(0, 0, 0); background: rgb(127, 180, 194)"></canvas>
+</body>
+</html> 
