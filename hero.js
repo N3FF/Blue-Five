@@ -7,10 +7,10 @@ function Hero(game, x, y) {
     // Animations
     this.idleR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Idle_R.png"), 0, 0, 191, 351, 0.06, 10, true, false);
     this.idleL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Idle_L.png"), 0, 0, 191, 351, 0.06, 10, true, false);
-    this.RunningR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Walk_R.png"), 0, 0, 295, 343, 0.05, 10, true, false);
-    this.RunningL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Walk_L.png"), 0, 0, 295, 343, 0.05, 10, true, false);
-    this.jumpAnimationR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Jump_R.png"), 0, 0, 402, 365, 0.06, 10, true, false);
-    this.jumpAnimationL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Jump_L.png"), 0, 0, 402, 365, 0.06, 10, true, false);
+    this.RunningR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Walk2_R.png"), 0, 0, 214, 359, 0.04, 10, true, false);
+    this.RunningL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Walk2_L.png"), 0, 0, 214, 359, 0.04, 10, true, false);
+    this.jumpAnimationR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Jump2_R.png"), 0, 0, 213, 344, 0.2, 10, true, false);
+    this.jumpAnimationL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Jump2_L.png"), 0, 0, 213, 344, 0.2, 10, true, false);
     this.shootAnimationR = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Shoot2_R.png"), 0, 0, 223, 344, 0.03, 5, true, false);
     this.shootAnimationL = new Animation(ASSET_MANAGER.getAsset("./img/hero/Cyborg_Shoot2_L.png"), 0, 0, 223, 344, 0.03, 5, true, false);
 

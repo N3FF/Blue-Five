@@ -9,12 +9,12 @@ async function loadString(filePath) {
 
 var ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Walk_L.png");
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Walk_R.png");
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Walk2_L.png");
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Walk2_R.png");
 ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Idle_L.png");
 ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Idle_R.png");
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Jump_L.png");
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Jump_R.png");
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Jump2_L.png");
+ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Jump2_R.png");
 ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Shoot2_L.png");
 ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Shoot2_R.png");
 
