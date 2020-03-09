@@ -59,7 +59,10 @@ Level.prototype.build = function (levelText) {
                 var platform = new Platform(this.game, x * tileSize, y, "invisible");
                 this.game.addEntity(platform);
                 break;
-
+            case 's': // checkpoint
+                var platform = new Platform(this.game, x * tileSize, y, "checkpoint");
+                this.game.addEntity(platform);
+                break; d
             case '+': // win upon collision
                 var winTile = new WinTile(this.game, x * tileSize, y);
                 this.game.addEntity(winTile);

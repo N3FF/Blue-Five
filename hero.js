@@ -202,6 +202,10 @@ Hero.prototype.handleCollision = function (entity) {
                 this.changeHP(-20);
                 this.ticksSinceCollison = 0;
             }
+        // HERO CHECKPOINT
+        case TYPES.CHECKPOINT:
+            this.startX = entity.x;
+            this.startY = entity.y - 100;
         default:
             if (this.collisionManager.topCollisionDetected(entity)) {
                 this.y = entity.y + this.height;

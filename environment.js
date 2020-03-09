@@ -34,6 +34,8 @@ function Platform(game, x, y, type, win) {
     this.type = TYPES.PLATFORM;
     this.win = true;
     this.fileName = "./img/environment/";
+    this.hazardous = false;
+    this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
 
     switch (type) {
         case "invisible":
@@ -42,6 +44,7 @@ function Platform(game, x, y, type, win) {
 
         case "floating_spikes":
             this.fileName += "floating_spikes.png";
+            this.hazardous = true;
             break;
 
         case "steel_block_spikes":
@@ -50,6 +53,7 @@ function Platform(game, x, y, type, win) {
 
         case "floor_spikes":
             this.fileName += "floor_spikes.png";
+            this.hazardous = true;
             break;
 
         case "gap_right":
@@ -67,6 +71,11 @@ function Platform(game, x, y, type, win) {
         case "steel_block":
             this.fileName += "steel_block.png";
             break;
+        
+        case "checkpoint":
+            this.fileName += "steel_block.png";
+            this.type = TYPES.CHECKPOINT;
+            break;
     }
 
     this.tile = new Animation(ASSET_MANAGER.getAsset(this.fileName), 0, 0, this.width, this.height, .20, 1, true, true);
@@ -80,8 +89,32 @@ function Platform(game, x, y, type, win) {
 Platform.prototype = new Entity();
 Platform.prototype.constructor = Platform;
 
+Platform.prototype.handleCollision = function (entity) {
+    switch (entity.type) {
+        case TYPES.HERO:
+            entity.currentHP = entity.currentHP - 20;
+            break;
+        case TYPES.CANNON:
+            entity.currentHP = entity.currentHP - 20;
+            break;    
+        default:
+            //
+    }
+}
+  
+
 // The update function
 Platform.prototype.update = function () {
+
+    // Collison is only checked if the block is hazardous
+    if (this.hazardous == true) {
+        for (var i = 0; i < this.game.entities.length; i++) {
+            var ent = this.game.entities[i];
+            if (ent !== this && collisionDetected(this, ent) ) {
+                this.handleCollision(ent);
+            }
+        }
+    }  
 
     Entity.prototype.update.call(this);
 }
