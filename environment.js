@@ -31,12 +31,13 @@ function Platform(game, x, y, type, win) {
     this.radius = 52;
     this.width = 52;
     this.height = 52;
+    this.frames = 1;
+    this.fps = 0.2;
     this.type = TYPES.PLATFORM;
     this.win = true;
     this.fileName = "./img/environment/";
     this.hazardous = false;
     this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
-    this.flag = new Animation(ASSET_MANAGER.getAsset("./img/environment/flag.png"), 0, 0, 202, 324, 0.10, 10, true, true);
 
     switch (type) {
         case "invisible":
@@ -72,14 +73,18 @@ function Platform(game, x, y, type, win) {
         case "steel_block":
             this.fileName += "steel_block.png";
             break;
-        
+
         case "checkpoint":
-            this.fileName += "steel_block.png";
+            this.fileName += "checkpoint.png";
+            this.width = 104;
+            this.height = 104;
+            this.frames = 5;
+            this.fps = .1;
             this.type = TYPES.CHECKPOINT;
             break;
     }
 
-    this.tile = new Animation(ASSET_MANAGER.getAsset(this.fileName), 0, 0, this.width, this.height, .20, 1, true, true);
+    this.tile = new Animation(ASSET_MANAGER.getAsset(this.fileName), 0, 0, this.width, this.height, this.fps, this.frames, true, true);
 
     // For future
     this.walkableTerrain = false;
@@ -97,12 +102,12 @@ Platform.prototype.handleCollision = function (entity) {
             break;
         case TYPES.CANNON:
             entity.currentHP = entity.currentHP - 20;
-            break;    
+            break;
         default:
-            //
+        //
     }
 }
-  
+
 
 // The update function
 Platform.prototype.update = function () {
@@ -111,23 +116,19 @@ Platform.prototype.update = function () {
     if (this.hazardous == true) {
         for (var i = 0; i < this.game.entities.length; i++) {
             var ent = this.game.entities[i];
-            if (ent !== this && collisionDetected(this, ent) ) {
+            if (ent !== this && collisionDetected(this, ent)) {
                 this.handleCollision(ent);
             }
         }
-    }  
+    }
 
     Entity.prototype.update.call(this);
 }
 
 Platform.prototype.draw = function (ctx, xView, yView) {
 
-    if (this.type != TYPES.CHECKPOINT) {
-        this.tile.drawFrame(this.game.clockTick, ctx, this.x - xView, this.y - yView, 1);
-    } else {
-        this.flag.drawFrame(this.game.clockTick, ctx, this.x - xView, this.y - yView, 1/2); 
-    }
-    
+    this.tile.drawFrame(this.game.clockTick, ctx, this.x - xView, this.y - yView, 1);
+
 
     Entity.prototype.draw.call(this);
 }
