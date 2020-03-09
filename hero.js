@@ -160,12 +160,15 @@ Hero.prototype.draw = function (ctx, xView, yView) {
 
     else if (this.jumping) {
         (this.direction == DIRECTIONS.RIGHT ? this.jumpAnimationR : this.jumpAnimationL)
-            .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
+            .drawFrame(this.game.clockTick, ctx, drawX - 100 * this.scale, drawY, this.scale);
     }
 
     else if (this.walking) {
-        (this.direction == DIRECTIONS.RIGHT ? this.RunningR : this.RunningL)
-            .drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
+        if (this.direction == DIRECTIONS.RIGHT) {
+            this.RunningR.drawFrame(this.game.clockTick, ctx, drawX - 100 * this.scale, drawY, this.scale);
+        } else {
+            this.RunningL.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
+        }
 
     } else {
         (this.direction == DIRECTIONS.RIGHT ? this.idleR : this.idleL)
