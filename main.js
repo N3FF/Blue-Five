@@ -31,6 +31,7 @@ ASSET_MANAGER.queueDownload("./img/environment/floor_gap_right.png");
 ASSET_MANAGER.queueDownload("./img/environment/floor_spikes.png");
 ASSET_MANAGER.queueDownload("./img/environment/invisible.png");
 ASSET_MANAGER.queueDownload("./img/environment/steel_block.png");
+ASSET_MANAGER.queueDownload("./img/environment/flag.png");
 
 ASSET_MANAGER.queueDownload("./img/hud/HP_bars.png");
 ASSET_MANAGER.queueDownload("./img/hud/HP_bars_background.png");

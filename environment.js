@@ -36,6 +36,7 @@ function Platform(game, x, y, type, win) {
     this.fileName = "./img/environment/";
     this.hazardous = false;
     this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
+    this.flag = new Animation(ASSET_MANAGER.getAsset("./img/environment/flag.png"), 0, 0, 202, 324, 0.10, 10, true, true);
 
     switch (type) {
         case "invisible":
@@ -121,7 +122,12 @@ Platform.prototype.update = function () {
 
 Platform.prototype.draw = function (ctx, xView, yView) {
 
-    this.tile.drawFrame(this.game.clockTick, ctx, this.x - xView, this.y - yView, 1);
+    if (this.type != TYPES.CHECKPOINT) {
+        this.tile.drawFrame(this.game.clockTick, ctx, this.x - xView, this.y - yView, 1);
+    } else {
+        this.flag.drawFrame(this.game.clockTick, ctx, this.x - xView, this.y - yView, 1/2); 
+    }
+    
 
     Entity.prototype.draw.call(this);
 }
