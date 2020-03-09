@@ -1,17 +1,16 @@
   
-xx
-xx
-xx                                                                                                                                                                                        w
-xx                                                                                                                                                                                        w
-xx                                                                                                                                                                                        w         
-xx                                                                                                                                                                                        w
-xx                                                                                                                                                       xxxxxx       v v v v v v v       w                                           
-xx                     v                                                                                                                     x                                            w    
-xx                     v            f        v           s                                                                                            c                                   xxxxxxxxxxxxxxx
-xx              vvvv          vvvvvvvvvvvv          vvvvvvvvvvvvv      vvvvv                                                             x               
-xx              z c  z             c                                                                                                            v    xxxxxxxxx
-xx                                                                                                                                   x
-xx  h                                                                                                                           x
-xx                                                                                              c           f          xxx                                                 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx           xxxxxxxxxxxxxxx        xxxxxxxxxx      xxxxxxxxxx   x x x x x         
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx           xxxxxxxxxxxxxxx        xxxxxxxxxx      xxxxxxxxxx          
+?
+?
+?                                                                                                                                                                                          +
+?                                                                                                                                                                                          +
+?                                                                                                                                                                                          +         
+?                                                                                                                                                                                          +
+?                     m                                                                                                                                 <....>       - - - - - - -         +                                           
+?                     -                                                                                                                     -                                              +    
+?                     -                     -                                                                                                         c                                  <.............>
+?              ----          ---^^^^-----          -------------      -----                                                             -               
+?               c h              c                                                                                                            -    <.......>
+?                                                                                                                                   -
+?  p                                                                                                                           --
+?                                                                                              c                         --                                                 
+?<......##.................##............>         <..............>        <........>      <........>   <> <##.##.##>         
