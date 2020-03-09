@@ -40,16 +40,16 @@ Level.prototype.build = function (levelText) {
                 this.game.addEntity(platform);
                 break;
             case '^': // spikes on a steel blockd 
-                var platform = new Platform(this.game, x * tileSize, y, "steel_block_spikes");
-                this.game.addEntity(platform);
+                var spike = new Spike(this.game, x * tileSize, y, "steel_block_spikes");
+                this.game.addEntity(spike);
                 break;
             case '*': // floating spikes
-                var platform = new Platform(this.game, x * tileSize, y, "floating_spikes");
-                this.game.addEntity(platform);
+                var spike = new Spike(this.game, x * tileSize, y, "floating_spikes");
+                this.game.addEntity(spike);
                 break;
             case '#': // floor spikes replace floor tiles
-                var platform = new Platform(this.game, x * tileSize, y, "floor_spikes");
-                this.game.addEntity(platform);
+                var spike = new Spike(this.game, x * tileSize, y, "floor_spikes");
+                this.game.addEntity(spike);
                 break;
             case '-': // floating steel block
                 var platform = new Platform(this.game, x * tileSize, y, "steel_block");

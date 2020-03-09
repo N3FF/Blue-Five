@@ -236,7 +236,8 @@ const TYPES = {
         HEALTHPACK: 4,
         MANAPACK: 5
     },
-    WIN: 6
+    WIN: 6,
+    SPIKE: 7
 };
 Object.freeze(TYPES);
 

@@ -25,31 +25,16 @@ Background.prototype.draw = function (ctx, xView, yView) {
     Entity.prototype.draw.call(this);
 }
 
-function Platform(game, x, y, type, win) {
+function Platform(game, x, y, type) {
 
-
-    this.radius = 52;
     this.width = 52;
     this.height = 52;
     this.type = TYPES.PLATFORM;
-    this.win = true;
     this.fileName = "./img/environment/";
 
     switch (type) {
         case "invisible":
             this.fileName += "invisible.png";
-            break;
-
-        case "floating_spikes":
-            this.fileName += "floating_spikes.png";
-            break;
-
-        case "steel_block_spikes":
-            this.fileName += "steel_block_spikes.png";
-            break
-
-        case "floor_spikes":
-            this.fileName += "floor_spikes.png";
             break;
 
         case "gap_right":
@@ -71,9 +56,6 @@ function Platform(game, x, y, type, win) {
 
     this.tile = new Animation(ASSET_MANAGER.getAsset(this.fileName), 0, 0, this.width, this.height, .20, 1, true, true);
 
-    // For future
-    this.walkableTerrain = false;
-
     Entity.call(this, game, x, y);
 }
 
@@ -92,6 +74,45 @@ Platform.prototype.draw = function (ctx, xView, yView) {
 
     Entity.prototype.draw.call(this);
 }
+
+function Spike(game, x, y, type) {
+    
+    this.type = TYPES.SPIKE;
+    this.width = 52;
+    this.height = 52;
+    this.damage = 34;
+    this.fileName = "./img/environment/spikes/";
+
+    switch (type) {
+        case "floating_spikes":
+            this.fileName += "floating_spikes.png";
+            break;
+
+        case "steel_block_spikes":
+            this.fileName += "steel_block_spikes.png";
+            break
+
+        case "floor_spikes":
+            this.fileName += "floor_spikes.png";
+            break;
+    }
+
+    this.tile = new Animation(ASSET_MANAGER.getAsset(this.fileName), 0, 0, this.width, this.height, .20, 1, true, true);
+    Entity.call(this, game, x, y);
+}
+
+Spike.prototype = new Entity();
+Spike.prototype.constructor = Spike;
+
+Spike.prototype.update = function () {
+    Entity.prototype.update.call(this);
+}
+
+Spike.prototype.draw = function (ctx, xView, yView) {
+    this.tile.drawFrame(this.game.clockTick, ctx, this.x - xView, this.y - yView);
+    Entity.prototype.draw.call(this);
+}
+
 
 function Instructions(game, x, y) {
     this.img = new Animation(ASSET_MANAGER.getAsset("./img/hud/Instructions.png"), 0, 0, 370, 202, 1, 1, true, true);

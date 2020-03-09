@@ -41,10 +41,10 @@ function Hero(game, x, y) {
     this.scale = .25;
     this.width = 191 * this.scale;
     this.height = 351 * this.scale;
-    this.collisionDelay = 60;
-    this.ticksSinceCollison = 0;  // amount of ticks between instances of damage when colliding w/enemy
-    this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
 
+    this.collisionDelay = 60;
+    this.ticksSinceCollison = 60;
+    this.collisionManager = new CollisionManager(this.x, this.y, this.width, this.height);
     this.ticksSinceShot = 0;
     
     this.startX = x;
@@ -82,13 +82,7 @@ Hero.prototype.update = function () {
             this.y = this.startY;
             this.currentHP = this.maxHP;
             this.currentMP = this.maxMP;
-
-            //this.game.init(ctx, camera);
-            // this.game.start();
         }
-
-        // Handles running animations on the ground
-        // all this code does is make the hero look like he is running
 
         // If the yaccel is not 0 it means the hero is jumping or falling
         if (this.yAccel != 0) {
@@ -181,6 +175,24 @@ Hero.prototype.draw = function (ctx, xView, yView) {
     Entity.prototype.draw.call(this);
 }
 
+Hero.prototype.blockMovement = function (entity) {
+    if (this.collisionManager.topCollisionDetected(entity)) {
+        this.y = entity.y + this.height;
+        this.yAccel = 0;
+    } else if (this.collisionManager.botCollisionDetected(entity)) {
+        this.jumping = false;
+        this.y = entity.y - this.height;
+        this.jumpStart = true;
+        if (this.yAccel > 0) {
+            this.yAccel = 0;
+        }
+    } else if (this.collisionManager.rightCollisionDetected(entity)) {
+        this.x = entity.x - this.width;
+    } else if (this.collisionManager.leftCollisionDetected(entity)) {
+        this.x = entity.x + entity.width;
+    }
+}
+
 Hero.prototype.handleCollision = function (entity) {
     switch (entity.type) {
         case TYPES.PROJECTILE:
@@ -202,22 +214,18 @@ Hero.prototype.handleCollision = function (entity) {
                 this.changeHP(-20);
                 this.ticksSinceCollison = 0;
             }
-        default:
-            if (this.collisionManager.topCollisionDetected(entity)) {
-                this.y = entity.y + this.height;
-                this.yAccel = 0;
-            } else if (this.collisionManager.botCollisionDetected(entity)) {
-                this.jumping = false;
-                this.y = entity.y - this.height;
-                this.jumpStart = true;
-                if (this.yAccel > 0) {
-                    this.yAccel = 0;
-                }
-            } else if (this.collisionManager.rightCollisionDetected(entity)) {
-                this.x = entity.x - this.width;
-            } else if (this.collisionManager.leftCollisionDetected(entity)) {
-                this.x = entity.x + entity.width;
+            this.blockMovement(entity);
+            break;
+        case TYPES.PLATFORM:
+            this.blockMovement(entity);
+            break;
+        case TYPES.SPIKE:
+            if (this.ticksSinceCollison >= this.collisionDelay) {
+                this.changeHP(-entity.damage);
+                this.ticksSinceCollison = 0;
             }
+            this.blockMovement(entity);
+            break;
     }
 }
 

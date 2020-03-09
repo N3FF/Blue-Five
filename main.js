@@ -23,14 +23,14 @@ ASSET_MANAGER.queueDownload("./img/environment/Background.png");
 
 ASSET_MANAGER.queueDownload("./img/environment/background_100x100.png");
 ASSET_MANAGER.queueDownload("./img/environment/background_100x100_light.png");
-ASSET_MANAGER.queueDownload("./img/environment/steel_block_spikes.png");
-ASSET_MANAGER.queueDownload("./img/environment/floating_spikes.png");
 ASSET_MANAGER.queueDownload("./img/environment/floor.png");
 ASSET_MANAGER.queueDownload("./img/environment/floor_gap_left.png");
 ASSET_MANAGER.queueDownload("./img/environment/floor_gap_right.png");
-ASSET_MANAGER.queueDownload("./img/environment/floor_spikes.png");
 ASSET_MANAGER.queueDownload("./img/environment/invisible.png");
 ASSET_MANAGER.queueDownload("./img/environment/steel_block.png");
+ASSET_MANAGER.queueDownload("./img/environment/spikes/steel_block_spikes.png");
+ASSET_MANAGER.queueDownload("./img/environment/spikes/floating_spikes.png");
+ASSET_MANAGER.queueDownload("./img/environment/spikes/floor_spikes.png");
 
 ASSET_MANAGER.queueDownload("./img/hud/HP_bars.png");
 ASSET_MANAGER.queueDownload("./img/hud/HP_bars_background.png");
