@@ -75,7 +75,7 @@ Projectile.prototype.draw = function (ctx, xView, yView) {
  * @param {number} x            starting X coordinate 
  * @param {number} y            starting Y coordinate 
  */
-function Bullet (game, x, y, destX, destY, initialVelocity, friendly) {
+function Rocket (game, x, y, destX, destY, initialVelocity, friendly) {
     var scale = 0.5;
     var fireRate = 20;
     var damage = 5;
@@ -84,15 +84,72 @@ function Bullet (game, x, y, destX, destY, initialVelocity, friendly) {
     var accel = 0;
     var timeAlive = 100;
     var physics = new Physics(x, y, timeAlive, destX, destY, gravity, initialVelocity, velocity, accel);
-    var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/rocket.png"), 0, 0, 51, 60, .20, 1, true, true);
+    var img = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/rocket.png"), 0, 0, 51, 60, .20, 1, true, false);
     this.width = 25 * scale;
     this.height = 25 * scale;
     this.manaCost = 5;
+    this.explosion = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/explosion.png"), 0, 0, 51, 51, 0.025, 7, false, false);
+    this.exploding = false;
     Projectile.call(this, game, x, y, scale, fireRate, damage, friendly, physics, img);
 }
 
-Bullet.prototype = new Projectile();
-Bullet.prototype.constructor = Bullet;
+Rocket.prototype = new Projectile();
+Rocket.prototype.constructor = Rocket;
+
+Rocket.prototype.handleCollision = function (entity) {
+    switch (entity.type) {
+        case TYPES.HERO:
+            if (!this.friendly) this.exploding = true;
+            break;
+        case TYPES.CANNON:
+            if (this.friendly) this.exploding = true;
+            break;
+        case TYPES.PLATFORM:
+        case TYPES.SPIKE:
+            this.exploding = true;
+            break;
+    }
+}
+
+Rocket.prototype.update = function () {
+
+    if (!this.physics.isDone() && !this.exploding) {
+
+        for (var i = 0; i < this.game.entities.length; i++) {
+            var ent = this.game.entities[i];
+            if (ent !== this && collisionDetected(this, ent)) {
+                this.handleCollision(ent);
+            }
+        }
+
+        if (!this.exploding) {
+            this.physics.tick();
+            var pos = this.physics.getPosition();
+            this.x = pos.x;
+            this.y = pos.y;
+        }
+
+    } else {
+        this.exploding = true;
+    }
+
+    if (this.exploding && this.explosion.isDone()) this.removeFromWorld = true;
+    Entity.prototype.update.call(this);
+}
+
+Rocket.prototype.draw = function (ctx, xView, yView) {
+    if (!this.exploding) {
+        ctx.save();
+        ctx.translate(this.x + this.width / 2 - xView, this.y + this.height / 2 - yView);
+        ctx.rotate(this.physics.currentAngle);
+        this.img.drawFrame(this.game.clockTick, ctx, 0, -this.img.spriteSheet.height * this.scale / 2, this.scale);
+        ctx.restore();
+    } else {
+        this.explosion.drawFrame(this.game.clockTick, ctx, this.x - this.width / 2 - xView, this.y - this.height / 2 - yView, this.scale);
+    }
+    
+    Entity.prototype.draw.call(this);
+}
 
 /**
  * @description Fire class - extends Projectile

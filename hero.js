@@ -297,17 +297,17 @@ Hero.prototype.shootBullet = function () {
     var startY = this.y + 145 * this.scale;
 
     if (this.walking) {
-        var bullet = new Bullet(this.game, startX, startY, this.game.mouseX, this.game.mouseY, 
+        var rocket = new Rocket(this.game, startX, startY, this.game.mouseX, this.game.mouseY, 
                             (this.direction == DIRECTIONS.RIGHT ? 1: -1) * this.velocity, true);
     } else {
-        var bullet = new Bullet(this.game, startX, startY, this.game.mouseX, this.game.mouseY, 
+        var rocket = new Rocket(this.game, startX, startY, this.game.mouseX, this.game.mouseY, 
                             0, true);
     }
 
-    if (this.ticksSinceShot >= bullet.fireRate && this.currentMP >= bullet.manaCost) {
-        this.game.addEntity(bullet);
+    if (this.ticksSinceShot >= rocket.fireRate && this.currentMP >= rocket.manaCost) {
+        this.game.addEntity(rocket);
         this.ticksSinceShot = 0;
-        this.changeMP(-bullet.manaCost);
+        this.changeMP(-rocket.manaCost);
     }
 }
 

@@ -36,7 +36,7 @@ Cannon.prototype.constructor = Cannon;
 Cannon.prototype.handleCollision = function (entity) {
     switch (entity.type) {
         case TYPES.PROJECTILE:
-            if (entity.friendly) {
+            if (entity.friendly && !entity.exploding) {
                 this.takeDamage(entity.damage);
             }
             break;
