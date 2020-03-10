@@ -7,47 +7,44 @@ async function loadString(filePath) {
     return levelString;
 }
 
+var files = [
+	"./img/hero/Cyborg_Walk_L.png",
+	"./img/hero/Cyborg_Walk_R.png",
+	"./img/hero/Cyborg_Idle_L.png",
+	"./img/hero/Cyborg_Idle_R.png",
+	"./img/hero/Cyborg_Jump_L.png",
+	"./img/hero/Cyborg_Jump_R.png",
+	"./img/hero/Cyborg_Shoot2_L.png",
+	"./img/hero/Cyborg_Shoot2_R.png",
+	"./img/environment/Background.png",
+	"./img/environment/background_100x100.png",
+	"./img/environment/background_100x100_light.png",
+	"./img/environment/floor.png",
+	"./img/environment/floor_gap_left.png",
+	"./img/environment/floor_gap_right.png",
+	"./img/environment/invisible.png",
+	"./img/environment/steel_block.png",
+	"./img/environment/spikes/steel_block_spikes.png",
+	"./img/environment/spikes/floating_spikes.png",
+	"./img/environment/spikes/floor_spikes.png",
+	"./img/hud/HP_bars.png",
+	"./img/hud/HP_bars_background.png",
+	"./img/hud/Instructions.png",
+	"./img/hud/Win.png",
+	"./img/projectiles/rocket.png",
+	"./img/projectiles/explosion.png",
+	"./img/projectiles/fire.png",
+	"./img/enemies/Cannon2_L.png",
+	"./img/enemies/Cannon2_R.png",
+	"./img/collectables/healthPack.png",
+	"./img/collectables/manaPack.png"
+];
+
 var ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Walk_L.png");
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Walk_R.png");
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Idle_L.png");
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Idle_R.png");
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Jump_L.png");
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Jump_R.png");
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Shoot2_L.png");
-ASSET_MANAGER.queueDownload("./img/hero/Cyborg_Shoot2_R.png");
-
-
-ASSET_MANAGER.queueDownload("./img/environment/Background.png");
-
-ASSET_MANAGER.queueDownload("./img/environment/background_100x100.png");
-ASSET_MANAGER.queueDownload("./img/environment/background_100x100_light.png");
-ASSET_MANAGER.queueDownload("./img/environment/floor.png");
-ASSET_MANAGER.queueDownload("./img/environment/floor_gap_left.png");
-ASSET_MANAGER.queueDownload("./img/environment/floor_gap_right.png");
-ASSET_MANAGER.queueDownload("./img/environment/invisible.png");
-ASSET_MANAGER.queueDownload("./img/environment/steel_block.png");
-ASSET_MANAGER.queueDownload("./img/environment/spikes/steel_block_spikes.png");
-ASSET_MANAGER.queueDownload("./img/environment/spikes/floating_spikes.png");
-ASSET_MANAGER.queueDownload("./img/environment/spikes/floor_spikes.png");
-
-ASSET_MANAGER.queueDownload("./img/hud/HP_bars.png");
-ASSET_MANAGER.queueDownload("./img/hud/HP_bars_background.png");
-ASSET_MANAGER.queueDownload("./img/hud/Instructions.png");
-ASSET_MANAGER.queueDownload("./img/hud/Win.png");
-
-//ASSET_MANAGER.queueDownload("./img/projectiles/bullet.png");
-ASSET_MANAGER.queueDownload("./img/projectiles/rocket.png");
-ASSET_MANAGER.queueDownload("./img/projectiles/explosion.png");
-ASSET_MANAGER.queueDownload("./img/projectiles/fire.png");
-
-ASSET_MANAGER.queueDownload("./img/enemies/Cannon2_L.png");
-ASSET_MANAGER.queueDownload("./img/enemies/Cannon2_R.png");
-
-ASSET_MANAGER.queueDownload("./img/collectables/healthPack.png");
-ASSET_MANAGER.queueDownload("./img/collectables/manaPack.png");
-
+files.forEach(function (file) {
+	ASSET_MANAGER.queueDownload(file);
+});
 
 ASSET_MANAGER.downloadAll(async function () {
     var canvas = document.getElementById('gameWorld');
@@ -69,6 +66,5 @@ ASSET_MANAGER.downloadAll(async function () {
 
 	gameEngine.init(ctx, camera);
 	gameEngine.start();
-
 	
 });

@@ -223,9 +223,11 @@ Hero.prototype.handleCollision = function (entity) {
             this.blockMovement(entity);
             break;
         case TYPES.SPIKE:
-            if (this.ticksSinceCollison >= this.collisionDelay) {
-                this.changeHP(-entity.damage);
-                this.ticksSinceCollison = 0;
+            if (entity.collisionManager.topCollisionDetected(this)) {
+                if (this.ticksSinceCollison >= this.collisionDelay) {
+                    this.changeHP(-entity.damage);
+                    this.ticksSinceCollison = 0;
+                }
             }
             this.blockMovement(entity);
             break;
