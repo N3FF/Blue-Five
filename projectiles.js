@@ -145,8 +145,8 @@ Rocket.prototype.draw = function (ctx, xView, yView) {
         this.img.drawFrame(this.game.clockTick, ctx, 0, -this.img.spriteSheet.height * this.scale / 2, this.scale);
         ctx.restore();
     } else {
-        var imgWidthOffset = this.width/3 - 15; // adjust the position of the explosion so the image is centered
-        var imgHeightOffset = this.height/3 - 15;
+        var imgWidthOffset = (this.width/0.6); // adjust the position of the explosion so the image is centered
+        var imgHeightOffset = (this.height/0.6);
         this.explosion.drawFrame(this.game.clockTick, ctx, this.x - xView - imgWidthOffset, this.y - yView - imgHeightOffset, this.scale * 2);
     }
     
