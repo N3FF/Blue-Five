@@ -237,7 +237,8 @@ const TYPES = {
         MANAPACK: 5
     },
     WIN: 6,
-    SPIKE: 7
+    SPIKE: 7,
+    INVISIBLE: 8
 };
 Object.freeze(TYPES);
 

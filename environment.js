@@ -34,9 +34,15 @@ function Platform(game, x, y, type) {
 
     switch (type) {
         case "invisible":
+            this.type = TYPES.INVISIBLE;
             this.fileName += "invisible.png";
             break;
 
+        case "win":
+            this.type = TYPES.WIN;
+            this.fileName += "invisible.png";
+            break;
+            
         case "gap_right":
             this.fileName += "floor_gap_right.png";
             break;

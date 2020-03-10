@@ -219,6 +219,7 @@ Hero.prototype.handleCollision = function (entity) {
             }
             this.blockMovement(entity);
             break;
+        case TYPES.INVISIBLE:
         case TYPES.PLATFORM:
             this.blockMovement(entity);
             break;

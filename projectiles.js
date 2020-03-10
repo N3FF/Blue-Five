@@ -32,10 +32,10 @@ Projectile.prototype.handleCollision = function (entity) {
         case TYPES.CANNON:
             if (this.friendly) this.removeFromWorld = true;
             break;
-        case TYPES.PROJECTILE:
-            break;
-        default:
+        case TYPES.PLATFORM:
+        case TYPES.SPIKE:
             this.removeFromWorld = true;
+            break;
     }
 }
 

@@ -59,17 +59,14 @@ Level.prototype.build = function (levelText) {
                 var platform = new Platform(this.game, x * tileSize, y, "invisible");
                 this.game.addEntity(platform);
                 break;
-
             case '+': // win upon collision
-                var winTile = new WinTile(this.game, x * tileSize, y);
+                var winTile = new Platform(this.game, x * tileSize, y, "win");
                 this.game.addEntity(winTile);
                 break;
-
             case 'p': //player spawn
                 var hero = new Hero(this.game, x * tileSize, y);
                 this.game.entities.splice(1, 0, hero);              //entities[1] = hero
                 break;
-
             case 'c': //cannon spawn
                 var e1 = new Cannon(this.game, x * tileSize, y);
                 this.game.addEntity(e1);
@@ -86,8 +83,6 @@ Level.prototype.build = function (levelText) {
                 y += tileSize;
                 if (x > this.width / tileSize) this.width = tileSize * (x + 1);
                 x = -1;
-                break;
-            default:
                 break;
         }
         x++;
