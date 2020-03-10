@@ -45,16 +45,16 @@ function Platform(game, x, y, type, win) {
             break;
 
         case "floating_spikes":
-            this.fileName += "floating_spikes.png";
+            this.fileName += "spikes/floating_spikes.png";
             this.hazardous = true;
             break;
 
         case "steel_block_spikes":
-            this.fileName += "steel_block_spikes.png";
+            this.fileName += "spikes/steel_block_spikes.png";
             break
 
         case "floor_spikes":
-            this.fileName += "floor_spikes.png";
+            this.fileName += "spikes/floor_spikes.png";
             this.hazardous = true;
             break;
 
