@@ -8,12 +8,16 @@ async function loadString(filePath) {
 }
 
 var files = [
-	"./img/hero/Cyborg_Walk_L.png",
-	"./img/hero/Cyborg_Walk_R.png",
+	// "./img/hero/Cyborg_Walk_L.png",
+	// "./img/hero/Cyborg_Walk_R.png",
+	"./img/hero/Cyborg_Walk2_L.png",
+	"./img/hero/Cyborg_Walk2_R.png",
 	"./img/hero/Cyborg_Idle_L.png",
 	"./img/hero/Cyborg_Idle_R.png",
-	"./img/hero/Cyborg_Jump_L.png",
-	"./img/hero/Cyborg_Jump_R.png",
+	// "./img/hero/Cyborg_Jump_L.png",
+	// "./img/hero/Cyborg_Jump_R.png",
+	"./img/hero/Cyborg_Jump2_L.png",
+	"./img/hero/Cyborg_Jump2_R.png",
 	"./img/hero/Cyborg_Shoot2_L.png",
 	"./img/hero/Cyborg_Shoot2_R.png",
 	"./img/environment/Background.png",
@@ -24,6 +28,7 @@ var files = [
 	"./img/environment/floor_gap_right.png",
 	"./img/environment/invisible.png",
 	"./img/environment/steel_block.png",
+	"./img/environment/checkpoint.png",
 	"./img/environment/spikes/steel_block_spikes.png",
 	"./img/environment/spikes/floating_spikes.png",
 	"./img/environment/spikes/floor_spikes.png",
