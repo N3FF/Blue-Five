@@ -90,6 +90,8 @@ function Rocket (game, x, y, destX, destY, initialVelocity, friendly) {
     this.manaCost = 5;
     this.explosion = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/explosion.png"), 0, 0, 51, 51, 0.025, 7, false, false);
     this.exploding = false;
+    this.explosion_audio = false; // make sure the explosion sound only plays once.
+    this.shoot_audio = false;
     Projectile.call(this, game, x, y, scale, fireRate, damage, friendly, physics, img);
 }
 
@@ -113,6 +115,10 @@ Rocket.prototype.handleCollision = function (entity) {
 
 Rocket.prototype.update = function () {
 
+    // if(!this.shoot_audio){
+    //     this.shoot_audio = true;
+    //     (new Audio("./sounds/rocket_shoot.wav")).play();
+    // }
     if (!this.physics.isDone() && !this.exploding) {
 
         for (var i = 0; i < this.game.entities.length; i++) {
@@ -130,6 +136,10 @@ Rocket.prototype.update = function () {
         }
 
     } else {
+        // if(!this.explosion_audio){
+        //     this.explosion_audio = true;
+        //     (new Audio("./sounds/rocket_explode.mp3")).play();
+        // }
         this.exploding = true;
     }
 
