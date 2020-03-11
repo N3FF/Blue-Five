@@ -31,6 +31,10 @@ Level.prototype.build = function (levelText) {
                 var platform = new Platform(this.game, x * tileSize, y, "floor");
                 this.game.addEntity(platform);
                 break;
+            case '=': // standard floor tile
+                var platform = new Platform(this.game, x * tileSize, y, "bricks");
+                this.game.addEntity(platform);
+                break;
             case '>': // goes on the right side of floor tile ...>
                 var platform = new Platform(this.game, x * tileSize, y, "gap_right");
                 this.game.addEntity(platform);

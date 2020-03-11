@@ -23,6 +23,7 @@ var files = [
 	"./img/environment/Background.png",
 	"./img/environment/background_100x100.png",
 	"./img/environment/background_100x100_light.png",
+	"./img/environment/bricks.png",
 	"./img/environment/floor.png",
 	"./img/environment/floor_gap_left.png",
 	"./img/environment/floor_gap_right.png",

@@ -63,6 +63,10 @@ function Platform(game, x, y, type) {
             this.fileName += "steel_block.png";
             break;
 
+        case "bricks":
+            this.fileName += "bricks.png";
+            break;
+
         case "checkpoint":
             this.fileName += "checkpoint.png";
             this.width = 104;
@@ -120,7 +124,7 @@ Platform.prototype.draw = function (ctx, xView, yView) {
 }
 
 function Spike(game, x, y, type) {
-    
+
     this.type = TYPES.SPIKE;
     this.width = 52;
     this.height = 52;
