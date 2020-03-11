@@ -1,6 +1,7 @@
 function HealthManaBars(game, x, y) {
     this.backgroundBars = new Animation(ASSET_MANAGER.getAsset("./img/hud/HP_bars_background.png"), 0, 0, 658, 164, 1, 1, true, false);
     this.overlay = new Animation(ASSET_MANAGER.getAsset("./img/hud/HP_bars.png"), 0, 0, 658, 164, 1, 1, true, false);
+    this.weapon = new Animation(ASSET_MANAGER.getAsset("./img/projectiles/rocket.png"), 0, 0, 51, 60, .20, 1, true, false);
     this.healthPercent = 100;
     this.manaPercent = 100;
     this.scale = 0.4;
@@ -57,5 +58,8 @@ HealthManaBars.prototype.draw = function (ctx, xView, yView) {
 
     // draw overlay
     this.overlay.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+
+    // draw current weapon
+    this.weapon.drawFrame(this.game.clockTick, ctx, this.x +12, this.y+20, 0.85);
     Entity.prototype.draw.call(this);
 }

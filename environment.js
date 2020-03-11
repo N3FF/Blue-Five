@@ -43,8 +43,12 @@ function Platform(game, x, y, type) {
             break;
 
         case "win":
+            this.fileName += "goal.png";
+            this.width = 104;
+            this.height = 104;
+            this.frames = 5;
+            this.fps = .1;
             this.type = TYPES.WIN;
-            this.fileName += "invisible.png";
             break;
 
         case "gap_right":

@@ -30,6 +30,7 @@ var files = [
 	"./img/environment/invisible.png",
 	"./img/environment/steel_block.png",
 	"./img/environment/checkpoint.png",
+	"./img/environment/goal.png",
 	"./img/environment/spikes/steel_block_spikes.png",
 	"./img/environment/spikes/floating_spikes.png",
 	"./img/environment/spikes/floor_spikes.png",
