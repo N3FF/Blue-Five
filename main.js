@@ -62,7 +62,7 @@ ASSET_MANAGER.downloadAll(async function () {
 	var healthManaBars = new HealthManaBars(gameEngine, 10, 10);
 	var instructions = new Instructions(gameEngine, ctx.canvas.width - 370 * .75, 0);
 
-	var levelText = await loadString("./levels/level1.txt");
+	var levelText = await loadString("./levels/level3.txt");
 	
 	gameEngine.addEntity(bg);
 	gameEngine.hudEntities.push(healthManaBars);
