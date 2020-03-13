@@ -28,12 +28,13 @@ Timer.prototype.tick = function () {
     this.wallLastTimestamp = wallCurrent;
     var gameDelta = Math.min(wallDelta, this.maxStep);
     this.gameTime += gameDelta;
-    return gameDelta;
+    return gameDelta;    
 }
 
 // Game engine
 function GameEngine() {
     this.camera = null;
+    this.paused = false;
     this.entities = [];
     this.hudEntities = [];
     this.showOutlines = false;
@@ -89,7 +90,10 @@ GameEngine.prototype.startInput = function () {
         // Array of all of the keys on the keyboard
         // Set key that is pressed to true
         that.keysActive[e.which] = true;
-
+        if (e.code == "Escape") {
+            if(that.paused) that.resume();
+            else that.pause();
+        }
     }, false);
 
     // When a key is released
@@ -218,13 +222,24 @@ GameEngine.prototype.update = function () {
 }
 
 GameEngine.prototype.loop = function () {
-    this.clockTick = this.timer.tick();
-    this.update();
-    this.draw();
-    this.space = null;
-    this.left = null;
-    this.right = null;
-    
+    if (!this.paused) {
+        this.clockTick = this.timer.tick();
+        this.update();
+        this.draw();
+        this.space = null;
+        this.left = null;
+        this.right = null;
+    }    
+}
+
+GameEngine.prototype.pause = function () {
+    this.paused = true;
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+}
+
+GameEngine.prototype.resume = function () {
+    this.paused = false;
 }
 
 const TYPES = {
