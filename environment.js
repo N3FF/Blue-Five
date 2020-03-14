@@ -185,3 +185,17 @@ Instructions.prototype.constructor = Instructions;
 Instructions.prototype.draw = function (ctx, xView, yView) {
     if (!this.game.entities[1].win) this.img.drawFrame(this.game.clockTick, ctx, this.x, this.y, .75);
 }
+
+function SplashScreen(game) {
+    this.img = new Animation(ASSET_MANAGER.getAsset("./img/hud/title_screen.png"), 0, 0, 1000, 750, 1, 1, true, true);
+    this.visible = true;
+    Entity.call(this, game, 0, 0);
+}
+
+SplashScreen.prototype = new Entity();
+SplashScreen.prototype.constructor = SplashScreen;
+
+SplashScreen.prototype.draw = function (ctx, xView, yView) {
+    if (this.visible) this.img.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+}
+

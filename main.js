@@ -38,6 +38,7 @@ var files = [
 	"./img/hud/HP_bars_background.png",
 	"./img/hud/Instructions.png",
 	"./img/hud/Win.png",
+	"./img/hud/title_screen.png",
 	"./img/projectiles/rocket.png",
 	"./img/projectiles/explosion.png",
 	"./img/projectiles/fire.png",
@@ -57,7 +58,8 @@ ASSET_MANAGER.downloadAll(async function () {
     var canvas = document.getElementById('gameWorld');
     var ctx = canvas.getContext('2d');
 
-    var gameEngine = new GameEngine();
+	var gameEngine = new GameEngine();
+	var splash_screen = new SplashScreen(gameEngine);
 	var bg = new Background(gameEngine);
 	var healthManaBars = new HealthManaBars(gameEngine, 10, 10);
 	var instructions = new Instructions(gameEngine, ctx.canvas.width - 370 * .75, 0);
@@ -67,6 +69,11 @@ ASSET_MANAGER.downloadAll(async function () {
 	gameEngine.addEntity(bg);
 	gameEngine.hudEntities.push(healthManaBars);
 	gameEngine.hudEntities.push(instructions);
+	gameEngine.hudEntities.push(splash_screen);
+
+	canvas.addEventListener("mousedown", function () {
+		splash_screen.visible = false;
+	});
 
 	var level = new Level(gameEngine, levelText);	
 	var camera = new Camera(gameEngine.entities[1], 0, 0, ctx.canvas.width, ctx.canvas.height, level.width, level.height);
